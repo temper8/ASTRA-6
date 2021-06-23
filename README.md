@@ -35,12 +35,12 @@
 6. Compile Astra kernel
 
    ```
-   ./MAKER Astra-6.2.1  Intel-oneAPI
+   ./MAKER Astra  Intel-oneAPI
    ```
 
 7. Create user profile
    ```
-   ./MAUSER /home/tmp8/Dev/GitHub/ASTRA/Astra-6.2.1/ a4 Intel-oneAPI
+   ./MAUSER , a4 Intel-oneAPI
    ```
 
 8. Run Astra
