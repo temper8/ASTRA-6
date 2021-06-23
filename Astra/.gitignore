@@ -3,3 +3,4 @@
 !.exe/astra.log
 .lbr/
 .rep/
+*.o
