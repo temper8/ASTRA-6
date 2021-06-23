@@ -1,0 +1,47 @@
+C PDTF	[MW/m#3]   D-T	Fusion power thermal  + NB
+C
+C				Polevoy		06-JUL-99,18-JUN-01
+C	if RUNDTF(pbfus)::
+c	PDTF	=pbfus(j)
+C ARPDTF	[MW/m#3]   D-T	Fusion power thermal  + NB
+C	S.V.Putvinskij//VANT,v.2,1988,p.3
+C	Corrected by S.V.Putvinskij 22.11.89
+C				Polevoy		22-DEC-99
+C
+C============================================================
+	INCLUDE 'fml/svdt'
+	IF(ABEAM.eq.1.or.NIBM(j).le.0.)	then
+		PDTF = 5.632*NDEUT(J)*NTRIT(J)*SVDT
+	else
+C.......Logarithm e
+	YLE	=15.85+LOG(TE(J)/SQRT(NE(J)))
+	Y	=3.1E-4*(17590./SQRT(EBEAM))*2.*ABEAM
+	IF(ABEAM.eq.2)	then
+		YECM	=0.6*EBEAM
+		YSQ	=SQRT(YECM)
+		YJ	=Y*NTRIT(J)/NE(J)*TE(J)*SQRT(TE(J))/YLE
+		PDTF = 5.632*(NDEUT(J)-NIBM(j))*NTRIT(J)*SVDT
+	endif
+	IF(ABEAM.eq.3)	then
+		YECM	=0.4*EBEAM
+		YSQ	=SQRT(YECM)
+		YJ	=Y*NDEUT(J)/NE(J)*TE(J)*SQRT(TE(J))/YLE
+		PDTF = 5.632*(NTRIT(J)-NIBM(j))*NDEUT(J)*SVDT
+	endif
+ 		YS	=0.
+		YSUM	=0.
+	YEBDEC 	=10.*TE(J)*ABEAM/EBEAM
+	YXC3	=YEBDEC*SQRT(YEBDEC)
+	DO 	JK = 1,99
+	YX	=.01*JK
+	YX2	=YX*YX
+	YX3	=YX2*YX
+	YE	=YECM*YX2
+	YS2	=(YE-48.7878)**2
+	YSIG	=EXP(-34.3812/YX/YSQ)*(1.+1.1177E-5*YS2)/
+     /			(1.+6.433E-4*YS2)/YE
+      		YSUM	=YSUM+ YSIG/(1.+YXC3/YX3)
+	 enddo
+	PDTF	=PDTF+.2*26798.*.01*YSUM*YJ*PBEAM(J)	
+	endif
+	 

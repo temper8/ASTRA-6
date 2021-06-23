@@ -1,0 +1,9 @@
+C SVIEP [10#19m#3/s]: The formula is a fit to ionization rate by electron impact
+C	Abramov, Vikhrev, Pogutse Fizika Plazmy 3 (1977) N3 p.512 
+C			(POLEVOY 21.10.93)
+	Y	=.0136/TE(J)
+	IF(TE(J).GT..01)	THEN
+	SVIEP=9.7E5*EXP(-Y)*SQRT(Y/(1.+Y))/(Y+.73)
+				ELSE
+	SVIEP=2.958E5*EXP(-Y)*SQRT(Y)
+				ENDIF

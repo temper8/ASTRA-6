@@ -1,0 +1,10 @@
+C SVRECX [m#3/s] :	The formula is a fit to recombination rate
+C			SVRECX=<sigma*v>*1.E19
+C	Gordeev, Zinov'ev,Petrov//Sov. Pisma v ZETF,(1977), p.223
+C					Polevoy 29-NOV-91
+	if (TEX(J).lt..002) then
+	SVRECX=0.
+	else
+	SVRECX	=13.6E-3/TEX(j)
+	SVRECX	=1.27*SVRECX*sqrt(SVRECX)/(SVRECX+.59)
+	endif

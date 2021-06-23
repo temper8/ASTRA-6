@@ -1,0 +1,620 @@
+#!/bin/csh -f
+# Script file "MAKER" Makes Astra KERnel.
+# 
+# SYNOPSIS
+# 	./MAKER AROOT PLATFORM
+#
+# AROOT     is a name for the new Astra kernel directory to be created
+#           ($cwd/Astra by default)
+#
+#     As of version 6.2 the multi-platform kernel can be installed only
+# PLATFORM  must be defined either
+#           by the environment variable "ObjectCode" or
+#           by the command line, e.g.
+#       	   ./MAKER , Aix
+#
+
+# Installation options:
+set IFICR = no
+set IFIPC = yes
+set IFESP = yes
+set IFNBI = yes
+set OWNER = $3
+set PROTECT = no
+if ( $1 != '' && $1 != ',' ) set AROOT = $1
+if ( !(${?AROOT}) ) set AROOT = $cwd/Astra
+if ( ${AROOT:t} == "" ) then
+   echo \ 
+   echo " >>> Wrong Astra kernel name: " ${AROOT}
+   goto End
+endif
+if ( ${AROOT} == ${AROOT:t} ) then
+   set AKERN = ${AROOT}
+   set AROOT = $cwd/$AROOT
+else
+   set AKERN = ${AROOT:t}
+endif
+set LEZ = ${AROOT}/LEZ
+#echo $LEZ
+
+if ( !(-d ${LEZ}) && (-e tgz2esc) && (-e esc.tgz || -e esc.tar.gz)  ) then
+#   source tgz2esc
+   cd ${AROOT}
+endif
+
+if ( !(-e ${AROOT}) )	then
+#   echo \ 
+#   echo "Unpacking Astra kernel"
+#   echo \ 
+   if ( -e ${AKERN}.tgz )	mv  ${AKERN}.tgz  ${AKERN}.tar.gz 
+   if ( -e ${AKERN}.tar.Z )	then
+      uncompress ${AKERN}.tar.Z	|| set ERCODE = ERR
+      tar -xf   ${AKERN}.tar	|| set ERCODE = ERR
+   else if ( -e ${AKERN}.tar.gz ) then
+      gunzip  ${AKERN}.tar.gz
+      tar -xf ${AKERN}.tar	|| set ERCODE = ERR
+      gzip    ${AKERN}.tar
+   else if ( -e ${AKERN}.tar ) then
+      tar -xf ${AKERN}.tar	|| set ERCODE = ERR
+      gzip    ${AKERN}.tar
+   else
+      echo \ 
+      echo " >>> Astra kernel " ${AKERN} is not found
+      goto End
+   endif
+   if ( ${?ERCODE} )     goto End
+#   if ( $3 == master )  goto Continue
+#----------- Single-platform-kernel option is obsolete ------------
+#   if ( !(${?Objectcode}) && $2 != '' )  then
+#      # Create a single platform kernel
+#      set ARC = ${AROOT}/.exe/astrarc
+#      mv  ${ARC} ${ARC}.orig
+#      echo '1,$s/${ObjectCode}/'${2}'/' > ${AROOT}/SED.input
+#      sed -f ${AROOT}/SED.input ${ARC}.orig > ${ARC}
+#      cat ${AROOT}/SED.input
+#      rm  ${AROOT}/SED.input
+#   endif
+   echo \ 
+   echo \ 
+   echo "      *****************************************"
+   echo "      **                                     **"
+   echo "      **  ASTRA KERNEL STRUCTURE IS CREATED  **"
+   echo "      **                                     **"
+   echo "      *****************************************"
+   echo \ 
+   echo -n \ \ Adjust settings in file \"${AKERN}/.exe/astrarc\" and
+   echo \ 
+   echo -n \ \ enter \<Return\> to continue or any other key for exit \>\ 
+   set ATEST = $<
+   if ( $ATEST != "" ) then
+      echo \ 
+      echo \ \ "You can resume the installation running "
+      echo $0 $1 $2 $3
+      echo \    
+      goto End
+   else
+      echo \ 
+   endif
+endif
+
+Continue:
+cd ${AROOT}
+
+# This part works if platform is defined in a command line or in ObjectCode
+
+set ARCH = $2
+if ( $ARCH == "," ) set ARCH = 
+
+if ( ${?ObjectCode} && ${ARCH} != '' )	then
+   if ( ${ObjectCode}  == ${ARCH} )	goto	Start
+   echo \ 
+   echo \ 
+   echo " >>> Warning >>> Conflicting platform definitions"
+   echo "                 "\"$ARCH\" vs \"$ObjectCode\""(=ObjectCode)"
+   echo "                 Environment variable ObjectCode will be ignored"
+   goto	Start
+endif
+
+if ( ${ARCH} != '' )	then
+   goto	Start
+else if ( ${?ObjectCode} )	then
+   set ARCH = ${ObjectCode}
+else
+   echo " >>> Input error >>> Undefined platform" 
+   echo " >>> Please select the installation platform. Look into the file"
+   echo "     "`pwd`/.exe/astrarc \ for available options
+   goto	End
+endif
+
+Start:
+set ATEST = `grep -w case .exe/astrarc | grep -w ${ARCH}`
+if ( ${#ATEST} == '0' )	 goto	Unknown_platform
+
+echo \ 
+echo " Checking structure of the Astra root directory" \"${AROOT}\"
+echo \ 
+echo \ Creating ASTRA kernel: \"${ARCH}\"
+
+setenv ALBR .lbr/${ARCH}/
+if ( !(-e .lbr) )     mkdir .lbr
+if ( !(-e ${ALBR}) )  mkdir ${ALBR}
+if ( ${?ObjectCode} )	then
+   set OC = ${ObjectCode}
+   setenv ObjectCode ${ARCH}
+   source ${AROOT}/.exe/astrarc 	||	goto	End
+   setenv ObjectCode ${OC}
+   unset OC
+else
+   setenv ObjectCode ${ARCH}
+   source ${AROOT}/.exe/astrarc 	||	goto	End
+   unsetenv ObjectCode
+endif
+
+#echo '$AROOT ' = $AROOT
+#echo '$ARCH  ' = $ARCH
+#echo '$ALBR  ' = $ALBR
+#echo '$PROTECT ' = $PROTECT
+#echo '$PLATFORM' = $PLATFORM
+#echo '$ObjectCode' = $ObjectCode
+#goto End
+unset ARCH
+
+if ( !(-e cvsf.c) || !(-e kindof.F) )	goto	Libsbr
+set AA = ''
+${ACC} cvsf.c
+${AFL} kindof.F kindof cvsf.o
+./kindof >& /dev/null
+if ( $status == 0 )     goto	Libsbr
+if ( $status & 1 )     set AA = $AA" INTEGER "
+if ( $status & 2 )     set AA = $AA" REAL"
+if ( $status & 4 )     set AA = $AA" DOUBLE "
+goto CFmismatch
+
+Libsbr:
+if ( -e ${ALBR}sbr.a )	goto	Libesp
+echo \ 
+echo " Creating library ./${AKERN}/${ALBR}sbr.a"
+
+#ar c ${AROOT}/${ALBR}sbr.a
+   foreach A (sbr/*.f sbr/*.F)
+      set B = ${A:t}
+      set B = ${B:r}
+      if ( -e $B.o ) then
+	  echo $B.o
+	  echo \ 
+      endif
+      if ( !(-e $B.o) ) then
+         if ( ${PLATFORM}$B == "Alphafourtr" ) then
+            mv sbr/fourtr.f sbr/fourtr
+            sed '1,$s/integer LY(NLOC),L/integer*8 LY(NLOC),L/' sbr/fourtr > $A
+         endif
+	   ((${AFC} $A > /dev/null) >& /dev/tty) || goto LibError
+	   if ( ${PLATFORM}$B == "Alphafourtr" ) mv sbr/fourtr sbr/fourtr.f
+      endif
+   end
+
+   foreach A (*.o)
+      ar rv sbr.a $A			> /dev/null
+   end
+   mv sbr.a ${ALBR}sbr.a
+
+   ranlib ${ALBR}sbr.a			>& /dev/null
+   rm *.o
+
+Libesp:
+if ( !(-e ${AROOT}/esp) )	goto	Libicr
+if ( ${IFESP} == no && ${PROTECT} == yes )	rm -r esp >& /dev/null
+if ( ${IFESP} == no )		goto	Libicr
+if ( -e ${ALBR}esp.a )		goto	Libicr
+echo \ 
+echo " Creating library ./${AKERN}/${ALBR}esp.a"
+
+#ar c ${AROOT}/${ALBR}esp.a
+   foreach A (esp/*.f esp/*.F)
+      set B = ${A:t}
+      set B = ${B:r}
+      if ( -e $B.o ) then
+	  echo $B.o
+	  echo \ 
+      endif
+      if ( !(-e $B.o) ) then
+	 ((${AFC} $A > /dev/null) >& /dev/tty) || goto LibError
+      endif
+   end
+
+   foreach A (*.o)
+      ar rv esp.a $A			> /dev/null
+   end
+   mv esp.a ${ALBR}esp.a
+
+   ranlib ${ALBR}esp.a			>& /dev/null
+   rm *.o
+
+Libicr:
+if ( ${IFICR} == no && ${PROTECT} == yes && (-e icr) )	rm -r icr
+if ( ${IFICR} == no )				goto	Libnbi
+if ( -e ${ALBR}icr.a || !(-e ${AROOT}/icr) )	goto	Libnbi
+if ( ${ALBR} != .lbr/Solaris/ )			goto	Libnbi
+
+echo \ 
+echo " Creating library ./${AKERN}/${ALBR}icr.a"
+
+#ar c ${AROOT}/${ALBR}icr.a
+
+    foreach A (icr/*.f)
+      set B = ${A:t}
+      set B = ${B:r}
+	if ( -e $B.o ) then
+	     echo $B.o
+	     echo \ 
+	else
+	   ((${AFC} $A > /dev/null) >& /dev/tty) || goto LibError
+	   if (${PROTECT} == yes) rm $A
+	endif
+    end
+
+    foreach A (*.o)
+    ar rv icr.a $A			> /dev/null
+    end
+    mv icr.a ${ALBR}icr.a
+
+    ranlib ${ALBR}icr.a		>& /dev/null
+    rm *.o
+
+Libnbi:
+if ( ${PROTECT} == yes ) rm -r icr		>& /dev/null
+if ( ${IFNBI} == no && ${PROTECT} == yes && (-e nbi) )	rm -r nbi
+if ( ${IFNBI} == no )				goto	Libfnc
+if ( -e ${ALBR}nbi.a || !(-e ${AROOT}/nbi) )	goto	Libfnc
+
+echo \ 
+echo " Creating library ./${AKERN}/${ALBR}nbi.a"
+
+#ar c ${AROOT}/${ALBR}nbi.a
+
+    foreach A (nbi/*.f)
+      set B = ${A:t}
+      set B = ${B:r}
+	if ( -e $B.o ) then
+	     echo $B.o
+	     echo \ 
+	else
+	   ((${AFC} $A > /dev/null) >& /dev/tty) || goto LibError
+	   if (${PROTECT} == yes) rm $A
+	endif
+    end
+
+    foreach A (*.o)
+    ar rv nbi.a $A			> /dev/null
+    end
+    mv nbi.a ${ALBR}nbi.a
+
+    ranlib ${ALBR}nbi.a		>& /dev/null
+    rm *.o
+
+Libfnc:
+#if ( ${PROTECT} == yes ) rm -r nbi	>& /dev/null
+if ( -e ${ALBR}fnc.a )	goto	Libipc
+echo \ 
+echo " Creating library ./${AKERN}/${ALBR}fnc.a"
+
+#ar c ${AROOT}/${ALBR}fnc.a
+    foreach A (fnc/*.f)
+      set B = ${A:t}
+      set B = ${B:r}
+	if ( -e $B.o ) then
+	     echo $B.o
+	     echo \ 
+	else
+	   ((${AFC} $A > /dev/null) >& /dev/tty) || goto LibError
+	endif
+    end
+
+    foreach A (*.o)
+    ar rv fnc.a $A			> /dev/null
+    end
+    mv fnc.a ${ALBR}fnc.a
+
+    ranlib ${ALBR}fnc.a		>& /dev/null
+    rm *.o
+
+Libipc:
+set ATST = `echo ${ALBR} | grep Sun`
+if ( ${#ATST} != '0')		goto	MkDummy
+if ( ${IFIPC} == no )		goto	MkDummy
+if ( !(-e ${AROOT}/ipc) )	goto	MkDummy
+if ( -e ${ALBR}ipc.a )		goto	MkDummy
+echo \ 
+echo " Creating library ./${AKERN}/${ALBR}ipc.a"
+
+#ar c ${AROOT}/${ALBR}ipc.a
+   foreach A (ipc/*.f)
+      set B = ${A:t}
+      set B = ${B:r}
+      if ( -e $B.o ) then
+	  echo $B.o
+	  echo \ 
+      endif
+      if ( !(-e $B.o) ) then
+	 ((${AFC} $A > /dev/null) >& /dev/tty) || goto LibError
+      endif
+   end
+   foreach A (ipc/*.c)
+      set B = ${A:t}
+      set B = ${B:r}
+      if ( -e $B.o ) then
+	  echo $B.o
+	  echo \ 
+      endif
+      if ( !(-e $B.o) ) then
+	 ((${ACC} $A > /dev/null) >& /dev/tty) || goto LibError
+      endif
+   end
+
+   foreach A (*.o)
+      ar rv ipc.a $A			> /dev/null
+   end
+   mv ipc.a ${ALBR}ipc.a
+
+   ranlib ${ALBR}ipc.a			>& /dev/null
+   rm *.o
+
+MkDummy:				# Included from MAUSER
+if ( -e ${ALBR}user.a ) goto	MakeAsrv
+echo \ \ \ \ \ \  end > dummy.f
+(${AFC} dummy.f)	       #>& /dev/null
+ar r user.a dummy.o		>& /dev/null
+ranlib user.a			>& /dev/null
+mv user.a ${ALBR}user.a
+ranlib    ${ALBR}user.a		>& /dev/null
+rm dummy.*
+
+MakeAsrv:
+if ( !(-e ${AROOT}/${ALBR}listres) ) \
+		${AFL} ${ALBR}listres .srv/listres.f  || goto   SrvError
+#	   ((${AFC} $A > /dev/null) >& /dev/tty) || goto SrvError
+
+if ( !(-e ${AROOT}/${ALBR}startA) )  ${ACL} ${ALBR}startA .srv/startA.c 
+
+if ( !(-e ${AROOT}/${ALBR}timer) )   ${ACL} ${ALBR}timer .srv/timer.c 
+rm *.o			>& /dev/null
+
+MakeAcomp:
+if ( -e ${ALBR}model )	goto	Makereview
+echo \ 
+echo " Creating Astra Compiler"
+
+((make -f .srv/makemodel model > /dev/null) >& /dev/tty) || \
+					goto   SrvError
+rm ${ALBR}mod*.o >& /dev/null
+#if ( ${ALBR} != .lbr/ ) mv .lbr/model ${ALBR}model
+
+Makereview:
+if ( ${PROTECT} == yes ) rm -r .srv
+if ( -e ${ALBR}review ) goto	Libfor
+echo \ 
+echo " Creating PostViewer"
+
+if (${PLATFORM:r} == "Aix" || ${PLATFORM} == "g95")	then
+   mv for/typdsp.f for/typdsp
+   sed '1,$s/ACCESS/POSITION/' for/typdsp > for/typdsp.f
+endif
+
+((make -f .exe/makereview ${ALBR}review > /dev/null) >& /dev/tty) ||\
+                                        goto   PviewError
+if ( -e for/typdsp )  mv for/typdsp  for/typdsp.f
+if ( -e for/dialogx ) mv for/dialogx for/dialogx.c
+if ( -e for/serv )    mv for/serv    for/serv.c
+mv ${ALBR}*.o .
+
+Libfor:
+if ( ${PROTECT} == yes ) rm .exe/makereview for/review.f for/*.c
+if ( -e ${ALBR}for.a )	goto	Makejex
+echo \ 
+echo " Creating library ./${AKERN}/${ALBR}for.a"
+
+#ar c ${AROOT}/${ALBR}for.a
+
+set TEST = `find for/*.f`
+if ( !(${#TEST}) )  goto	Check_c
+   foreach A (for/*.f)
+      if ($A == for/stepon.f ) goto Next
+      if ($A == for/mpistepon.f ) goto Next
+      if ($A == for/review.f ) goto Next
+      set C = $A:t ; set B = $C:r
+      if ( -e $B.o ) goto	Next
+
+      switch ( ${PLATFORM:r}$A )
+      case "Aixfor/typdsp.f":
+      case "g95for/typdsp.f":
+         mv for/typdsp.f for/typdsp
+         sed '1,$s/ACCESS/POSITION/' for/typdsp > for/typdsp.f
+         ${AFC} $A    ||   goto LibError
+         mv for/typdsp for/typdsp.f
+         breaksw
+      default:
+	 ((${AFC} $A > /dev/null) >& /dev/tty) || goto LibError
+#         ${AFC} $A    ||   goto LibError
+         breaksw
+      endsw
+      if (${PROTECT} == yes) rm $A
+      goto Next
+Next:
+   end
+
+Check_c:
+if ( ${PROTECT} == yes ) goto Makefor
+set TEST = `find for/*.c`
+if ( !(${#TEST}) )  goto Makefor
+foreach A (for/*.c)
+   set B = ${A:r}
+   set B = ${B:t}
+   if ( -e $B.o ) goto	Nextc
+   if ( ${IFIPC} == no )	then
+      ${ACC} $A	||   goto LibError
+   else
+      ${ACC} -DIPCACTIVE $A	||   goto LibError
+   endif
+Nextc:
+end
+
+Makefor:
+    foreach A (*.o)
+    if ( $A == review.o ) then 
+       rm $A
+    else
+       ar rv /tmp/for.a $A	> /dev/null
+    endif
+    end
+    mv /tmp/for.a ${ALBR}for.a
+
+    ranlib ${ALBR}for.a		>& /dev/null
+    if (${PROTECT} == yes) rm for/emeq*.inc for/surv.f for/*dsp.f
+
+
+Makejex:
+if ( -e ${ALBR}jexfile.o ) goto MakeArc
+   echo	"      subroutine JEXFILE(I1,I2,I3,I4,I5,I6,CH1," > dummy.f
+   echo "     >I7,I8,I9,R1,R2,CH2,I10,I11)"		 >> dummy.f
+   echo "      implicit none"				 >> dummy.f
+   echo "      integer	I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11" >> dummy.f
+   echo "      real*8	R1,R2"				 >> dummy.f
+   echo "      character CH1*8,CH2*20"			 >> dummy.f
+   echo "      write(*,*)"\"Sorry, Ex-file reading routine is not available\" >> dummy.f
+   echo "      end"					 >> dummy.f
+   echo "      subroutine JEXFILET(I1,I2,I3,I4,I5,CH1,"  >> dummy.f
+   echo "     >I7,I8,I9,R1,R2,CH2,I10,I11)"		 >> dummy.f
+   echo "      implicit none"				 >> dummy.f
+   echo "      integer	I1,I2,I3,I4,I5,I7,I8,I9,I10,I11" >> dummy.f
+   echo "      real*8	R1,R2"				 >> dummy.f
+   echo "      character CH1*8,CH2*20"			 >> dummy.f
+   echo "      write(*,*)"\"Sorry, Ex-file reading routine is not available\" >> dummy.f
+   echo "      end"					 >> dummy.f
+   (${AFC} dummy.f) #>& /dev/null
+   mv dummy.o ${ALBR}jexfile.o
+   rm dummy.*
+
+MakeArc:
+rm *.o	>& /dev/null
+
+if ( !(-e exp/exp.tar.gz) ) then
+   tar -cf exp.tar exp
+   gzip exp.tar
+   mv exp.tar.gz exp/
+endif
+if ( !(-e equ/equ.tar.gz) ) then
+   tar -cf equ.tar equ
+   gzip equ.tar
+   mv equ.tar.gz equ/
+endif
+
+WriteProtection:
+foreach SUBD (.exe .lbr equ exp fml fnc for sbr udb)
+   cd ${AROOT}/$SUBD
+   if (${PROTECT} == yes) chmod ugo-w *
+end
+
+cd ${AROOT}
+if ( !(-e .rep) ) mkdir .rep
+chmod 733 .rep
+if ( !(-e .rep/Kernel) ) touch .rep/Kernel
+date 		       			>> .rep/Kernel
+echo "The kernel has been created as"	>> .rep/Kernel
+echo $0 $1 $2 $3			>> .rep/Kernel
+ls -l $0				>> .rep/Kernel
+# cp $0 .exe/
+echo " "				>> .rep/Kernel
+
+cd ${AROOT}/..
+if ( ${PROTECT} == yes && (-e ${AKERN}.tar) ) rm ${AKERN}.tar
+if ( ${PROTECT} == yes && (-e Astra.tar) ) rm Astra.tar
+# if (${PROTECT} == yes) chmod 555 .
+
+echo \ 
+echo \ 
+echo "      *********************************"
+echo "      **                             **"
+echo "      **  THE ASTRA KERNEL IS BUILT  **"
+echo "      **                             **"
+echo "      *********************************"
+echo \ 
+echo \ 
+if (${PROTECT} == yes) rm $0
+exit
+
+LibError:
+   if ( ${PLATFORM}$A == "Alphasbr/fourtr.f" ) mv sbr/fourtr sbr/fourtr.f
+echo \ 
+echo \ 
+echo \ 
+echo \>\>\>\ \ INSTALLATION \ ERROR:
+echo \ 
+echo Fix error\[s\] in the file \"${AKERN}/$A\" and call MAKER again
+goto End
+
+Introduction:
+echo \ 
+echo \ 
+echo "      *****************************************"
+echo "      **                                     **"
+echo "      **  ASTRA SOURCE STRUCTURE IS CREATED  **"
+echo "      **                                     **"
+echo "      *****************************************"
+echo \ 
+echo \ \ Adjust settings in the file \"${AKERN}/.exe/astrarc\"
+echo \ 
+echo \ 
+goto Again
+
+X11_CreationError:
+   if ( ${PLATFORM:r} == "Aix" )  mv for/typdsp for/typdsp.f
+   if ( ${PLATFORM:r} == "g95" )  mv for/typdsp for/typdsp.f
+echo \ 
+echo \ 
+echo \ 
+echo \>\>\>\ \ Failing to create X11 library 
+echo \ 
+echo Make proper changes to the file \"${AKERN}/.exe/astrarc\"
+goto Again
+
+PviewError:
+echo \ 
+echo \ 
+echo \ 
+echo \>\>\>\ \ Failing to create Astra postviewer
+echo \ 
+echo Make proper changes to the file \"${AKERN}/for/review.f\"
+echo \ 
+
+Again:
+echo "   "Then run \"MAKER\" again
+goto End
+
+Unknown_platform:
+echo \ 
+echo \ 
+echo \>\>\>\ \ INSTALLATION \ ERROR: \ \ \"$ARCH\" - Unknown Platform
+unset ARCH
+goto End
+
+Undefined_platform:
+echo \ 
+echo \ 
+echo \>\>\>\ \ INSTALLATION \ ERROR:
+echo \ 
+echo \>\>\>\ \ You have to define your platform either in the command line
+echo \ \ \ \ \ or in the file ${AKERN}/.exe/astrarc
+goto End
+
+CFmismatch:
+echo \ 
+echo \ 
+echo \>\>\>\ \ INSTALLATION \ ERROR:
+echo \ 
+echo \>\>\>\ \ C and Fortran compilers have different
+echo \ \ \ \ $AA data representation
+goto End
+
+End:
+echo \ 
+echo \ 

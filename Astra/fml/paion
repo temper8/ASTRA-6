@@ -1,0 +1,17 @@
+C PAION	 D-T Fraction of fusion alpha power deposited to ions
+C D.E.Post, 'Applied Atomic Collision Physics, Vol 2, 381, (1984)
+C C.M.Roach, 5/7/99
+C			(used in PEDT, PIDT)
+      YVALP=SQRT(2.0*3.5*1.6e-13/(4.0*1.667e-27))
+      YVE=SQRT(2.0*TE(J)*1.6e-16/9.1095e-31)
+      YLLAME=23.9+LOG(1.0e3*TE(J)/SQRT(1.0e19*NE(J)))
+      YLLAMI=14.2+LOG(SQRT(1.0e3*TE(J)/1.0e19*NE(J))*(4.0*AMAIN(J)*
+     +            YVALP)/(4.0+AMAIN(J)))
+      YLLAMA=14.2+LOG(SQRT(1.0e3*TE(J)/1.0e19*NE(J))*2.0*YVALP)
+      YVC=7.2925e-4/YLLAME*(YLLAMI*NI(J)/(AMAIN(J)*NE(J))+YLLAMA*
+     +     NALF(J)/NE(J) )
+      YVC=SIGN(YVC,1.d0)*ABS(YVC)**0.3333*YVE
+      YEPS=YVALP/YVC
+      PAION=2.0d0/YEPS**2*(0.57735*atan(0.57735*(2.0d0*YEPS-1.0d0))
+     +            -0.16667*log((1.0d0+YEPS)**2/(1.0d0-YEPS+YEPS**2))
+     +            +0.302299894d0 )

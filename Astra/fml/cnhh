@@ -1,0 +1,12 @@
+C CNHH [1/mkOM*m]:	Conductivity Neoclassical Hinton-Hazeltine
+C	CNHH=CCSP*(1-SQRT(eps)*K33)
+C			Rev. Mod. Phys. v.48, part 1 (1976) 297.
+C			(Yushmanov 28-APR-87)
+	YZ=ZEF(J)
+	include	'fml/nues'
+	YS=SQEPS(J)
+	YD=(0.65+1.28*YZ)/(0.05+YZ)
+	YA=(0.88+0.34*YZ)/(0.8+YZ)*SQRT(NUES)+(-.1+0.2*YZ)/(-.7+YZ)*NUES
+	CNHH=YD/(1.+YA)/((1.15+0.39*YZ)/(1.33+YZ)*NUES*YS*YS*YS+1.)
+	INCLUDE	'fml/ccsp'
+	CNHH=CCSP*(1.-YS*CNHH)

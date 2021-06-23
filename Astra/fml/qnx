@@ -1,0 +1,4 @@
+C QNX [10#19/s]:	Integral {0,J} ( SNX ) dV
+C			(Yushmanov 11-JAN-89)
+	IF(J.EQ.1)	QNX=0.
+	QNX=QNX+SNX(J)*VR(J)*HRO

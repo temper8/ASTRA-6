@@ -1,0 +1,130 @@
+! This file can start with arbitrary number of comment lines.
+! A comment line must have "!" in the first position.
+! 
+! The remainder of the file should provide a description of each beam 
+! line and include N groups, where N is the total number of beam lines.
+!
+! Each group consists of 21 records. 
+! The first record in a separate line is the ordinal group number.
+! The rest of a group includes 20 character*12 fields (4 lines).
+! Every field can be either a real number or a name of variable.
+! The allowed variables are: 
+!   "ZRDn" (or "ZRDnX"), where n stands for an integer number 1<=n<=48
+!   "Astra_Constant" (see the full list in "for/const.inc" 
+!                     or just press "C" in the run mode).
+! 
+! Significance of input parameters in each group:
+!   0th line:
+! Ordinal_beam_number
+!
+!   1st line:
+! QBEAM  [MW] Beam power
+! CONTR       Counter injection fraction (0 co-, 1 counter)
+! ABEAM [m_p] Mass of beam ions in the proton mass (can be 1,2,3)
+! ZBEAM       Beam ion charge in the proton charge units
+! EBEAM [keV] Beam energy
+!
+!   2nd line:
+! DBM1        EBEAM power fraction
+! DBM2        EBEAM/2 power fraction
+! DBM3        EBEAM/3 power fraction
+! Orb_av      Type of averaging over ion orbits
+!		  =0 No averaging (deposition at birth point)
+!		  =1 Averaging with finite orbit width
+!	    	  =2 Averaging with zero orbit width
+! Penc_num    Number of thin beams in the horizontal plane
+!
+!   3rd line:
+! HBEAM   [m] Beam footprint center height
+! RBMAX   [m] Beam footprint maximum radius
+! RBMIN   [m] Beam footprint minimum radius
+! tg(A)       A is the angle between the beam and the midplane
+! Aspect      Footprint aspect ratio: Beam_height=Aspect*(RBMAX-RBMIN)
+!
+!   4th line:
+! Cver1       These parameters describe exponential (or any other)
+! Cver2       beam power distribution across the beam cross-section
+! Chor1       as described by the user functions NBFRY & NBFHZ
+! Chor2       (see file sbr/nbuser.f)
+! Unused      Unused parameter
+!
+  1
+  ZRD11       0.0000E+00  2.0000E+00  1.0000E+00  8.0000E+01
+  7.7000E-01  1.4000E-01  9.0000E-02  1.0000E+00  1.5000E+01
+  1.5773E-01  1.9733E+00  1.7201E+00  2.3800E-02  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+  2
+  ZRD12       0.0000E+00  2.0000E+00  1.0000E+00  8.0000E+01
+  7.7000E-01  1.4000E-01  9.0000E-02  1.0000E+00  1.5000E+01
+ -5.4710E-01  1.9732E+00  1.7219E+00  1.5974E-01  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+  3
+  ZRD13       0.0000E+00  2.0000E+00  1.0000E+00  8.0000E+01
+  8.1000E-01  1.3000E-01  6.0000E-02  1.0000E+00  1.5000E+01
+ -5.7710E-01  1.4379E+00  1.1829E+00  1.5974E-01  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+  4
+  ZRD14       0.0000E+00  2.0000E+00  1.0000E+00  8.0000E+01
+  8.1000E-01  1.3000E-01  6.0000E-02  1.0000E+00  1.5000E+01
+  1.5303E-01  1.4376E+00  1.1805E+00  2.3800E-02  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+  5
+  ZRD15       0.0000E+00  2.0000E+00  1.0000E+00  8.0000E+01
+  8.1000E-01  1.3000E-01  6.0000E-02  1.0000E+00  1.5000E+01
+  1.6952E-01  1.4376E+00  1.1805E+00 -5.0800E-02  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+  6
+  ZRD16       0.0000E+00  2.0000E+00  1.0000E+00  8.0000E+01
+  8.1000E-01  1.3000E-01  6.0000E-02  1.0000E+00  1.5000E+01
+  7.7192E-01  1.4379E+00  1.1829E+00 -1.7620E-01  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+  7
+  ZRD17       0.0000E+00  2.0000E+00  1.0000E+00  8.0000E+01
+  8.1000E-01  1.3000E-01  6.0000E-02  1.0000E+00  1.5000E+01
+  7.3881E-01  1.9732E+00  1.7219E+00 -1.7620E-01  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+  8
+  ZRD18       0.0000E+00  2.0000E+00  1.0000E+00  8.0000E+01
+  8.1000E-01  1.3000E-01  6.0000E-02  1.0000E+00  1.5000E+01
+  1.5948E-01  1.9733E+00  1.7201E+00 -5.0800E-02  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+  9
+  ZRD21       0.0000E+00  2.0000E+00  1.0000E+00  1.3700E+02
+  6.3000E-01  1.9000E-01  1.8000E-01  1.0000E+00  1.5000E+01
+  1.5773E-01  1.9733E+00  1.7201E+00  2.3800E-02  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+ 10
+  ZRD22       0.0000E+00  2.0000E+00  1.0000E+00  1.3700E+02
+  6.3000E-01  1.9000E-01  1.8000E-01  1.0000E+00  1.5000E+01
+ -5.4710E-01  1.9732E+00  1.7219E+00  1.5974E-01  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+ 11
+  ZRD23       0.0000E+00  2.0000E+00  1.0000E+00  1.3700E+02
+  6.3000E-01  1.9000E-01  1.8000E-01  1.0000E+00  1.5000E+01
+ -5.7710E-01  1.4379E+00  1.1829E+00  1.5974E-01  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+ 12
+  ZRD24       0.0000E+00  2.0000E+00  1.0000E+00  1.3700E+02
+  6.3000E-01  1.9000E-01  1.8000E-01  1.0000E+00  1.5000E+01
+  1.5303E-01  1.4376E+00  1.1805E+00  2.3800E-02  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+ 13
+  ZRD25       0.0000E+00  2.0000E+00  1.0000E+00  1.3700E+02
+  6.3000E-01  1.9000E-01  1.8000E-01  1.0000E+00  1.5000E+01
+  1.6952E-01  1.4376E+00  1.1805E+00 -5.0800E-02  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+ 14
+  ZRD26       0.0000E+00  2.0000E+00  1.0000E+00  1.3700E+02
+  6.3000E-01  1.9000E-01  1.8000E-01  1.0000E+00  1.5000E+01
+  7.7192E-01  1.4379E+00  1.1829E+00 -1.7620E-01  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+ 15
+  ZRD27       0.0000E+00  2.0000E+00  1.0000E+00  1.3700E+02
+  6.3000E-01  1.9000E-01  1.8000E-01  1.0000E+00  1.5000E+01
+  7.3881E-01  1.9732E+00  1.7219E+00 -1.7620E-01  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00
+ 16
+  ZRD28       0.0000E+00  2.0000E+00  1.0000E+00  1.3700E+02
+  6.3000E-01  1.9000E-01  1.8000E-01  1.0000E+00  1.5000E+01
+  1.5948E-01  1.9733E+00  1.7201E+00 -5.0800E-02  1.0000E+00
+  9.0000E+00  2.0000E+00  9.0000E+00  2.0000E+00  0.0000E+00

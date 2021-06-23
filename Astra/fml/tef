@@ -1,0 +1,7 @@
+C TEF []:  Trapped Electron Fraction (banana)
+C	Sources:
+C	Off axis:	S.P.Hirshman, R.J.Hawryluk, B.Birge, 
+C		Nucl.Fusion - Letters v.17, No.3 (1977) 611
+	TEF = 1.-SQEPS(J)*SQEPS(J)
+	TEF = min(1.d0, 1.-TEF*SQRT(TEF)/(1.+1.46*SQEPS(J)))
+ 

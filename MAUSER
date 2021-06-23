@@ -1,0 +1,517 @@
+#!/bin/csh -f
+#############################################################################
+# Make Astra USER 
+#
+# The script creates a new or upadtes existiong Astra user directory
+# 
+# SYNOPSIS
+#       ./MAUSER AROOT AUSER PLATFORM
+#
+#    1st parameter AROOT ($1) must give an absolute (NB!) path 
+#	 or be empty, then default value "$cwd/Astra" is used.
+#    The 2nd parameter, AUSER ($2), is the name of newly created 
+#        or existing Astra User directory. 
+#        It can give an absolute or relative path or be empty. 
+#	 In the latter case, the user's directory "./astra" is created. 
+#
+#    User's Astra is installed as a link to the Astra kernel.
+#    The installation option is defined by 
+#    (i)  $3 (PLATFORM) value (single platform link), 
+#    (ii) environment variable ObjectCode (multi platform link).
+#
+#    If PLATFORM is empty then ObjectCode must be defined.
+#    Options:
+#       $3 undefined,  ObjectCode undefined	<->	Error
+#       $3 defined,    ObjectCode ignored	<->	Single-platform link
+#       $3 undefined,  ObjectCode defined	<->	Multi-platform link
+#
+#  SINGLE- vs MULTI-platform installation:
+#    The only difference is an additional line in the user files
+#        AWD/.exe/astra and AWD/.exe/view
+#    If a single platform link is already existing it can be transformed
+#    into a multi-platform by removing the 2nd last lines from the files
+#    AWD/.exe/astra and AWD/.exe/view and adding a line 
+#    "setenv ObjectCode ***" in users .login, .cshrc or whatever file.
+#
+#    If the parameter PLATFORM ($3) is non-empty then the environment 
+#    variable ObjectCode is ignored. (However, if the latter is different 
+#    from PLATFORM then a confirmation is asked for.) 
+#
+# Examples:
+# 
+# ./MAUSER  /afs/ipp.mpg.de/u/astrast/Astra_5.2  astra5  Aix
+#    creates user's "astra5" in the current directory linked 
+#    to Astra_5.2(Aix)
+# 
+# ./MAUSER , , Aix
+#    creates user's "./astra" linked to the Aix section of the 
+#    multi-platform kernel ./Astra in the same directory
+# 
+# ./MAUSER
+#    if ObjectCode is undefined user's "./astra" is created as a link 
+#    to the existing kernel.
+# 
+
+set OLDWD = `pwd`
+set AROOT = $1
+set AUSER = $2
+set PLATF = $3
+if ( ${AROOT} == "" || ${AROOT} == "," ) set AROOT = $cwd/Astra
+if ( ${AROOT} == ${AROOT:t} ) set AROOT = $cwd/$AROOT
+if ( !(-e ${AROOT}) ) then
+   echo \ 
+   echo ">>> ERROR >>> "Astra kernel \"${AROOT}\" not found. Enter a name
+   echo "       "of the Astra kernel directory with a full absolute path 
+   echo -n "Astra> "  
+   set AROOT = $<
+   if ( ${AROOT} == '' ) exit
+   if ( -e ${AROOT} ) goto Continue
+   echo \ 
+   echo The root Astra directory \"${AROOT}\" is not found
+   goto  End
+endif
+Continue:
+
+if ( ${AUSER} == "" || ${AUSER} == "," ) set AUSER = $cwd/astra
+
+#set echo
+#set verbose
+echo \ 						# Platform analysis:
+if ( ${PLATF} != '' )	then
+   set OC = ${PLATF}
+   set ATEST = `grep -w case ${AROOT}/.exe/astrarc | grep -w ${OC}`
+   if ( ${#ATEST} == '0' )	 goto	Unknown_platform
+   if ( -e ${AUSER}/.exe/astra ) then
+      set OCO = `grep ObjectCode ${AUSER}/.exe/astra`
+      if ( ${#OCO} == '0' )	goto	Name_Conflict3
+      if ( ${OCO[3]} != $OC )	goto	Name_Conflict
+   endif
+   echo \ A single-platform Astra \"${OC}\" will be created
+   goto	Start
+else if ( ${?ObjectCode} )	then
+   set OC = ${ObjectCode}
+   set ATEST = `grep -w case ${AROOT}/.exe/astrarc | grep -w ${OC}`
+   if ( ${#ATEST} == '0' )	 goto	Unknown_platform
+   if ( -e ${AUSER}/.exe/astra ) then
+      set OCO = `grep ObjectCode ${AUSER}/.exe/astra`
+      if ( ${#OCO} != '0' )	goto	Name_Conflict1
+      echo \ The platform \"${OC}\" will be added to your Astra installation
+   else
+      echo \ A multi-platform Astra will be created
+   endif
+else
+   echo " >>> Input error >>> Undefined 3rd input parameter" 
+   goto	End
+endif
+
+#goto End
+Start:
+
+# Create a name with an absolute path
+if ( !(-e ${AUSER}) )	mkdir ${AUSER}
+cd ${AUSER}
+set AUSER = ${cwd:h}/$AUSER:t
+
+echo \ \ \ in the directory \ \"${AUSER}\"
+echo \ \ \ with a link to \ \"${AROOT}\"
+# echo \ \ \ will be created
+echo \ 
+echo \ Creating internal structure:
+
+if ( !(-e ${AUSER}/.exe) )	mkdir ${AUSER}/.exe
+echo -n \ \ .exe
+if ( !(-e ${AUSER}/.lbr) )	ln -s ${AROOT}/.lbr .lbr
+echo -n \ .lbr
+if ( !(-e ${AUSER}/.res) )	mkdir ${AUSER}/.res
+echo -n \ .res
+if ( !(-e ${AUSER}/.tsk) )	mkdir ${AUSER}/.tsk
+echo -n \ .tsk
+if ( !(-e ${AUSER}/dat) )	mkdir ${AUSER}/dat
+echo -n \ dat
+#if ( !(-e ${AUSER}/equ) )	mkdir ${AUSER}/equ
+#if ( !(-e ${AUSER}/equ/log) )	mkdir ${AUSER}/equ/log
+#if ( !(-e ${AUSER}/equ/txt) )	mkdir ${AUSER}/equ/txt
+if ( !(-e ${AUSER}/equ/equ.tar.gz) ) then
+   cp ${AROOT}/equ/equ.tar.gz ${AUSER}/
+   tar -xzof equ.tar.gz && rm equ.tar.gz
+endif
+echo -n \ equ
+#if ( !(-e ${AUSER}/exp) )	mkdir ${AUSER}/exp
+#if ( !(-e ${AUSER}/exp/bnd) )	mkdir ${AUSER}/exp/bnd
+#if ( !(-e ${AUSER}/exp/cnf) )	mkdir ${AUSER}/exp/cnf
+#if ( !(-e ${AUSER}/exp/ecr) )	mkdir ${AUSER}/exp/ecr
+#if ( !(-e ${AUSER}/exp/equ) )	mkdir ${AUSER}/exp/equ
+#if ( !(-e ${AUSER}/exp/mse) )	mkdir ${AUSER}/exp/mse
+#if ( !(-e ${AUSER}/exp/nbi) )	mkdir ${AUSER}/exp/nbi
+if ( !(-e ${AUSER}/exp/exp.tar.gz) ) then
+   cp ${AROOT}/exp/exp.tar.gz ${AUSER}/
+   tar -xzof exp.tar.gz && rm exp.tar.gz
+endif
+echo -n \ exp
+if ( !(-e ${AUSER}/fml) )	mkdir ${AUSER}/fml
+if ( !(-e ${AUSER}/fnc) )	mkdir ${AUSER}/fnc
+if ( !(-e ${AUSER}/for) )	ln -s ${AROOT}/for   for
+echo \ for
+if ( !(-e ${AUSER}/sbr) )	mkdir ${AUSER}/sbr
+if ( !(-e ${AUSER}/out) )	mkdir ${AUSER}/out
+echo -n \ \ out
+if ( !(-e ${AUSER}/tmp) )	mkdir ${AUSER}/tmp
+echo -n \ tmp
+if ( !(-e ${AUSER}/udb) )	mkdir ${AUSER}/udb
+echo -n \ udb
+if ( !(-e ${AUSER}/xmg) )	mkdir ${AUSER}/xmg
+echo -n \ xmg
+if ( -e ${AROOT}/ipc && -e ${AROOT}/xpr )	then
+   if ( !(-e ${AUSER}/ipc) )	mkdir ${AUSER}/ipc
+   if ( !(-e ${AUSER}/xpr) )	mkdir ${AUSER}/xpr
+endif
+
+foreach SUBD ( fml fnc sbr )
+   foreach A ( ${AROOT}/${SUBD}/* )
+     if ( !(-e "$SUBD/$A:t") ) ln -s $A $SUBD/
+   end
+   echo -n \ $SUBD
+end
+foreach SUBD ( ipc xpr )
+   if ( !(-e $SUBD) )	goto	EndSUBD
+   foreach A ( ${AROOT}/${SUBD}/* )
+     if ( !(-e "$SUBD/$A:t") ) ln -s $A $SUBD/
+   end
+   echo -n \ $SUBD
+EndSUBD:
+end
+cd ${AUSER}
+
+if ( ${?ESCHOME} )	goto	Make_ESC
+echo \ 
+echo -n "  Do you wish to use ESC with ASTRA (y or n)? "
+set ATEST = $<
+if ( $ATEST != "y" )	goto	Make_start
+echo \ 
+# echo -n "  Please enter location of ESC >"${OLDWD}/
+echo -n "  Please enter location of ESC > "
+set ATEST = $<
+if ( ${%ATEST} == 0 )	goto	Make_start
+# setenv ESCHOME ${OLDWD}/$ATEST
+setenv ESCHOME $ATEST
+Make_ESC:
+if ( !(-d ${ESCHOME}) )	then
+   echo "  >>> Directory "\"$ESCHOME\" does not exist
+   echo "      Continue installation of user's ASTRA"
+   unsetenv ESCHOME
+   goto Make_start
+endif
+echo \ 
+echo \ \ Creating ESC interface
+echo \ 
+if ( !(-d ESC) )	mkdir ESC
+#if ( !(-e ./dB0) )		cp -r ${ESCHOME}/dB0		.
+if ( !(-e ./ESC/WRK/In) )	cp -r ${ESCHOME}/WRK/In		./ESC/
+if ( !(-e ./ESC/WRK/Wrk) )	cp -r ${ESCHOME}/WRK/Wrk	./ESC/
+if ( !(-e ./ESC/WRK/Hlp) )	ln -s ${ESCHOME}/WRK/Hlp	./ESC/
+if ( !(-e ./ESC/WRK/Obj) )	ln -s ${ESCHOME}/WRK/Obj	./ESC/
+ln -s ${ESCHOME}/WRK/Cbesc.*	./ESC/
+rm ./ESC/Cbesc.mk
+#if ( !(-e ./ESC/ZcbL/cln) )	ln -s ${ESCHOME}/ZcbL/cln	./ESC/
+foreach CBESC ( ${ESCHOME}/WRK/Cbesc.* )
+   if ( ${CBESC:t} != Cbesc.mk )	goto Skip_mk
+   if ( !(-e ./ESC/WRK/${CBESC:t}) )	ln -s $CBESC	./ESC/
+Skip_mk:
+end
+
+Make_start:
+echo \ 
+echo \ Creating ASTRA local files
+echo \ 
+
+cd ${AUSER}/.exe
+   if ( !(-e Runastra) )  ln -s ${AROOT}/.exe/Astra	Runastra
+   if ( !(-e Review) )	  ln -s ${AROOT}/.exe/Review	.
+   if ( !(-e Checkdu) )	  ln -s ${AROOT}/.exe/Checkdu	.
+   if ( !(-e Checklbu) )  ln -s ${AROOT}/.exe/Checklbu	.
+   if ( !(-e getaargs) )  ln -s ${AROOT}/.exe/getaargs	.
+   if ( !(-e getvargs) )  ln -s ${AROOT}/.exe/getvargs	.
+   if ( !(-e man_astra) ) ln -s ${AROOT}/.exe/man_astra	.
+   if ( !(-e man_view) )  ln -s ${AROOT}/.exe/man_view	.
+   if ( !(-e version) )   ln -s ${AROOT}/.exe/version	.
+   if ( !(-e astra.log)	) cp    ${AROOT}/.exe/astra.log	.
+   if ( !(-e astrarc) )   cp    ${AROOT}/.exe/astrarc	.
+   if ( -e ${AROOT}/.exe/ifortvars.csh && !(-e ifortvars.csh) ) \
+			  ln -s ${AROOT}/.exe/ifortvars.csh .
+   if ( -e astra ) then
+      if ( ${PLATF} == '' )	goto	Make_view
+      set OCO = `grep ObjectCode astra`
+      if ( ${#OCO} != '3' )	goto	Name_Conflict2
+      if ( ${OCO[3]} == $OC )	goto	Make_view
+      goto	Name_Conflict
+   else
+      echo \#\!/bin/csh -f 		 	>  astra
+      echo 'if (-e $cwd/$0) then'		>> astra
+      echo '   set AWD = $cwd/$0'		>> astra
+      echo 'else'				>> astra
+      echo '   set AWD = $0'			>> astra
+      echo 'endif'				>> astra
+      if ( ${PLATF} != '' )	then
+         echo '# Remove	the next line for multi-platform installation' >> astra
+         echo 'setenv ObjectCode '${OC}		>> astra
+      endif
+      echo 'exec ${AWD:h}/Runastra $*'		>> astra
+      chmod u+x astra
+   endif
+Make_view:
+   if ( -e view ) then
+      if ( ${PLATF} == '' )	goto	Make_user
+      set OCO = `grep ObjectCode view`
+      if ( ${#OCO} != '3' )	goto	Name_Conflict2
+      if ( ${OCO[3]} == $OC )	goto	Make_user
+      goto	Name_Conflict
+   else
+      echo \#\!/bin/csh -f			>  view
+      echo 'if (-e $cwd/$0) then'		>> view
+      echo '   set AWD = $cwd/$0'		>> view
+      echo 'else'				>> view
+      echo '   set AWD = $0'			>> view
+      echo 'endif'				>> view
+      if ( ${PLATF} != '' )	\
+         echo 'setenv ObjectCode '${OC}		>> view
+      echo 'exec ${AWD:h}/Review $*'		>> view
+      chmod u+x view
+   endif
+   chmod ugo+x .
+
+Make_user:
+cd ${AUSER}
+
+#foreach SUBD (equ equ/log exp exp/cnf exp/equ exp/nbi udb )
+foreach SUBD ( udb )
+   foreach A ( ${AROOT}/${SUBD}/* )
+      if ( !(-e "$SUBD/$A:t") ) cp -r $A $SUBD/
+   end
+#     cp -r -u ${AROOT}/${SUBD}/* $SUBD/
+end
+chmod u+w equ/                >& /dev/null
+chmod u+w equ/*               >& /dev/null
+chmod u+w equ/*/*             >& /dev/null
+chmod u+w exp/                >& /dev/null
+chmod u+w exp/*               >& /dev/null
+chmod u+w exp/*/*             >& /dev/null
+chmod u+w exp/*/*/*           >& /dev/null
+
+if ( !(-e ./tmp/printout) )  then
+   echo \	write"(*,*)"TIME,ROC > ./tmp/printout
+endif
+if ( !(-e ./tmp/astra.log) )  cp ./.exe/astra.log ./tmp/
+chmod 644 ./tmp/astra.log
+if ( !(-e ./tmp/declar.usr) ) touch ./tmp/declar.usr
+if ( !(-e ./tmp/impei.msg) )  ln -s ${AROOT}/.exe/impei.msg ./tmp/
+touch ./tmp/astra.hi
+touch ./tmp/astra.ipc
+
+if ( !(-e .usr/) )        mkdir .usr
+if ( !(-e .usr/${OC}) )   mkdir .usr/${OC}
+if ( !(-e .tsk/${OC}) )   mkdir .tsk/${OC}
+if ( !(-e .res/${OC}) )   mkdir .res/${OC}
+
+if ( !(${?ObjectCode}) )	then
+   setenv ObjectCode ${OC}
+   source ${AUSER}/.exe/astrarc || goto	End
+   unsetenv ObjectCode
+else if ( $PLATF != "" ) then
+   set OCO = $ObjectCode
+   setenv ObjectCode ${OC}
+   source ${AUSER}/.exe/astrarc || goto	End
+   setenv ObjectCode ${OCO}
+   unset OCO
+else
+   source ${AUSER}/.exe/astrarc || goto	End   
+endif
+
+if ( -e ${AUSER}/.usr/${OC}/user.a ) goto LinkJAMS
+cp ${AROOT}/.lbr/${OC}/user.a .usr/${OC}/user.a
+chmod u+w .usr/${OC}/user.a
+
+#goto LinkJAMS		# Moved to MAKER
+#cd ${AUSER}/tmp
+#echo \ \ \ \ \ \  end > dummy.f
+#(${AFC} dummy.f) #>& /dev/null
+#ar r ${AUSER}/.usr/${OC}/user.a dummy.o	>& /dev/null
+#ranlib ${AUSER}/.usr/${OC}/user.a		>& /dev/null
+#rm dummy.*
+#cd ${AUSER}
+
+LinkJAMS:
+   if ( !(-e /u/sim/sh/newsimuser) )   	goto	Done
+   if ( -e $HOME/cmg/catalog && -e $HOME/astra/runs )	goto	Done
+   echo \ 
+   echo -n \ \ Do you wish to configure ASTRA for usage with JAMS 
+   echo -n " (y or n)? "
+   set ATEST = $<
+   echo \ 
+   if ( $ATEST != "y" )			goto	Done
+   echo \ \ OK, creating JAMS interface
+   echo \ 
+   if ( !(-e $HOME/astra) )		mkdir $HOME/astra
+   if ( !(-e $HOME/astra/runs) )       	mkdir $HOME/astra/runs
+   cp /home/gperev/astra/runs/* 	$HOME/astra/runs/	>& /dev/null
+   if ( ${?GUSR} ) 			goto	Done
+   if ( -x /u/sim/sh/newsimuser )   	then
+      /u/sim/sh/newsimuser
+   else
+      echo \ 
+      echo "    "You have no execute permission for the installation script
+      echo \ 
+      echo "    "Please contact \ \"Gerard Corrigan@jet.uk\"
+   endif
+
+Done:
+#alias Astra ${AUSER}/.exe/astra
+#alias View  ${AUSER}/.exe/view
+#
+#echo "      "For this session aliases \"Astra\" and \"View\" are created
+echo \ > memo
+echo \ >> memo
+echo "      *************************************************" >> memo
+echo "      **                                             **" >> memo
+echo "      **  THE ASTRA PROGRAMMING SYSTEM IS INSTALLED  **" >> memo
+echo "      **                                             **" >> memo
+echo "      *************************************************" >> memo
+echo \  >> memo
+echo \  >> memo
+echo "      Create aliases:  "\"Astra\""  for  " ${AUSER}'/.exe/astra'>> memo
+echo "                 and   "\"View\""   for  " ${AUSER}'/.exe/view' >> memo
+echo \  >> memo
+echo \  >> memo
+echo "      For getting help enter:" >> memo
+echo \  >> memo
+echo "Astra -h" >> memo
+echo \  >> memo
+echo \ \ \ or >> memo
+echo \  >> memo
+echo "View -h" >> memo
+#if ( ${?ObjectCode} && $OC != ${ObjectCode} ) then
+#   echo \ >> memo
+#   echo \ >> memo
+#   echo \>\>\>  Warning \>\>\>\ Run \"unsetenv ObjectCode\" \
+#		before starting Astra >> memo
+#endif
+echo \  >> memo
+
+cat memo 
+mail `whoami` < memo 		&& rm memo
+
+# Test also "hostname --fqdn" fully qualified domain name"
+set ATHOST = `uname -n`
+if ( ${#ATHOST} != 1 ) set ATHOST = `hostname -s`
+if ( ${#ATHOST} != 1 ) goto End
+set ATHOST = `nslookup ${ATHOST} | grep -i name`  > & /dev/null
+if ( ${#ATHOST} == 2 ) then
+   set ATHOST = ${ATHOST[2]}
+else if ( ${#ATHOST} == 0 )   then
+   unset ATHOST			# Detection of hostname failed
+endif
+#   echo ATHOST = $ATHOST
+if ( !(${?ATHOST}) ) set ATHOST = `uname -n`"."`domainname`
+if ( !(${?ATHOST}) ) set ATHOST
+
+echo \ > report
+if ( ${PLATF} != '' ) echo -n \ Single-platform link \"$OC\"	>> report
+if ( ${PLATF} == '' ) echo -n \ Multi-platform link		>> report
+echo \ has been created on `date`				>> report
+echo -n \ `whoami`"@"$ATHOST":"$AUSER				>> report
+echo "  ->  "$AROOT"("$OC")"					>> report
+echo \  >> report
+if ( (-d ${AROOT}/.rep) && (-w ${AROOT}/.rep) )	then
+   ( cat report >> ${AROOT}/.rep/`whoami` ) >& /dev/null
+else 
+   echo " >>> Warning >>> .rep/" is unwritable
+endif
+( mail astra@ipp.mpg.de < report )	>& /dev/null
+if ( $PLATF != '' && ${?ObjectCode} ) then
+   echo \ >> report
+   echo \>\>\>  Warning \>\>\>\ Run \"unsetenv ObjectCode\" \
+		before starting Astra >> report
+endif
+echo \  >> report
+rm report
+goto End
+
+Unknown_platform:		# PLATFORM is incompatible with kernel
+echo \ 
+echo \ 
+echo " >>> Installation error >>> Unknown platform"
+#echo \ \ \ \ 
+if ( ${PLATF} != '' )	then
+#   echo "     Single-platform kernel requested"
+#   echo \ \ \ \ 
+   echo "     Check the 3rd input parameter "\"$3\".
+else
+   echo "     Multi-platform kernel requested"
+#   echo "     the current platform "\"${ObjectCode}\" is unknown
+endif
+#echo \ 
+#echo \ \ \ \ For more details contact \ \"astra@ipp.mpg.de\"
+goto End
+
+Name_Conflict:
+echo \ 
+echo \ 
+tput bold
+echo -n "   >>> Installation error >>>"
+tput sgr0
+echo " Platform conflict."
+echo "   Single-platform link "\"Astra\@${OCO[3]}\" is found.
+echo "   A new platform "\"Astra\@$3\" is requested.
+echo "   Convertion to multi-platform installation requires"
+echo "   editing files "\"$AUSER/.exe/astra\" and \"$AUSER/.exe/view\"
+goto End
+
+Name_Conflict1:
+echo \ 
+echo \ 
+tput bold
+echo -n "   >>> Installation error >>>"
+tput sgr0
+echo " Platform conflict."
+echo "   Single-platform link "\"Astra\@${OCO[3]}\" is found.
+echo "   Convertion to multi-platform installation requires"
+echo "   editing files "\"$AUSER/.exe/astra\" and \"$AUSER/.exe/view\"
+echo \ 
+echo \ 
+goto End
+echo \ \ You can remove existing Astra
+echo \ \ To continue installation enter the appropriate platform name
+echo \ \ or hit \<Return\> for exit.
+echo \ 
+echo -n  Your choice: \>\ 
+set PLATF = $<
+if ( ${PLATF} == '' ) goto End
+set ATEST = `ls -1 ${AROOT}/.lbr/${PLATF}`
+if ( ${#ATEST} == 0 ) echo \ \ \ The name \"${PLATF}\" is not valid
+if ( ${#ATEST} != 0 ) goto Start
+goto End
+
+Name_Conflict2:
+echo \ 
+echo \ 
+echo " >>> Installation error >>> Inconsistency in file "\".exe/astrarc\"
+goto End
+
+Name_Conflict3:
+echo \ 
+echo \ 
+echo " >>> Installation error >>> Multi-platform Astra is found"
+echo "     The requested single-platform link "\"$OC\" cannot be created
+echo "     You can extend your multi-platform link by setting "
+echo "                    the environment variable "\"$OC\"
+goto End
+
+Arc_error:
+echo \ 
+echo \ 
+echo \>\>\>  Error in file ${AROOT}/.exe/astrarc 
+echo \ 
+goto End
+
+End:
+echo \ 
+echo \ 

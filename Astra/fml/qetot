@@ -1,0 +1,4 @@
+C QETOT [MW]:	Integral {0,R} ( PETOT ) dV
+C			(Yushmanov 11-JAN-89)
+	IF(J.EQ.1)	QETOT=0.
+	QETOT=QETOT+PETOT(J)*VR(J)*HRO

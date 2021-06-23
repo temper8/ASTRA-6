@@ -1,0 +1,5 @@
+C HANAG [m#2/s]:	Heat conductivity Anomalous Neo-ALcator - Goldston
+	YHANA	=143.*SQEPS(J)**2*MU(J)/(NE(J)*RTOR*SQRT(AMAIN(J)))
+	YGLD	=33.*SQRT(QTOTR(ABC)/(ELONG*AMAIN(J)))*
+     '			SQEPS(J)**3.26/RTOR**.12
+	HANAG	=SQRT(YHANA**2+YGLD**2)

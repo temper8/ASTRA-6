@@ -1,0 +1,3 @@
+C CUOHM [MA/m^2] - Ohmic current density
+C			(Pereverzev 17-FEB-00)
+	CUOHM=CC(j)*ULON(j)/(RTOR*GP2)

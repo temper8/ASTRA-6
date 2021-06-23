@@ -1,0 +1,2 @@
+C FA [m]:	Minor radius in the mid-plane (the same as AMETR)
+	FA=AMETR(j)

@@ -1,0 +1,9 @@
+C SVD1 [10^19m^3/s]:	The formula is a fit to D-D reaction rate
+C	according to Putvinskiy
+C	D+D=n(2.452MeV)+3He(0.817MeV)
+C	Use:	P3He=Nd*Nd*SVD1*817./625.	[MW/m^3]
+C	Use:	Neutron_Source=Nd*Nd*SVD1	[10^19/m^3/s](Neutrons)
+C			(Yushmanov 11-JUN-87)
+	YSVD=TI(J)**.333333
+	SVD1=0.16247+0.001741*TI(J)-0.029*EXP(-0.3843*SQRT(TI(J)))
+	SVD1=SVD1*EXP(-18.8085/YSVD)/YSVD**2	

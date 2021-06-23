@@ -1,0 +1,5 @@
+C HAITR Heat conductivity Anomalous based on ITER-scaling
+C	hi(r)=r^2/tau(P(r))			 Pereverzev (06.08.91)
+	YRO=(J-.5)*HRO
+	HAITR=ABS(QTOTR(YRO))/(.038*IPL**0.85*SQRT(AMAIN(1)*ELON(NA1))
+     *	*(BTOR*ABC*RTOR)**.2*RTOR*(ABC*NEAVR(ROC)+.001)**.1)*YRO**2

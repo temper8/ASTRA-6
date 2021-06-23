@@ -1,0 +1,6 @@
+C PENEU [MW/m#3]: Electron heat losses due to cold neutrals Ionization
+C	PENEU=<sigma*v>*Ne*Nn*(0.013keV)
+C	PE=...-PENEU
+C			(Pereverzev 14-MAY-87)
+	INCLUDE	'fml/svie'
+	PENEU	=2.08E-5*SVIE*(NNCL+NNWM)*NN(J)*NE(J)

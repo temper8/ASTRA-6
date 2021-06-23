@@ -1,0 +1,4 @@
+C PBR3 [MW/m#3]: Bremsstrahlung radiation due to 3rd impurity species
+C	N.A.Uckan//	ITER-TN-PH-8-6	Final Draft , 30 Nov.1988
+c							Pereverzev 03-Apr-03
+	PBR3=5.06E-5*NE(J)*SQRT(TE(J))*NIZ3(J)*ZIM3(J)*ZIM3(J)

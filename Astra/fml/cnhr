@@ -1,0 +1,16 @@
+C CNHR [1/mkOM*m]:	Conductivity Neoclassical Hirshman
+C	C=CCSP*(1-fT/(1 + s Ve*))(1 - CR fT/(1 + s Ve*))
+C		CR=.56/ZZ*(3.-ZZ)/(3.+ZZ);	s=.58+.2*ZZ
+C		S.P.Hirshman, R.J.Hawryluk, B.Birge
+C		Nucl.Fusion -Letters v.17, No.3 (1977) 611
+C			(Polevoy 14-MAR-1990)
+	ZZ=ZEF(J)
+	CNHR=1.-SQEPS(J)*SQEPS(J)
+	CNHR=1.-CNHR*SQRT(CNHR)/(1.+1.46*SQEPS(J))/SQRT(2.-CNHR)
+C (GP 23-10-97) in the original paper:
+C	FT=1.-YFT*SQRT(YFT)/(1.+1.46*SQEPS(J))
+	include	'fml/nues'
+	CNHR=CNHR/(1.+(.58+.2*ZZ)*NUES)
+	CNHR=(1.-CNHR)*(1.-.56/ZZ*(3.-ZZ)/(3.+ZZ)*CNHR)
+	include	'fml/ccsp'
+	CNHR=CCSP*CNHR

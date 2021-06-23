@@ -1,0 +1,390 @@
+!----------------------------------------------------------------------------
+! Equ file "m0dc" is based on the ITER-99 (ELMy H-mode) scaling
+!----------------------------------------------------------------------------
+! This model is similar to "m0dc" but its control algorithm is based on 
+! the subroutine SETFD which differs from SETFC by a step-wise control:
+! Steps in CHE1 are finite and can happen after a finite time interval.
+!----------------------------------------------------------------------------
+!====================  Grad-Shafranov equation ==============================
+!SETSTATUS():;
+!NEQUIL=41;					! 3-moment equilibrium solver
+!====================  Ion densities ========================================
+AMAIN=AMJ;	ZMAIN=ZMJ;	! mass & charge of main ion
+
+AIM1=9;				! 1st impurity species is Be
+ZIM1=ZIBE;			! Be charge is taken as coronal Z_Be
+NIZ1=CIMP1*NE;			! Be density is fraction of n_e
+
+AIM2=40;			! 2nd impurity species is Argon
+ZIM2=ZIAR;			! Ar charge is taken as coronal Z_Ar
+!NIZ2=CIMP2*NE;			! Ar density is defined below
+
+AIM3=12;			! 3rd impurity species is C
+ZIM3=ZICAR;			! C charge is taken as coronal Z_C
+NIZ3=CIMP3*NE;		        ! C density is fraction of n_e
+
+NTRIT=.5*(NE-NIBM-2*NALF-ZIM1*NIZ1-ZIM2*NIZ2-ZIM3*NIZ3);	! n_T
+NDEUT=NTRIT+NIBM;	                    			! n_D
+NI=NDEUT+NTRIT+NALF+NIZ1+NIZ2+NIZ3;			! all-ion density
+!====================  Impurity radiation ==================================
+!   Contribution to Z_eff:
+ZEF1=ZIBE*(ZIBE-1.)*NIZ1/NE;	! Delta(Z_eff) due to Be
+ZEF2=ZIAR*(ZIAR-1.)*NIZ2/NE;	! Delta(Z_eff) due to Ar
+ZEF3=ZICAR*(ZICAR-1.)*NIZ3/NE;	! Delta(Z_eff) due to C
+ZEF=ZZEF;			! Here: ZEF=1+2*NALF+ZEF1+ZEF2+ZEF3
+PBOL1=PRBER*NIZ1*NE;		! PBOL1 - entire radiation due to Be
+PBOL2=PRARG*NIZ2*NE;		! PBOL2 - entire radiation due to Ar
+PBOL3=PRCAR*NIZ3*NE;		! PBOL3 - entire radiation due to C
+! CAR5=PBRAD-5.06E-5*NE*NE*sqrt(TE)*(ZEF1+ZEF2+ZEF3)
+PBOL1=PBOL1-PBR1;		! PBOL1 - line radiation due to Be, MW/m^3
+PBOL2=PBOL2-PBR2;		! PBOL2 - line radiation due to Ar, MW/m^3
+PBOL3=PBOL3-PBR3;		! PBOL3 - line radiation due to C,  MW/m^3
+CAR5=PBRAD;			! Bremstrahlung
+PRAD=PBOL1+PBOL2+PBOL3+CAR5+CRAD2*PSYNC; ! Total radiation power density
+PRADX=PBOL1+PBOL2+PBOL3; 	! Total line radiation power density
+!----------------------------------------------------------------------------
+!==================== Auxiliary heating =====================================
+!SETFUS(8.d1,CF7,CF8):0.01;	! Feed back control of P_alf by means of P_NB
+NBI:1.0;	CNB1=2;		! NBI heating routine; CNB1 - number of beams
+!----------------------------------------------------------------------------
+!==================== Gas puff neutrals =====================================
+NEUTEN:;					! Subroutine call
+NNCX=CNEUT1;				! NNCX is a number of iterations
+CV12=10*IPL/GP/ABC**2;			! Greenwald density
+SETNAV(0.85*CV12,CF9):0.001;		! Flux (parameter NNCL) adjustment
+!------------------------------------//--------------------------------------
+!============== Transport model based on 0D scaling =========================
+!   Parabolic profile in the plasma core:            rho_N < CBND1
+!   Ion neoclassics inside a pedestal zone:  CBND1 < rho_N < 1
+
+CAR13=0.74*(1+3*FX**2)*(1-XSTEP(CBND1)); Parabolic profile for the core
+!CAR15=xstep(CBND1)*SQZ;		! Optionally, a squeezing factor
+!CV15=frmax(CAR15);		!     due to E_r by Shaing & Hazeltine
+!CAR14=CV15*CAR14;		!     can be included
+
+CF15=QDTFB+QJOULB+QBTOTB;	! Total input power
+CF16=CF15-QRADB+.667*QRADXB;	! minus radiation
+CV3=max(1.e-8,CF16);		! 
+CV1=THQ99/CV3**0.69;		! tau_E(99) scaling for ELMy H-mode
+CV2=max(1.e-6,TAUEB);		! tau_E, calculated confinement time
+CV5=(WIB+WEB)/CV3;		! tau_E_instant=3*W/P_input
+
+!----------------------	Algorithm for 0D scaling control -------------------
+! CV5 - Actual energy confinement time
+! CV1 - Energy confinement time according to H99y scaling
+! CHE2 - Enhancement factor
+! CV1*CHE2 - Required energy conf. time (command signal)
+! CHE1 - Actuator (coefficient in front of chi_e)
+! CHE3, CHE4 - control parameters
+! CHE3 - proportional gain
+! CHE4 - derivative gain
+SETFC(CV5-CV1*CHE2,CHE1,CHE3,CHE4,0.d0):;
+!--------------	Control algorithm for Fusion power -------------------------
+! CFUS1 - Actual fusion power
+! CFUS2 - Required fusion power (CFUS1-CFUS2 - command signal)
+! CF7   - Actuator (additional heating power)
+! CFUS3, CFUS4 - control parameters
+! CFUS3 - proportional gain
+! CFUS4 - derivative gain
+SETFD(CFUS1-CFUS2,CF7,CFUS3,CFUS4,0.d0):;
+CAR13=CAR13/CV1/CHE1;		! chi(r)/tau_E/CHE1 (CHE1 ~ enhancement factor)
+CAR14=XSTEP(CBND1)*HNCHI;	! Ion neoclassics inside a pedestal
+HE=CAR13+CAR14;			! Electron heat conductivity
+XI=CHI1*CAR13+CAR14;		! Here CHI1 is a control parameter (default=2)
+DN=CAR13+5.e-2*CAR14;		! Electron diffusion coefficient
+CN=0;		-VP*VRHH;	! As in A.R.P. the Ware pinch is discarded
+!----------------------------------------------------------------------------
+!====================  Particle transport ===================================
+NE:;				! Solve equation for n_e
+NEB=CF6;			! Boundary condition (default 0.6x10^19)
+NE=0.75*NEX;			! Initial condition as read from data file
+SN=SNEBM;	SNN=SNNEU;	! Particle source from wall and fast neutrals
+!----------------------------------------------------------------------------
+!--------------------- Helium transport -------------------------------------
+NALF=F1;			! Set n_He as a solution to eqn:
+F1:;				! Solve transport eqn for f1
+F1B=CIMP4;			!    with the boundary (CIMP4=0.153)
+F1=CIMP4;			!    and initial condtions
+DF1=DN;				! The same diffusion coefficient as for elns
+VF1=CN;				! The same pinch velocity
+SF1=NDEUT*NTRIT*SVDT;		! He source from D-T reaction
+!----------------------------------------------------------------------------
+!--------------	Control algorithm for the Argon transport -------------------
+CSOL1=CF15-QRADB;		! Actual heat flux through the separatrix
+! CSOL2  - Required energy flux through the separatrix
+! CBND2 - Actuator (Ar density at the separtrix)
+! CSOL3, CSOL4 - control parameters
+! CSOL3 - proportional gain
+! CSOL4 - derivative gain
+SETFA(CSOL1-CSOL2,CBND2,CSOL3,CSOL4,0.d0):10:50000;
+!----------------------------------------------------------------------------
+!--------------------  Ar transport -----------------------------------------
+!NIZ2=CIMP2*NE;			! Prescribe distribution of n_Ar
+!NIZ2=(F2+CIMP2)*NE;		! Set n_Ar as a solution to eqn:
+NIZ2=F2+CIMP2*NE;		! Set n_Ar as a solution to eqn:
+F2:;				! Solve transport eqn for f2
+F2B=CBND2;			!    with the boundary CBND2
+F2=CBND2;			!    and initial condtions
+DF2=DN;				! The same diffusion coefficient and
+VF2=CN;				! the same pinch velocity as for elns
+!----------------------------------------------------------------------------
+!====================  Heat transport equations =============================
+TE*:;				! Solve eqn for T_e
+TEB=CF1;			! Boundary condition 0.125*(TEAVB+TIAVB);
+TE=TEX;				! Initial condition
+! Electron RHS comprises:  P_eNB+P_OH+P_ei+P_eDT-ionization_losses-radiation
+PE=PEBM+POH+PEDTF-PENEU-PRAD;
+TI*:;				! Solve eqn for T_i
+TIB=CF1;			! Boundary condition
+TI=TIX;				! Initial condition
+CAR6=CNEUT2*PIONZ;		! Ionization can be optionally switched off
+CAR7=CNEUT3*PICX;		! The same for charge exchange
+PI=PIBM+PIDTF+CAR6-CAR7;	! P_iNB-P_ei+P_iDT-losses_due_to_neutrals
+!----------------------------------------------------------------------------
+!====================  Poloidal field equation ==============================
+!HC=HCKIM;	DC=DCKIM;	XC=XCKIM;	! Bootstrap due to Kim
+HC=HCSA;	DC=DCSA;	XC=XCSA;	!    or due to Sauter-Angioni
+! Additionally, BSAL calculates the bootstrap current due to alpha-particles
+BSAL(CAR4,CF4):;		! CAR4 - current density, CF4 - total current
+CD=CUBM+CAR4;			! NB driven current + alpha driven current
+CC=CNHR;			! Neoclassical conductivity
+CU:EQ;				! Solve current diffusivity eqn
+!MU=MUX;			! Set initial profile for \mu=1/q=MUX
+!MU=FPR+.3;
+!CU=CUX;			!     or, optionally, for j=CU
+CU=FPR;
+!----------------------------------------------------------------------------
+!====================  Sawtooth oscillations ================================
+!MIXINT(CF10,CF11)::::M>;	! Kadomtsev's reconnection, CF11=given_period
+!----------------------------------------------------------------------------
+!====================  Auxiliary quantities =================================
+CV6=1.6E-3*VINT(PBPERB);	! perpendicular energy of fast ions
+CV7=0.8E-3*VINT(PBLONB);	! parallel energy of fast ions
+CFUS1=QDTFB;			! Total alpha power
+CV9=timder(CFUS1);		! Its time derivative
+CV10=NEAVB;			! Volume average density
+CV11=timder(CV10);		! Its time derivative
+CAR14X=SNN*NE;			! Particle source from the wall neutrals
+CAR16=(FP-FPC)/(FPB-FPC);	CV16=AFR(RFVAL(CAR16,0.95));
+!----------------------------------------------------------------------------
+!====================  Radial electric field (not used) =====================
+!VTOR=VTORX;			! Toroidal velocity from measurements (here 0)
+VPOL=VPSWW;			! Neoclassical poloidal velocity
+ER=BTOR*(VDIA-VPOL+VTOR*MU*FRS/RTOR);	! Radial electric field
+!----------------------------------------------------------------------------
+! Initial values to override exp settings
+!TE=20*FPR+CF1;	TI=20*FPR+CF1;	NE=10*FPR+CF6;	CU=FPR;
+!----------------------------------------------------------------------------
+!===================== Profile output =======================================
+!---------  Current balance -------------------------- Screen number (0) ----
+j\CU\3;		jBS\CUBS+CAR4\3;g33\G33;	Vtor\UPL;
+jNB\CUBM\3;	mu\MU\1;	psi\FP;		shir\SHEAR\2.;
+joh\CUOHM\3;	jBSa\CAR4\3;	g22\G22\5;	V||\ULON;	
+jBSm\CUBS\3;	q\1./MU\5;	l_i\LINT;	sigm\CC;	!betj\BETAJ;
+!---------  Overview --------------------------------- Screen number (1) ----
+n_e\NE\-1;		! Electron density
+T_e\TE\-3;		! Electron temperature
+Pfus\PDTF;		! Heat source due to alphas
+RLcr\RLTCR\20;		! T_i critical gradient length IFS/PPPL
+D_e\DN\1;		! Electron diffusivity
+K_e\HE\2;		! Electron heat conductivity
+!DN\DN
+!CN\CN
+n_Ar\NIZ2\-2;		! Actual Argon density
+SN\SN
+!gA\GAITG\1.e5;		! gamma_ITG due to Kotschenreuther, Dorland  et al.
+
+n_d\NDEUT\-1;		! Deuton density
+T_i\TI\-3;		! Ion temperature
+PNB\PBEAM;		! NB heating power density
+RLTi\RTOR/LTI\20;	! T_i gradient length
+f2\F2;			! 
+K_i\XI\2;		! Ion heat conductivity
+nArf\CIMP2*NE\-2;	! Reference Argon density
+SNNE\SNN*NE
+!rho\RHO;
+!---------  Overview --------------------------------- Screen number (2) ----
+Gsrc\QNTOT\1500;	! Particle source
+Gsrc\QNTOT[1.9]\1500;	! Particle source at the edge
+Gd\-DN*grad(NE);	! Particle diffusive flux
+Se\SNTOT;		! Total particle source
+QeFl\QE\-6;		! Total electron heat flux
+QiFl\QI\-6;		! Total ion heat flux
+tauE\TAUE\-5;		! Total energy confinement time
+taEe\TAUEE\-5;		! Electron energy confinement time
+
+Gflx\QN\1500;		! Diffusive particle flux
+Gflx\QN[1.9]\1500;	! Diffusive particle flux at the edge
+Gv\-CN*NE;		! Particle pinch flux
+SeNB\SNEBM;		! Particle source due to NBI
+QiN\QINEU;		! Ion heat losses due to cold neutrals
+QeN\QENEU;		! Electron heat losses due to cold neutrals
+\;
+taEi\TAUEI\-5;		! Ion energy confinement time
+!---------  Integrated power sources ---------------- Screen number (3) ----
+QeSr\QETOT\100;		! Total electron input power
+Qei\QEICL;		! Electron - ion heat exchange
+QNBI\vint(PBEAM);	! Total NBI power input
+Qion\vint(CAR6);	! Ion heat losses due to ionization
+QiSr\QITOT\100;		! Total ion input power
+QeGN\2.5*GN*TE\-6;	! Electron convective heat flux (5/2*Gamma*T_e)
+QeNB\vint(PEBM);	! NBI power input to electrons
+QDTf\QDTF;		! Total D-T power
+
+QeFl\QE\100;		! Total electron heat flux
+QeiG\QEIGN;		! Electron - ion heat exchange
+QOH\QOH;		! Ohmic heating
+Qicx\QICX;		! Ion heat losses due to charge exchange
+QiFl\QI\100;		! Total ion heat flux
+QiGN\2.5*GN*TI*NI/NE;	! Ion convective heat flux (5/2*Gamma*n_i*T_i/n_e)
+QiNB\vint(PIBM);	! NBI power input to ions
+Qrad\QRAD;		! Radiation losses
+!----------  Local power densities ------------------- Screen number (4) ----
+QEdt\QEDWT;		! d(W_e)/dt
+Pcx\CNEUT3*PICX;	! Ion charge exchange losses
+Pedt\PEDTF;		! Electron heating due to D-T reaction
+Pi\PITOT;		! Total power input to ions
+PDTf\PDTF;		! D-T power density including fast particles
+PeN\PENEU;		! Electron losses due to ionization
+Pe\PETOT;		! Total power input to electrons
+PeNB\PEBM;		! Electron heating due to NBI
+
+QIdt\QIDWT;		! d(W_i)/dt
+Pion\CNEUT2*PIONZ;	! Ion heat losses due to ionization
+Pidt\PIDTF;		! Ion heating due to D-T reaction
+Pei\PEICL;		! Electron - ion heat exchange
+PDT1\PEDT1+PIDT1;	! D-T power density (alternative)
+PiN\PINEU;		! Ion heat losses due to cold neutrals
+Prad\PRAD;		! Radiation losses
+PiNB\PIBM;		! Ion heating due to D-T reaction
+!---------  Impurities ------------------------------- Screen number (5) ----
+dzBe\ZEF1;		! Be contribution to Z_eff
+dZHe\2*NALF/max(.01,NE);! He contribution to Z_eff
+Zeff\ZEF;		! Total Z_eff
+lnNN\1.+log(NN)\10;	! Wall neutral density distribution
+n_A~\F2+CIMP2*NE;	! test  density
+n_He\NALF;		! He density
+nuis\NUIS\1;		! \nu_i*
+T_i\TI;	 		! Ion temperature
+
+dzAr\ZEF2; 		! Ar contribution to Z_eff
+dzC\ZEF3; 		! C  contribution to Z_eff
+SNNn\CAR14X;		
+tpf\TPF;		! Trapped particle fraction
+n_Ar\NIZ2;		! Ar density
+n_Be\NIZ1;		! Be density
+nues\NUES\1;		! \nu_e*
+T_N\TN;			! Neutral temperature
+!---------  Current balance -------------------------- Screen number (6) ----
+j\CU\3;		! Total current density
+jBS\CUBS+CAR4\3;	! Bootstrap current due to (bulk & alpha) particles
+wExB\ROTSH;		! Rotational shear
+Vtor\UPL;		! Toroidal loop voltage
+jNB\CUBM\3;		! NB driven current density
+mu\MU\1;		! Rotational transform
+psi\FP;
+shir\SHEAR\2.;		! Local magnetic shear
+
+joh\CUOHM\3;		! Ohmic current density
+jBSa\CAR4;		! Bootstrap current due to alpha particles alone
+betj\BETAJ;		! Beta poloidal
+V||\ULON;		! Longitudinal loop voltage
+jBSm\CUBS\3;		! Bootstrap current density due to bulk particles
+q\1./MU\5;		! Safety factor
+G22\G22;		! 
+sigm\CC;		! Current conductivity
+!---------   ------------------------------- Screen number (7) ----
+PeDT\PEDTF;
+PeDT\PEDT1;
+PeDT\PDT*(1.-PAION1);
+P_al\PEDTF+PIDTF;
+f_e\PAION;
+f_e1\PAION1;
+\;
+P_al\PEDT+PIDT;
+
+PiDT\PIDTF;
+PiDT\PIDT1;
+PiDT\PDT*PAION1;
+P_a1\PEDT1+PIDT1;
+!---------------------------------------------------------------------------
+!====================  Time output settings =================================
+!-------  Overview  ---------------------------------- Screen number (1) ----
+Pfus_.005*CFUS1_100;	! Total fusion power, GW
+alfa_1/CHE1_1;
+!act_CBND2;		! Control parameter
+Q_5*CFUS1/(QNBI+1.e-3)_20;	! Fusion "Q"
+tauE_CV5_-6;		! tau_E_instant defined as tau_E=W/P
+Psep_CSOL1_100;		! Heat flux through the separatrix
+H98y_CV5/CV1_1;		! Correction factor
+Paux_QNBI;
+ta98_CV1_-6;		! ELMy H-mode scaling tau_E
+!-------  Power balance (1) -------------------------- Screen number (2) ----
+Ptot_QTOTB;		! Total power input
+PeDT_QEDTFB;		! Total alpha power to electrons
+POH_QOHB;		! Ohmic heating power
+PeNB_vint(PEBMB);	! Total NB power to electrons
+Pei_QEICLB;		! e <-> i heat exchange due to equipartition
+PiDT_QIDTFB;		! Total alpha power to ions
+Prad_QRADB;		! Total radiation power
+PiNB_vint(PIBMB);	! Total NB power to ions
+!-------  Power balance (2) -------------------------- Screen number (3) ----
+Pi_QITOTB;		! Total ion energy source
+PeN_QENEUB;		! Total electron energy source due to wall neutrals
+Qea_QEB;		! Electron heat flux through the outermost surface
+Pion_CNEUT2*QINEUB;	! Total ion energy source due to the wall neutrals
+Pe_QETOTB;		! Total electron energy source
+PCX_QICXB;		! Charge exchange ion energy source
+Qia_QIB;		! Ion heat flux through the outermost surface
+PNB_QBTOTB;		! NB heating power
+!-------  Power balance (3) -------------------------- Screen number (4) ----
+Pin_CF15;		! Total power as used in the scaling
+Pbrs_CRAD1*QBRADB;	! Bremsstrahlung radiation power
+shth_QNBI-QBTOTB;	! NBI shine through
+PrBe_vint(PBOL1B);	! Be radiation power
+dQdt_CV9_10;		! d(P_alpha)/dt
+Psyn_CRAD2*QSYNCB;	! Synchrotron radiation power
+Psep_CSOL1;		! Heat flux through the separatrix
+PAr_vint(PBOL2B);	! Ar radiation power
+!--------  Kinetics  --------------------------------- Screen number (5) ----
+Te0_TEC;		! T_e(0)
+H89_TAUEB/TITER;	! Enhancement factor ITER-89
+Ti0_TIC;		! T_i(0)
+Wequ_WTOTB+0.75*CV6+1.5*CV7; ! Equilbrium plasma energy
+<Te>_TEAVB;		! Volume average T_e
+Zef0_ZEFC;		! Z_eff(0)
+<Ti>_TIAVB;		! Volume average T_i
+Wtot_WTOTB+CV7+CV6;	! Diamagnetic plasma energy
+!--------  Particle balalnce ------------------------- Screen number (6) ----
+ne0_NEC;		! n_e(0)
+Gflx_QNB;		! Particle flux through the outermost surface
+dndt_CV11_1;		! d<n_e>/dt
+SeNN_VINT(CAR14XB);	! Particle source from the wall neutrals
+NNCL_NNCL;		! Cold neutral density 
+Gsrs_QNTOTB;		! Total particle source
+taup_TAUPB;		! Particle confinement time
+SeNB_VINT(SNEBMB);	! Particle source from the beam neutrals
+!---------  Current & Geometry ----------------------- Screen number (7) ----
+Ipl_IPL;		! Plasma current
+V_VOLUME;		! Total plasma volume
+INB_IBMB;		! Beam driven curreny
+S_SLATB;		! Flux surface area
+Ulc_UPLB;		! Plasma surface loop voltage
+li_LINTB;		! Internal inductance
+IBS_IBSB+CF4;		! Bootstarp current
+q95_1/MU(CV16);
+!---------  Miscellaneous  --------------------------- Screen number (8) ----
+betr_BETRB;		! beta_Troyon
+ni0_NIC;		! n_i(0)
+betp_BETAJB;		! beta_pol
+nped_NEB;		! n_e(edge)
+NNCX_NNCX;		! Number of iterations in wall neutral solver
+Tped_TE(AFX(CBND1));	! Pedestal temperature
+Psca_CF16;
+Tedg_CF1;
+!----------------------------------------------------------------------------
+PeDT_QEDTFB;	<ne>_CV10;	Pal_QDTFB;	Pe1_QEDTB;
+PeDT_QEDTB;	nGr_CV12;	Pa1_QDTB;	Pi1_QIDTB;
+n->_0.85*CV12;	NNCL_NNCL;	NNWM_NNWM;	NA1_NA1;
+CB2_CBND2;	ROC_ROC;	li_LINTB;
+!============= Thank you for using ASTRA transport code =====================

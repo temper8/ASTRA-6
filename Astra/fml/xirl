@@ -1,0 +1,7 @@
+C XIRL [m/s]: Heat diffusivity ion anomalous Rebut-Lallia Smoothed
+C Usage: XI=...+HARL*XIRL  or  XI=...+HARLS*XIRL
+C		Internal Report IPP 5/29 (1988)
+C			(Pereverzev 6-AUG-92)
+	include	'fml/tecrl'
+	if(J .lt. NA1)	YGRADT = abs(TE(J+1)-TE(J))/HRO
+	XIRL=ZMAIN(J)*sqrt(TE(J)/TI(J))*max(1.-TECRL/YGRADT,0.d0)

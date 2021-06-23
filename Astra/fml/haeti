@@ -1,0 +1,14 @@
+C HAETI [m#2/s]:  Heat conductivity Anomalous ETA-I
+C	H=2.5*ROi#2*Vti*SQRT(GRAD(Ti)/Ti/Rt)*GRAD(Ln(Ne))*STEP(ETA-Icr/ETA-I)
+C			Nuclear Fusion v. 26 (1986) 1515.
+C			(Yushmanov 24-APR-87)
+	if(J.ne.NA1)	then
+	IF(TI(J).GT.TI(J+1).AND.NE(J).GT.NE(J+1))	THEN
+	ETAI=(1.-TI(J+1)/TI(J))/(1.-NE(J+1)/NE(J))
+	HAETI=22.*EXP(-(1.5/ETAI)**4)/(BTOR**2*ZMAIN(J))
+	HAETI=HAETI*TI(J)*SQRT(AMAIN(J)*ABS(TI(J)-TI(J+1))/HRO/RTOR)
+			ELSE
+	HAETI=0.
+			ENDIF
+		endif
+

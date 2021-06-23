@@ -1,0 +1,4 @@
+C DBOHM [m#2/s]:	Anomalous Diffusion Bohm
+C	DBOHM=c*Te/(e*B*16)
+C			(Pereverzev 15-12-98)
+	DBOHM=62.5*TE(J)/BTOR

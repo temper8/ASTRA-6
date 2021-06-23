@@ -1,0 +1,5 @@
+C HEXP [m#2/s]:	Experimental electron heat conductivity
+C			(G.Pereverzev 11-SEP-90)
+	YR=(J-.5)*HRO
+	HEXP=-625.*QETOTR(YR)/(G11(J)*NE(J)*GRAD(TEX,J))
+

@@ -1,0 +1,4 @@
+C QDVE [MW]:	Integral {0,R} (PDVE) dV
+C			(Pereverzev 9-OCT-07)
+	IF(J.EQ.1)	QDVE=0.
+	QDVE=QDVE+PDVE(J)*VR(J)*HRO

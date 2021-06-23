@@ -1,0 +1,10 @@
+C PEI [MW/m#3/keV]: Electron ion heat exchange due to Coulomb collisions
+C	PEI=3/tauei*Ne*m/M
+C  here tauei[sec]=1.1E-3*T_{e,keV}^{3/2}/[Z_i^2*n_{i,19}*\Lambda]
+C	PE=...+PEI*TI;		PET=...-PEI
+C	PI=...+PEI*TE;		PIT=...-PEI
+C			(Pereverzev 22-JAN-90)
+C			(Corrected  19-JUN-97)
+	include	'fml/coulg'
+	PEI=0.00246*COULG*NE(J)*NI(J)*ZMAIN(J)*ZMAIN(J)/
+     .		(AMAIN(J)*TE(J)*SQRT(TE(J)))

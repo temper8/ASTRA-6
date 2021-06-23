@@ -1,0 +1,16 @@
+C HGBEJ [m#2/s]:	GyroBohm term in JET Transport Model 
+C 		Private communication of 14.01.1999 with a reference to
+C 	V.V.Parail et al. Plasma Physics and Contr. Fusion,  40 (1998) 805
+C				(Implemented by Pereverzev 19-Jan-99)
+C	HGBJ=0.158*sqrt{Ti}/B^2*grad{Ti}
+C	Usage:		HE=2*HBJET+HGBEJ+...
+C			XI=4*HBJET+.5*HGBEJ+...
+C
+	if (J .eq. 1)	then
+	    YHGBEJ = 0.158/HRO/BTOR**2
+	    HGBEJ = .0
+	else
+	    HGBEJ =YHGBEJ*sqrt(TE(J))*abs(TE(J)-TE(J-1))
+	endif
+C=======================================================================
+

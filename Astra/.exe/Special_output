@@ -1,0 +1,34 @@
+exit 0			# Continue execution
+echo $AWD
+echo $AROOT
+if ( ${WHO} != grp && \
+     ${WHO} != cla && \
+     ${WHO} != arp    \
+    )	then
+  tput bold
+  echo "  "
+  echo "      Dear" ${WHO},
+  echo "  "
+  echo "After recent changes in the ASTRA library you might face a problem ..."
+  echo "  "
+  echo -n "Please, contact "
+  tput smso			# enter standout mode
+  tput smul			# enter underline mode
+  tput rmul			# exit underline mode
+  tput bold
+  echo -n " Pereverzev@ipp.mpg.de "
+  tput rmso			# exit standout mode
+  tput bold
+  echo ",   ext: 2602"
+  echo "  "
+  tput sgr0			# turn off all attributes
+endif
+
+  tput bold
+#  echo ">>> The ASTRA code is being updated"
+  echo ">>> The ASTRA code is being maintained"
+  echo ">>> Please, wait a few minutes"
+  tput sgr0
+
+#  exit 0			# Continue execution
+  exit 1			# Stop execution

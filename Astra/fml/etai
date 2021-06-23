@@ -1,0 +1,9 @@
+C ETAI []:  d Ln(Ti) /d Ln(Ne)
+	if(J.ne.NA1)	then
+	IF(ABS(NE(J)-NE(J+1)).GE..001)	THEN
+	ETAI=(TI(J)-TI(J+1))*(NE(J+1)+NE(J))/
+     1	((TI(J+1)+TI(J))*(NE(J)-NE(J+1)))
+		ELSE
+	ETAI=1000.
+		ENDIF
+	endif

@@ -1,0 +1,41 @@
+C HCHGP [m#2/s]:  Heat conductivity Neoclassical Chang and Hinton Ion
+C	Phys.Fl.-1493(1982); Phys.Fl.-3314(1986);
+C			(Pereverzev 23-JAN-92)
+C			(Corrected: 16-DEC-94)
+C	Coulomb logarithm 15 is used
+C:  YHNCHE = epsilon=a/R
+C:  YHNCHZ = alfa = nI*ZI^2/ni*Zi^2
+C:  YHNCH2 = epsilon*Delta'
+C:  YHNCHB = <(B0/B)^2>
+C:  YHNCHF = F
+C:  YHNCHK = ^K2
+C:  YHNCHH = H_p*F
+C:  YHNCHM = mu*
+C:  YHNCH3 = epsilon^1.5*mu*
+C:  YHNCHR = (ro_theta)^2 [m^2]
+	include	'fml/nuis'
+	YHNCHE	= SQEPS(J)**2
+	YHNCHZ	= -1.+NE(J)*ZEF(J)/NI(J)/ZMAIN(J)**2
+	if(J.eq.1)	then
+		YHNCH1	= (RTOR/(RTOR+SHIF(J)))**2
+			endif
+	if(J.lt.NA1)	YHNCH2	= 
+     .		YHNCHE*(SHIF(J+1)-SHIF(J))/(RHO(J+1)-RHO(J))
+	YHNCHB	= 1.+1.5*((1+0.25*YHNCH2)*YHNCHE**2+YHNCH2)
+	YHNCHB	= YHNCHB/(1.+.5*YHNCH2)
+	YHNCHC	= SQRT(1.0-YHNCHE**2)*(1.0+0.5*YHNCH2) /
+     .            (1.0+YHNCH2/YHNCHE**2*(SQRT(1.0-YHNCHE**2)-1.0))
+	YHNCHF	= .5/SQEPS(J)*(YHNCHB-YHNCHC)
+	YHNCHH	= (1+1.33*YHNCHZ*(1+.6*YHNCHZ)/(1+1.79*YHNCHZ))*YHNCHF
+	YHNCHM	= NUIS*(1+1.54*YHNCHZ)
+	YHNCHK	= (.66*(1+1.54*YHNCHZ)+(1.88*SQEPS(J)-1.54*YHNCHE)*
+     *		  (1+3.75*YHNCHZ))*YHNCHB
+	YHNCHK	= YHNCHK/(1+1.03*sqrt(YHNCHM)+0.31*YHNCHM)
+	YHNCH3	= YHNCHM*SQEPS(J)*YHNCHE
+        YHNCHK  = YHNCHK+1.17*YHNCH3*YHNCHH/(1+.74*YHNCH3)
+	YHNCHR	= (RTOR*BTOR*IPOL(J))/(RTOR+SHIF(J))*YHNCHE*
+     +            (ABS(MU(J))+.0001)*ZMAIN(J)
+	YHNCHR	= 2.1E-5*AMAIN(J)*TI(J)/YHNCHR**2
+	INCLUDE	'fml/nui'
+	HCHGP	= YHNCHK*NUI*SQEPS(J)*YHNCHR
+

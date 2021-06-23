@@ -1,0 +1,477 @@
+#!/bin/csh -f
+
+set AWD = $0 ; set AWD = ${AWD:h}
+if ( $AWD == 'Astra' || $AWD == '.' )     then
+   cd ..
+else if ( $AWD != '.exe' && $AWD != './.exe' ) then
+   cd ${AWD:h}
+endif
+set AWD = `pwd`/
+#set AWD = $0 ; set AWD = ${AWD:h} ; set AWD = ${AWD:h}/ ; cd ${AWD}
+cd for ; set AROOT = `pwd` ; set AROOT = ${AROOT:h}/ ; cd ${AWD}
+if ( $AROOT == $AWD ) set M_ASTER
+#setenv HOME_ASTRA_PATH $AWD
+set WHO  = `whoami`
+
+source .exe/getaargs || exit 
+
+# Define shell variables:
+#if ( ${?ObjectCode} && -e .exe/astrarc ) then
+if ( -e .exe/astrarc ) then
+   source .exe/astrarc || exit
+   set PROFT = ${PLATFORM}/
+else
+   echo " >>> ERROR >>> File" \".exe/astrarc\" "is not found"
+   goto	End
+endif
+
+if ( ${?M_ASTER} )	then
+   foreach A (.lbr .tsk .res)
+      if ( -d ./$A ) then
+         if ( -d ./$A/${PROFT} )	goto	Nextdir
+         mkdir   ./$A/${PROFT}
+      else
+         mkdir   ./$A
+         mkdir   ./$A/${PROFT}
+      endif
+   Nextdir:
+   end
+   if ( !(-d ./dat/) ) mkdir   ./dat
+endif
+if ( -e .lbr/${PROFT}Special_output ) source .lbr/{$PROFT}Special_output \
+						|| exit
+Setvars:
+setenv ALBR .lbr/${PROFT}
+set FROM = `uname`
+set ATSK = .tsk/${PROFT}
+if ( ${?M_ASTER} )	then
+   set ULBR = 
+   set AHIS = ${AROOT}tmp/astra.rep
+else
+   set ULBR = .usr/${PROFT}user.a
+   set AHIS = ${AROOT}.rep/astra.hi
+endif
+set ATMP = ./
+unset ARSN
+if ( -d /tmp/ && -w /tmp/ ) then
+   set ATMP = /tmp/${AWD:t}${WHO}/
+   set ARSN = ${ATMP}${PROFT}
+   if ( !(-e /tmp/${AWD:t}) ) then
+      mkdir /tmp/${AWD:t}
+      chmod 777 /tmp/${AWD:t}
+   endif
+   if ( !(-e ${ATMP}) ) mkdir ${ATMP}
+   if ( !(-e ${ARSN}) ) mkdir ${ARSN}
+endif
+set ATASK = ${ATSK}${MODNAME:t}.exe
+set AMAIN = for/stepon.f
+set MODIF = nonews
+#echo AROOT=$AROOT 
+#echo AWD=$AWD "AWD:t"=\"${AWD:t}\"
+#echo ATASK=$ATASK
+#echo AMAIN=$AMAIN
+#echo ${AWD:t} ${WHO}/
+#echo $ATMP /tmp/${AWD:t}${WHO}/
+#echo ARSN=$ARSN ${ARSN}profil.dat
+#goto End
+
+if ( ${?T_flag} ) then
+   set AMAIN = testepon.F
+   cp for/testepon testepon.F
+else if ( -e testepon.F ) then
+   rm testepon.F
+   rm ${ATASK}	>& /dev/null
+endif
+
+if ( ${?n_flag} ) then
+    if ( $NPROC != 1 ) set AMAIN = for/mpistepon.f
+endif
+#if ( !(${?n_flag}) ) then
+#   echo \>\>\> n_flag is not defined
+#   echo NPROC = $NPROC
+##   if ( $NPROC == 1 )echo NPROC=1
+#   goto End
+#endif
+
+rm ${ATSK}*.err >& /dev/null
+
+# Check ./fml list
+   set IFFML = `find ./fml -newer tmp/astra.log -print`
+   if ( "$IFFML" != '' ) then
+        echo \ \ Change\[s\] in ${AWD:t}fml/
+        foreach NEWMODULE ( ${IFFML} )
+           set NEWFML = ${NEWMODULE:t}
+           if ( $NEWFML != '' ) echo $NEWFML
+	end
+        set MODIF = fml
+   endif
+
+if ( -e  tmp/err.tmp  ) rm tmp/err.tmp
+if ( -e .exe/Checkmod )	source .exe/Checkmod
+if ( -e .exe/Checkfor )	source .exe/Checkfor
+if ( -e .exe/Checkjex )	source .exe/Checkjex
+if ( -e  tmp/err.tmp  ) goto Error
+if ( -e .exe/Checklbr )	source .exe/Checklbr
+if ( $status )	goto	Error
+if ( -e .exe/Checklbu )	source .exe/Checklbu
+if ( $status )	goto	Error
+if ( -e  tmp/err.tmp  ) goto Error
+if ( -e .exe/Checkxpr )	then
+   source .exe/Checkxpr xpr/makefile xpr/template
+   source .exe/Checkxpr xpr/makefile xpr/neutex
+   source .exe/Checkxpr xpr/makefile xpr/scope
+   source .exe/Checkxpr xpr/makexglf xpr/glf23p
+#   source .exe/Checkxpr xpr/tb/makefile xpr/tb/torbeam
+endif
+
+# set MODIF = anything			# Enforce model rebuild
+if ( $MODIF != nonews || ${?t_flag} || ${?T_flag} ) \
+			rm ${ATSK}*.exe >& /dev/null
+set MODIF =
+if ( -e ${ATASK} ) then
+   set MODIF = `find ${ALBR}*.a -newer ${ATASK} -print`
+   if ( "$MODIF" != '' ) rm ${ATSK}*.exe
+endif
+
+if ( !(-e ${ATASK}) ) goto Buildmodel
+
+   if ( !(${?HOST}) )	goto  Checkmodel	# $HOST unknown
+   if ( ${HOST} == lapgrp )  then		# Follow_symbolic_links
+      set IF_NEW = `find -L ./equ/$MODNAME -newer ${ATASK} -print`
+      goto  Checkmodel
+   endif
+   set IF_NEW = `find ./equ/$MODNAME -newer ${ATASK} -print`
+
+Checkmodel:
+   if ( $IF_NEW == ./equ/$MODNAME ) then
+      rm   ${ATASK}
+      goto Buildmodel
+   endif
+   goto Runmodel
+
+Buildmodel:
+    source .exe/Checkdu || goto End
+    cp equ/${MODNAME:t} tmp/model.tmp
+    set AMODEL = ${ALBR}model
+    if ( ${?T_flag} || ${?t_flag} )	set AMODEL=${AMODEL}" T_flag"
+#    echo ${AMODEL}
+    ${AMODEL} || goto ModelError
+#   ( ( ${ALBR}model > /dev/tty ) >& /dev/null ) || goto ModelError
+#   ${ALBR}model #(Suppress diagnostic output from model) >>& tmp/err.tmp || goto Error
+
+if (   ${?T_flag}  ) goto Test
+if ( !(${?t_flag}) ) goto NoTest
+Test:
+   if ( !(-e .exe/useredit) )	goto	InteractiveTest
+   source	.exe/useredit
+   sleep 1
+   echo " User's instructions executed"
+   goto NoTest
+InteractiveTest:
+   echo Astra execution is suspended.
+   echo You can edit include files now!
+   echo -n Hit \<Enter\> when ready\ 
+   set GO=$<
+   echo Resuming execution
+NoTest:
+   if ( ${MODNAME:h} != ${MODNAME:t} )	then
+      cp tmp/model.txt equ/${MODNAME:h}/txt/${MODNAME:t}
+   else
+      cp tmp/model.txt equ/txt/${MODNAME:t}
+   endif
+
+   set EQULIB =
+   if ( -e ${ALBR}esp.a ) set EQULIB = ${ALBR}esp.a
+   if ( -e ${ALBR}esc.a ) set EQULIB = "${EQULIB} ${ALBR}esc.a"
+   set NBILIB =
+   if ( -e ${ALBR}nbi.a ) set NBILIB = "${ALBR}nbi.a"
+   set IPCLIB =
+   if ( -e ${ALBR}ipc.a ) set IPCLIB = "${ALBR}ipc.a"
+   set LIBS = "${ULBR} ${ALBR}sbr.a ${ALBR}fnc.a ${NBILIB}"
+   set LIBS = "${LIBS} ${ALBR}for.a ${IPCLIB} ${EQULIB} ${ULBR}"
+   set LIBS = "${LIBS} ${ALBR}fnc.a ${ALBR}sbr.a ${ALBR}fnc.a"
+   if ( -e sbr/TCI06/libtransport.a )  \
+      set LIBS = "${LIBS} sbr/TCI06/libtransport.a"
+   set LIBS = "${LIBS} -lm ${XLBR}"
+
+LocalSetting4JET:
+   if ( ${PROFT} != "jac/" )		then
+      set LIBS = "${LIBS} ${ALBR}jexfile.o"      
+      goto EndIPPSetting	# JAMS works at JAC only
+   endif
+   if ( ${?JETTO} )						then
+      set LIBS = "${LIBS} $JETTO/libs/linux/default/libjams.a -lnag"
+   else if ( -e /u/sim/jetto/libs/linux/default/libjams.a )	then
+      set LIBS = "${LIBS} /u/sim/jetto/libs/linux/default/libjams.a -lnag"
+   else if ( ${PROFT} != "jac/" )				then
+      set LIBS = "${LIBS} ${ALBR}jexfile.o"      
+   endif
+LocalSetting4IPP:
+   set ATEST = `echo $cwd | grep ipp`
+   if ( $ATEST == "" )	goto	EndIPPSetting
+   set LIBS = "${LIBS} /afs/ipp/@sys/lib/libnag19d.a"
+   else if ( -d nagL && ${WHO} == grp )	then
+      set LIBS = "${LIBS} ./nagL/*.o"
+   endif
+   set ATEST = `uname | grep SunOS`
+   if ( $ATEST == "" )	goto	EndIPPSetting
+   set LIBS = "${LIBS} -L/afs/ipp/aug/ads/@sys/lib"
+   set LIBS = "${LIBS} -R/afs/ipp/aug/ads/@sys/lib"
+   set LIBS = "${LIBS} -lKK -lwoss"
+   set LIBS = "${LIBS} /afs/ipp/aug/ads/@sys/lib/libddww.so -lpplotXt"
+EndIPPSetting:
+
+LinkAexe:
+if ( ${ATMP} != "./" && -d ${ATMP} && -w ${ATMP} )	then
+   #echo ${AFL} ${ATMP}${MODNAME:t}.exe ${AMAIN} ${LIBS}
+   ${AFL} ${ATMP}${MODNAME:t}.exe ${AMAIN} ${LIBS} >>& tmp/err.tmp
+   if ( $status != 0 )	goto Error
+   ( cp ${ATMP}${MODNAME:t}.exe ${ATASK} & )		#> /dev/null
+   if ( !(${?n_flag}) )set ATASK = ${ATMP}${MODNAME:t}.exe
+else
+   ${AFL} ${ATASK} ${AMAIN} ${LIBS} >>& tmp/err.tmp
+   if ( $status != 0 )	goto Error
+endif
+rm tmp/err.tmp	>& /dev/null
+rm stepon.o	>& /dev/null
+
+Runmodel:
+#   if ( !(${?v_flag}) && ${EXNAME} != '' ) set VARNAME = ${EXNAME}
+   if ( ${?RUNS_HOME} ) then
+      ${ALBR}startA WHO $RUNS_HOME
+   else
+      ${ALBR}startA WHO $HOME
+   endif
+   ${ALBR}startA ARO $AROOT
+   ${ALBR}startA AWD $AWD
+   ${ALBR}startA VAR $VARNAME
+   ${ALBR}startA MOD $MODNAME
+   ${ALBR}startA TIM $TSTART
+   ${ALBR}startA TEN $TEND
+   ${ALBR}startA PRO ${PROFT}$PRNAME
+   ${ALBR}startA XFI $EXNAME
+   ${ALBR}startA RUNN $JAMSID
+   ${ALBR}startA MACH $MACHINE
+   ${ALBR}startA SHOT $SHOT
+   if ( ${?n_flag} ) then	# n_flag switches off interactive mode
+#      set b_flag
+   endif
+   if ( ${?b_flag} ) then
+      if ( ${TEND} == ) then
+         echo "  Warning >>> " t_stop is not defined
+	 echo -n "  Do you want to continue? [y,n]> "
+	 set VAR = $<
+	 if ( $VAR != "y" ) goto End
+      endif
+      ${ALBR}startA RTY BGD
+   else
+      ${ALBR}startA RTY "RUN $TPAUSE"
+   endif
+   if ( ${?ARSN} )	then
+      ${ALBR}startA RSN ${ARSN}profil.dat
+   else
+      ${ALBR}startA RSN ${ATSK}profil.dat
+   endif
+
+   set ADATE = `date | cut -c1-20`
+   set HI = `fgrep $VARNAME tmp/astra.hi | fgrep $MODNAME`
+   if ( "$HI" != '' ) goto  Runtask
+   echo $ADATE "	" $VARNAME "	" $MODNAME >> tmp/astra.hi
+   echo \ 
+   echo \ The model \"$MODNAME\" is started with the data file \"$VARNAME\"
+   echo \ 
+
+Runtask:
+   if ( ${?JETTO} && ${?RUNS_HOME} && ${JAMSID} != '' )	then
+      cp tmp/model.out	$RUNS_HOME/astra/runs/run${JAMSID}/astra.equ
+      cp exp/$VARNAME	$RUNS_HOME/astra/runs/run${JAMSID}/astra.exp
+      if ( -e equ/log/$MODNAME ) cp equ/log/$MODNAME \
+			$RUNS_HOME/astra/runs/run${JAMSID}/astra.equ_log
+      if ( -e exp/cnf/$VARNAME ) cp exp/cnf/$VARNAME \
+			$RUNS_HOME/astra/runs/run${JAMSID}/astra.exp_cnf
+      if ( -e exp/nbi/$VARNAME ) cp exp/nbi/$VARNAME \
+			$RUNS_HOME/astra/runs/run${JAMSID}/astra.exp_nbi
+      if ( -e exp/mse/$VARNAME ) cp exp/mse/$VARNAME \
+			$RUNS_HOME/astra/runs/run${JAMSID}/astra.exp_mse
+      if ( -e exp/ecr/$VARNAME ) cp exp/ecr/$VARNAME \
+			$RUNS_HOME/astra/runs/run${JAMSID}/astra.exp_ecr
+   endif
+   set ADATE = `date | cut -c4-20`
+   set BDATE = `date | cut -c11-20`
+
+   if ( ${?b_flag} && !(${?n_flag}) ) then
+      nohup ${ATASK} &
+      if ( $PRNAME != '' ) then
+         echo \ 
+         echo Results are being stored in the file: $PRNAME
+         echo \ 
+      endif
+      goto End
+    endif
+
+    if ( ${?n_flag} && !(${?b_flag}) ) then
+# Interactive run: NPROC machines
+#      which mpirun >& /dev/null
+#      if ( $status != 0 )	then
+#	 echo \ 
+#         echo "MPI environment not found"
+#         echo \ 
+#	 goto Cleaning
+#      endif
+#      echo ${ATASK} ${ATASK:t}
+#      cp ${ATASK} .
+#      mpirun -np ${NPROC} -machinefile ~/bin/hostfile ${ATASK} \
+#             -p4wd ~/a6 -p4pg ~/a6/PI22332
+#      ~/bin/j-ps ${ATASK:t}
+#      goto Cleaning
+	 echo \ 
+         echo "This set of opitions is not enabled"
+         echo \ 
+      goto End
+   endif
+
+   if ( ${?b_flag} && ${?n_flag} ) then		# Use Sun Grid Engine
+      which qsub >& /dev/null
+      if ( $status != 0 ) then
+	 echo \ 
+         echo "SGE environment not found"
+         echo \ 
+	 goto Cleaning
+      endif
+      cp .exe/sge_submit ./${PRNAME}		# Impose the job name
+      qsub ${PRNAME} ${NPROC} ${AWD}${ATASK} ${PRNAME}
+      sleep 5
+      rm ./${PRNAME}
+      set AA = `qstat | grep grp | grep ${PRNAME}`
+      echo $AA
+      set AA = `echo $AA | cut -d ' ' -f1`
+#      touch tmp/${PRNAME}-${AA}		# Create a stamp
+   endif
+
+   if ( !(${?b_flag}) && !(${?n_flag}) ) then	# Run interactively
+#     ( ${ATASK} > /dev/tty ) >& /dev/null
+#     echo      ${ATASK}
+      if ( -x ~/bin/TimeMonitor ) then
+#         ~/bin/TimeMonitor ${ATASK:t} &
+      endif
+#      echo ${ATASK}
+      ${ATASK}
+#      echo A_exit_status = $status
+#      ${ATASK}						> /dev/null
+#      ipcs
+      sleep 1
+      if ( !(-d ipc/) ) goto Cleaning
+      if ( !(-e tmp/astra.ipc) ) goto Cleaning
+      set SEMIDLIST = `cat tmp/astra.ipc | grep SemID | cut -c37-`
+#     echo SemList = $SEMIDLIST
+#     echo ${#SEMIDLIST}
+      if ( ${#SEMIDLIST} != 0 )	then
+#         echo Semaphores:
+	 foreach A ( $SEMIDLIST )
+	    set B = `ipcs -s | grep $A`
+#            echo B=$B, ,${#B},  A=$A
+	    if ( ${#B} != 0 ) ipcrm -s $A
+	 end
+      endif
+      set SHMIDLIST = `cat tmp/astra.ipc | grep Astra_inout | cut -c29-40`
+#     echo Main ShmList: $SHMIDLIST
+#     echo ${#SHMIDLIST}
+      if ( ${#SHMIDLIST} != 0 )	then
+#         echo Shmem segments:
+	 foreach A ( $SHMIDLIST )
+	    set B = `ipcs -m | grep $A`
+#            echo B=$B,  A=$A
+	    if ( ${#B} != 0 ) ipcrm -m $A
+	 end
+      endif
+      set SHMIDLIST = \
+          `cat tmp/astra.ipc | grep -v Astra | grep -v PID | cut -c13-24`
+#     echo 2nd ShmList: $SHMIDLIST
+#     echo ${#SHMIDLIST}
+#cat tmp/astra.ipc
+#ipcs -m
+#set echo
+#set verbose
+      if ( ${#SHMIDLIST} != 0 )	then
+#         echo Shmem segments:
+	 foreach A ( $SHMIDLIST )
+	    set B = `ipcs -m | grep $A`
+#            echo B=$B,  A=$A
+	    if ( ${#B} != 0 ) ipcrm -m $A
+	 end
+      endif
+#      set IPCLIST = `ipcs -m | grep $WHO | grep 660`
+#      if (${#IPCLIST} != 0)	then
+#        echo \ 
+#	echo \>\>\> Non-destroyed memory segments found:
+#	~/bin/tst
+#	ipcs -m | grep 660
+#      endif
+   endif
+
+Cleaning:
+   rm ${ATMP}${MODNAME:t}.exe >& /dev/null
+   if ( -e ${ATASK:t} )		rm ${ATASK:t}
+   set AA = ${AMAIN:r} ; set AA = ${AA:t}
+   if ( -e ${AA}.o )	rm ${AA}.o
+
+#   goto Store
+#   if ( -e ${AWD}/../ESC/cln )	${AWD}/../ESC/cln
+   set IFESC = `ps -a | grep Cbesc`
+   if ( "$IFESC" != '' ) then
+      kill $IFESC[1]
+      if ( ${?RUNS_HOME} )	then
+         foreach A ( `ipcs -s | grep gperev | cut -c12-22` )
+            if ( $A == '' )   goto Memories
+            ipcrm -s $A
+            echo SemNo $A removed
+         end
+      Memories:
+         foreach A ( `ipcs -m | grep gperev | cut -c12-22` )
+            if ( $A == '' )   goto End
+            ipcrm -m $A
+            echo ShmNo $A removed
+         end
+      endif
+   endif
+   unset IFESC
+
+Store:
+set ATEST = `echo $cwd | grep ipp`
+if ( !(-e ${AHIS}) || !(-w ${AHIS}) ) set ATEST =
+if ( $ATEST != "" && !(${?M_ASTER}) ) then
+   set CDATE = `date | cut -c11-20`
+   set CDATE = `${ALBR}timer $BDATE $CDATE`
+   echo $WHO" "$FROM"	"$ADATE" + "$CDATE"	"$VARNAME\
+		"     	"$MODNAME >> ${AHIS}
+endif
+
+goto End
+if ( $PRNAME == '' ) then
+   echo \ 
+   echo Results are stored in the file: $PRNAME
+   echo \ 
+endif
+
+Error:
+echo \ 
+cat tmp/err.tmp | grep -v "never used"
+goto End
+
+ModelError:
+# echo \ 
+# echo "Fix error[s] in the model" \"$MODNAME\" "and call Astra again"
+# echo \ 
+goto End
+
+Comment:
+#	The dignostic "Word too long" appears when the variables 
+#	$IFFML $IFFNC are too long. This happens when the code 
+#	was long not in use and tmp/astra.log is older than the 
+#	directories fml/ or fnc/. Use "touch tmp/astra.log"
+
+NoObjectCode:
+source .exe/HelpMulti
+
+End:
+rm tmp/err.tmp >& /dev/null

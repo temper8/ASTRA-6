@@ -1,0 +1,2 @@
+C FPR []:	Parabolic profile
+	FPR=1.000001-(RHO(J)/ROC)**2

@@ -1,0 +1,21 @@
+C ZINIT [ ]:	Average C charge
+C T [eV] Electron temperature
+C       POST D.E. JENSEN R.V. e.a., Atomic Data and Nuclear Tables,
+C				    Vol.20 (1977) 397.
+C				(Giannone 06-08-96)
+	T=TE(J)*1000.
+	Z=LOG10(T)
+					ZINIT=0.
+       IF(T.LT.18..AND.T.GE.4.) ZINIT=1.1283+0.20152*Z+2.0433*Z*Z
+       IF(T.LT.25.AND.T.GE.18.) ZINIT=-21.+37.801*Z-13.839*Z*Z
+       IF(T.LT.60.AND.T.GE.25.) ZINIT=-8.3817+16.517*Z-5.0732*Z*Z
+       IF(T.LT.100.AND.T.GE.60.) ZINIT=35.171-32.838*Z+8.9111*Z*Z
+       IF(T.LT.200.AND.T.GE.100.) ZINIT=-5.8715+5.6001*Z-0.055244*Z*Z
+       IF(T.LT.320.AND.T.GE.200.) ZINIT=-21.354+22.213*Z-4.3588*Z*Z
+       IF(T.LT.700.AND.T.GE.320.) ZINIT=2.6116+3.1238*Z-0.5579*Z*Z
+       IF(T.GE.700.) ZINIT=7.
+
+
+
+
+

@@ -1,0 +1,297 @@
+#	Info
+# -c  list compatible calls
+# -h  help
+# -V  list vars
+# -M  list mods
+#
+#	Run control:
+# -b  run the code in background
+# -t  test
+# -T  run testepon
+#
+#	File control:
+# -m  set model name
+# -n  set number of processors for parallel computing
+# -v  set data file
+# -j  set ex-file name (JAMS input)
+# -x  set machine and shot (JAMS input)
+# -r  set postviewer file name
+#
+#	Time control:
+# -s  set start time
+# -p  set pause time
+# -e  set stop (end) time
+#
+# Options h l t V M can preceed positional parameter list 
+# Once any of v m s e r encountered no positional substitution is possible
+
+#set echo =
+#set verbose =
+set argv = `getopt bchtTVMv:m:s:e:r:p:j:x:n: $argv` || goto Error
+#echo $argv
+
+set NPAR = 0
+set NPROC = 1
+set VARNAME =
+set MODNAME =
+set MACHINE =
+set SHOT =
+set TSTART =
+set TPAUSE =
+set TEND =
+set PRNAME =
+set EXNAME =
+set JAMSID =
+
+while ( ${#argv} )
+   switch ( $1 )
+   case -h:
+      more .exe/man_astra
+      exit 1
+   case -b:
+      set b_flag
+      breaksw
+   case -c:
+      set c_flag
+      breaksw
+   case -t:
+      set t_flag
+      breaksw
+   case -T:
+      set T_flag
+      breaksw
+   case -V:
+      set V_flag
+      breaksw
+   case -M:
+      set M_flag
+      breaksw
+   case -n:
+      shift
+      set n_flag
+      set NPAR = 1
+      set NPROC = $1
+      breaksw
+   case -v:
+      shift
+      set v_flag
+      set NPAR = 1
+      set VARNAME = $1
+      breaksw
+   case -m:
+      shift
+      set m_flag
+      set NPAR = 1
+      set MODNAME = $1
+      breaksw
+   case -j:
+      shift
+      set j_flag
+      set NPAR = 1
+      set EXNAME = $1
+      set JAMSID = ${EXNAME:e}
+      set EXNAME = ${EXNAME:r}
+#      echo JAMSID = ${JAMSID}
+#      echo EXNAME = ${EXNAME}
+      breaksw
+   case -x:
+      shift
+      set x_flag
+      set NPAR = 1
+      set MACHINE = $1
+      set SHOT = ${MACHINE:e}
+      set MACHINE = ${MACHINE:r}
+      breaksw
+   case -s:
+      shift
+      set NPAR = 1
+      set TSTART = $1
+      breaksw
+   case -e:
+      shift
+      set NPAR = 1
+      set TEND = $1
+      breaksw
+   case -p:
+      shift
+      set NPAR = 1
+      set TPAUSE = $1
+      breaksw
+   case -r:
+      shift
+      set NPAR = 1
+      set PRNAME = $1
+      breaksw
+   case --:
+      if ( ${#argv} == 1 ) break
+      shift
+      if ( $NPAR )	goto	Error 
+      set NPAR = ${#argv}
+      switch ( ${NPAR} )
+      case 6:
+         if ( $6 == 'TEST' || $6 == 'test')  set t_flag =
+      case 5:
+         if ( $5 != ',' )  set PRNAME = $5
+      case 4:
+         if ( $4 != ',' )  set TEND = $4
+      case 3:
+         if ( $3 != ',' )  set TSTART = $3
+      case 2:
+         if ( $2 != ',' )  set MODNAME = $2
+      case 1:
+         if ( $1 != ',' )  set VARNAME = $1
+      endsw
+   endsw
+   shift
+end
+
+#echo \ 
+#echo ${#argv} =\>  \"$argv\"
+
+if ( !(-e tmp/astra.log) || (-z tmp/astra.log) )	goto Error1
+
+if ( (${?c_flag}) && (-e tmp/astra.hi) )	then
+   echo \ 
+   rm exp/*% >& /dev/null
+   if ( ${?v_flag} || ${?m_flag} )	then
+      if ( ${?v_flag} ) then
+         echo The following models have been used with the data file \"$VARNAME\"
+         cat tmp/astra.hi | grep " $VARNAME" | cut -d " " -f7-
+      endif
+      if ( ${?m_flag} ) then
+         echo The following data files have been used with the model \"$MODNAME\"
+         cat tmp/astra.hi | grep " $MODNAME" | cut -d " " -f5-6
+      endif
+   else
+      cat tmp/astra.hi
+   endif
+   exit 1
+   exit 0					# Continue execution
+endif
+
+set OLDVAR = `fgrep VAR tmp/astra.log | cut -c7-`
+if ( $VARNAME == $OLDVAR || $VARNAME == '' ) unset OLDVAR
+set OLDMOD = `fgrep MOD tmp/astra.log | cut -c7-`
+if ( $MODNAME == $OLDMOD || $MODNAME == '' ) unset OLDMOD
+#if ( ${?OLDVAR} == 0 ) echo OLDVAR unset
+#if ( ${?OLDVAR} ) echo OLDVAR set
+if ( (${?OLDVAR} || ${?OLDMOD}) && -e .exe/version ) cat .exe/version
+
+if ( $VARNAME == '' ) set VARNAME = `fgrep VAR tmp/astra.log | cut -c7-`
+if ( !(-e exp/$VARNAME) ) then
+   if ( -e /usr/bin/echo ) /usr/bin/echo '\07'
+   set V_flag = 
+   echo \ 
+   echo \>\>\> ERROR: Data file \"exp/$VARNAME\" does not exist.
+endif
+if ( ${?V_flag} ) then
+   echo \ 
+   echo \ \ \ \ \ \ The following data files are available:
+   if ( -e tmp/xdata.list )	then
+      if ( -z tmp/xdata.list )	goto	Make_explist
+      set IFNEW = `find tmp/xdata.list -newer exp/ -print`
+      if ( "$IFNEW" == '')	goto	Make_explist
+      goto	Listexp
+   endif
+Make_explist:
+   if ( -d /tmp/ && -w /tmp/ ) then
+      set EQUTMP = /tmp/equtmp/
+   else
+      set EQUTMP = equtmp/
+   endif
+   mkdir ${EQUTMP}
+   ln -s exp/* ${EQUTMP}
+   rm ${EQUTMP}*.nbi ${EQUTMP}*.nbi.* ${EQUTMP}*% ${EQUTMP}*~ \
+      ${EQUTMP}*.bak ${EQUTMP}*.cnf ${EQUTMP}*.mse ${EQUTMP}*.ecr >& /dev/null
+   /bin/ls -C ${EQUTMP} > tmp/xdata.list
+   rm -r ${EQUTMP}	>& /dev/null
+Listexp:
+   more tmp/xdata.list
+   echo " "
+#   if ( ${?M_flag} ) goto Listmodels
+   exit 1
+endif
+
+if ( $MODNAME == '' ) set MODNAME = `fgrep MOD tmp/astra.log | cut -c7-`
+if ( !(-e equ/$MODNAME) ) then
+   set M_flag = 
+   if ( -e /usr/bin/echo ) /usr/bin/echo '\07'
+   echo \>\>\> ERROR: Model file \"equ/$MODNAME\" does not exist
+endif
+Listmodels:
+if ( ${?M_flag} ) then
+   echo " "
+   echo "      The following models are available:"
+   if ( -e tmp/model.list )	then
+      if ( -z tmp/model.list )	goto	Make_equlist
+      set IFNEW = `find tmp/model.list -newer equ/ -print`
+      if ( "$IFNEW" == '')	goto	Make_equlist
+      goto	Listequ
+   endif
+Make_equlist:
+   if ( -d /tmp/ && -w /tmp/ ) then
+      set EQUTMP = /tmp/equtmp/
+   else
+      set EQUTMP = equtmp/
+   endif
+   mkdir ${EQUTMP}
+   ln -s equ/* ${EQUTMP}
+   rm ${EQUTMP}*.log ${EQUTMP}*.log.* ${EQUTMP}*.txt \
+      ${EQUTMP}*% ${EQUTMP}*~ ${EQUTMP}*.bak		>& /dev/null
+   /bin/ls -C ${EQUTMP} > tmp/model.list
+   rm -r ${EQUTMP}	>& /dev/null
+Listequ:
+   more tmp/model.list
+   echo " "
+   exit 1
+endif
+
+goto Exit
+
+Error:
+   if ( -e /usr/bin/echo ) /usr/bin/echo '\07'
+   echo \>\>\>  Wrong argument or option list
+   echo \ \ \ \ Use \'Astra -h\'
+exit 1						# Stop execution
+
+Error1:
+   if ( -e /usr/bin/echo ) /usr/bin/echo '\07'
+   echo \>\>\>  Illegal changes in \'Astra\' work files
+   echo \ \ \ \ Probably your disc quota is exceeded
+   echo " "
+   echo "    Options:"
+   echo "              "\"d\" - restore default file and exit
+   echo "              "\"x\" - exit and fix the error manually
+   echo \ 
+   echo -n "    Your choice > "
+   set VAR = $<
+   if ( $VAR == "x" )	exit 1
+   if ( $VAR == "d" )	then
+      if ( !(-d tmp) )	then
+         mkdir tmp
+	 echo \ 	> tmp/deklar.usr
+      endif
+      cp  ${AROOT}.exe/astra.log  ${AWD}tmp/	>& /dev/null
+      echo \ 
+      echo "    "File \"astra.log\" re-created
+      echo \ 
+      exit 1
+   endif
+exit 1						# Stop execution
+
+Exit:
+
+#if ( ${?C_flag} ) echo C_flag on
+#if ( ${?t_flag} ) echo t_flag on
+#if ( ${?V_flag} ) echo V_flag on
+#if ( ${?M_flag} ) echo M_flag on
+#echo Variant name: $VARNAME
+#echo Model name:   $MODNAME
+#echo Start time:   $TSTART
+#echo End time:     $TEND
+#echo Set pause at: $TPAUSE
+#echo Result file:  $PRNAME
+#echo Ex-file name: $EXNAME
+#echo Ex-file name: $EXNAME
+
+exit 0						# Continue execution

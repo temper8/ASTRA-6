@@ -1,0 +1,7 @@
+C PIDTF	[MW/m#3]   D-T	Fusion power deposited to ions (th + NBI)
+C			  A.Polevoi 06-JUL-99
+	INCLUDE 'fml/pdtf'
+        y2 = 88./TE(J) 
+        y = sqrt(y2)
+        PIDTF  =PDTF*2.*(0.166666667*LOG((1-y+y2)/(1.+2.*y+y2))+
+     + 0.57735026*(TAN( 0.57735026*(2.*y-1.) )+0.52359874) ) / y2

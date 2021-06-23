@@ -1,0 +1,5 @@
+C XIEFF [m#2/s]:	Effective ion heat conductivity
+C			(Pereverzev 26-APR-99)
+	YR=(J-.5)*HRO
+	XIEFF =625.*(QITOTR(YR)-QIDWTR(YR))
+	XIEFF=-XIEFF/(G11(J)*NI(J)*GRAD(TI,J))

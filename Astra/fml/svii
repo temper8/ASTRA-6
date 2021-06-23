@@ -1,0 +1,4 @@
+C	The formula is a fit to ionization rate by Ion Impact
+C			SVII=<sigma*v>*1.E19	[m#3/s]
+C					Pereverzev 07-MAY-87
+	SVII	=0.

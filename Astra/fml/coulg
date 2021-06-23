@@ -1,0 +1,8 @@
+C COULG [d/l] Coulomb logarithm
+C				valid for e-e collisions (T_e > 0.01 keV)
+C				and   for e-i collisions (T_e > 0.01*Zeff^2)
+C			due to Ordonez and Molina
+C			Phys. Plasmas 1 (8), August 1994
+C			Rev. Mod. Phys., V.48, Part 1 (1976) 275.
+C		(Alexander 09-05-94)
+	COULG=15.9-.5*LOG(NE(J))+log(TE(J))

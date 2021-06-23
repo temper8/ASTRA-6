@@ -1,0 +1,13 @@
+C VRHH []:  Electrical particle convection Neoclassical Hinton-Hazeltine
+C (alias ENHH1)	
+C			Rev. Mod. Phys. v.48, part 1 (1976) 297.
+C			(Yushmanov 28-APR-87)
+C			(Corrected by Polevoi 12-APR-89)
+C VRHH=SQRT(eps)*K_13	(Pereverzev 22-NOV-2000)
+C			Usage in a model:   CN=-VP*VRHH	(Ware pinch)
+	ZZ=ZEF(J)
+	include 'fml/nues'
+	VRHH=SQEPS(J)*(0.95+1.43*ZZ)/(0.03+ZZ)/     (
+     >    1. + SQRT(NUES)* (1.27+0.65*ZZ)/(0.88+ZZ)
+     >       +      NUES *(-0.29+0.52*ZZ)/(-0.79+ZZ) )/
+     >   (1. +NUES*(0.66+0.34*ZZ)/(-0.07+ZZ)*SQEPS(J)**3)

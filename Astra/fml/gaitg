@@ -1,0 +1,15 @@
+C GAITG  [1/s]	linear growth rate GAmma for the ITG instability
+C	copied from the original Dorland's routine (Pereverzev 22-04-02)
+C-----------------------------------------------------------------------
+      if (j .lt. NA)	then
+      include	'fml/lti'
+      include	'fml/rltkd'
+      include	'fml/vti'
+      include	'fml/shat'
+         GAITG = 0.25/(1+0.5*MAX(SHAT,5.d-1)**2)/TI(j)*TE(j)
+     .      * (1 + 3.0 * MAX (0.d0, AMETR(j)/RTOR-0.16667))
+     .      / (1 + MAX (0.d0, 1./MU(j)-3)/15.0)*vti/RTOR/1.40967742
+         GAITG = GAITG*(RTOR/LTI-RLTKD)
+      else
+         GAITG = 0.
+      endif

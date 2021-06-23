@@ -1,0 +1,5 @@
+C HAQ1C[m#2/s]: Heat conductivity anomalous due to sawtooth oscillations (q<1)
+C	HE=1. if q < 1  
+C			(Polevoy A.R. 23-03-90)
+	IF (MU(J).LT.1.)	HAQ1C=0.
+	IF (MU(J).GE.1.)	HAQ1C=1.

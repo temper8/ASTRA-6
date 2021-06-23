@@ -1,0 +1,5 @@
+C TECRJ [keV/m]: Te Critical gradient after Janeschitz et al.
+C	(dT/dr),cr ~ mu*sqrt(I*B^3/ne/Te^2/S_tor)
+C			(Pereverzev 9-AUG-00)
+	TECRJ=MU(J)*BTOR*SQRT(BTOR*IPL/NE(J)/ELONG)/TE(J)/ABC
+C	if(J.eq.NA1)	TECRJ=0.

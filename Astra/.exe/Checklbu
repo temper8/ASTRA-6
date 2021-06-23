@@ -1,0 +1,93 @@
+Check_libs:
+set LISTF = `find ./fnc -newer ${ULBR} \! -type l -print | grep "\.f"$`
+set LISTC = `find ./sbr -newer ${ULBR} \! -type l -print | grep "\.c"$`
+set LISTS = `find ./sbr -newer ${ULBR} \! -type l -print | grep -i "\.f"$`
+set LISTS90 = \
+            `find ./sbr -newer ${ULBR} \! -type l -print | grep -i "\.f90"$`
+
+if ( "${LISTC}" == '' )	goto	EndC
+echo \ 
+echo \ \ Change\[s\] in ${AWD:t}/sbr/ are found:
+foreach AA ( $LISTC )
+   set AC = `echo ${AA:t}`
+   set AO = `echo ${AC:r}.o`
+   if ( $AF != '' ) then
+	 echo $AC
+	 ${ACC} sbr/$AC >& tmp/err.tmp || exit 1
+	 rm tmp/err.tmp >& /dev/null
+	 ar rv  ${ULBR} $AO		>& /dev/null
+	 rm $AO
+	 set MODIF = sbr
+   endif
+end #AA
+EndC:
+
+foreach SUBD ( sbr fnc )
+   if ( $SUBD == fnc ) set LIST = "${LISTF}"
+   if ( $SUBD == sbr ) set LIST = "${LISTS} ${LISTS90}"
+   if ( "${LIST}" == '' || "${LIST}" == ' ' )   goto  EndSUBD
+#   if ( $SUBD != sbr || "${LISTC}" == '' )	then
+      echo \ 
+      echo \ \ Change\[s\] in ${AWD:t}/$SUBD/ are found:
+#   endif
+   foreach AA ( $LIST )
+      set AF = `echo ${AA:t}`
+      set AO = `echo ${AF:r}.o`
+      if ( $AF != '' ) then
+	 echo $AF
+	 ${AFC} $SUBD/$AF >& tmp/err.tmp || exit 1
+	 rm tmp/err.tmp >& /dev/null
+	 ar rv  ${ULBR} $AO		>& /dev/null
+	 rm $AO
+	 set MODIF = $SUBD
+      endif
+   end #AA
+EndSUBD:
+end		# SUBD cycle
+
+if ( !(-d ./ipc) )	goto	MakeUlbr
+set LISTC = `find ./ipc -newer ${ULBR} \! -type l -print | grep -i "\.c"$`
+set LISTP = `find ./ipc -newer ${ULBR} \! -type l -print | grep -i "\.f"$`
+set LISTP90 = \
+            `find ./ipc -newer ${ULBR} \! -type l -print | grep -i "\.f90"$`
+   set LIST = "${LISTP} ${LISTP90}"
+   if ( "${LIST}" == '' || "${LIST}" == ' ' )   goto  CheckC
+   echo \ 
+   echo \ \ Change\[s\] in ${AWD:t}/ipc/ are found:
+   foreach AA ( $LIST )
+      set AF = `echo ${AA:t}`
+      set AO = `echo ${AF:r}.o`
+      if ( $AF != '' ) then
+	 echo $AF
+	 ${AFC} ipc/$AF >& tmp/err.tmp || exit 1
+	 rm tmp/err.tmp >& /dev/null
+	 ar rv  ${ULBR} $AO		>& /dev/null
+	 rm $AO
+	 set MODIF = ipc
+      endif
+   end #AA
+
+CheckC:
+   if ( "${#LISTC}" == 0 )   goto  MakeUlbr
+   echo \ 
+   echo \ \ Change\[s\] in ${AWD:t}/ipc/ are found:
+   foreach AA ( $LISTC )
+      set AC = `echo ${AA:t}`
+      set AO = `echo ${AC:r}.o`
+      if ( $AC != '' )	then
+   	  echo $AC
+   	  ${ACC} ipc/$AC # >& tmp/err.tmp || exit 1
+   	  ar rv ${ULBR} $AO		>& /dev/null
+   	  ranlib ${ULBR}			>& /dev/null
+   	  rm $AO
+   	  set MODIF = ipc
+      endif
+   end #AA
+   set LISTC
+
+MakeUlbr:
+if ( $MODIF != nonews && $MODIF != fml )	then
+   ranlib ${ULBR}			>& /dev/null
+   echo The user library is updated
+endif
+exit 0

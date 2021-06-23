@@ -1,0 +1,5 @@
+C BETI:	Local toroidal Beta Ion
+C					Pereverzev (20-05-99)
+C	beta_i=8\pi*n_i*T_i/B_0^2
+C
+	BETI = 4.02E-3*NI(j)*TI(j)/BTOR**2

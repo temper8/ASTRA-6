@@ -1,0 +1,7 @@
+C TECRL [keV/m]: Te Critical gradient Rebut-Lallia
+C	(dT/dr),cr = 5*mu*Bt*sqrt(Et*Bt/ne/sqrt(Te))
+C		Internal Report IPP 5/29 (1988)
+C			(Pereverzev 16-APR-92)
+	include	'fml/epl'		! Toroidal E-field
+	TECRL=5.*MU(J)*BTOR*SQRT( BTOR*ABS(EPL)/NE(J)/SQRT(TE(J)) )
+	if(J.eq.NA1)	TECRL=0.

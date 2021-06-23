@@ -1,0 +1,8 @@
+C HAITF Coefficient for Heat conductivity Anomalous based on ITER-scaling
+C    
+C	hi(r)=r^2/tau(Qe(r))=HAITF*r^2*sqrt(Qe(r))
+C						 Pereverzev (03.02.92)
+	IF (J.eq.1)
+     .	YHAITF=1./(.038*IPL**0.85*SQRT(AMAIN(1)*ELONG)
+     *	*(BTOR*ABC*RTOR)**.2*RTOR*(ABC*NEAVR(ROC)+.001)**.1)
+	HAITF=YHAITF*((J-.5)*HRO)**2

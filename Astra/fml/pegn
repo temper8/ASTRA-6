@@ -1,0 +1,11 @@
+C PEGN [MW/m#3]: Electron heat power density due to particle flux
+C	PEGN=5/2*div(Te*GN)[/625] [=5/2*GRAD(V'*Te*GN)/V']
+C	Use:	PE=-PEGN			(Pereverzev 26-OCT-90)
+C		Use only for output. 
+C	5/2*div(Te*GN) should be included in equations by defining
+C	coefficients DN, HN, XN or CN or by defining flux GNX
+	IF(J.GT.1.and.J.lt.NA1)	PEGN=(GN(J)*(VR(J)+VR(J+1))
+     1	*(TE(J+1)+TE(J))-GN(J-1)*(VR(J)+VR(J-1))*(TE(J)+TE(J-1)))
+     2	/(1000.*HRO*VR(J))
+	IF(J.EQ.1)	PEGN=GN(1)*(TE(2)+TE(1))/(250.*HRO)
+	IF(J.GE.NA1)	PEGN=0.

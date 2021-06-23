@@ -1,0 +1,5 @@
+C HASDL [m**2/s] Heat conductivity Anomalous based on ASdex 
+C	L-mode scaling
+C	IPP Preprint 2/318, June 1993, p. 14.
+C			Karulin (14.9.1993)
+ 	HASDL=11.62/RTOR/BTOR**2/(1.1-(RHO(j)/ROC)**2)**4*TE(J)**1.5

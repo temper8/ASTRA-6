@@ -1,0 +1,5 @@
+C QEICL [MW]:	Integral {0,R} ( PEICL ) dV
+C			(Yushmanov 11-JAN-89)
+	include 'fml/peicl'
+	IF(J.EQ.1)	QEICL=0.
+	QEICL=QEICL+PEICL*VR(J)*HRO

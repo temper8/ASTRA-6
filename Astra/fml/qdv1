@@ -1,0 +1,4 @@
+C QDV1 [F1/s]:	Integral {0,R} (SDV1) dV
+C			(Pereverzev 9-OCT-07)
+	if(J.eq.1)	QDV1=0.
+	QDV1=QDV1+SDV1(J)*VR(J)*HRO

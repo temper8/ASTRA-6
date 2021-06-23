@@ -1,0 +1,8 @@
+C QCD [d/l]:	Safety factor q(rho) due to the driven current CD
+C			(Pereverzev 20-SEP-90)
+	if(J.eq.1)	then
+		YQCDXC	=.1/(GP*BTOR)
+		YQCDXM	=0.
+			endif
+	YQCDXM	=YQCDXM+YQCDXC*CD(J)*VR(J)/IPOL(J)**2
+	QCD	=J*G22(J)/(YQCDXM+1.E-5)

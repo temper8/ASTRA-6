@@ -1,0 +1,11 @@
+C betpl:	Beta poloidal local
+C		Pereverzev	25.04.89
+C	betpl=4*pi*ne*Te/Bpo**2
+C
+	if(J.ne.NA1)	then
+	   BETPL = 1.6E-4*GP*(NE(J+1)+NE(J))*(TE(J+1)+TE(J))
+	   BETPL = BETPL*(RTOR/(BTOR*J*HRO*ABS(MU(J)+.0001)))**2
+	else
+	   BETPL = 6.4E-4*GP*NE(J)*TE(J)
+	   BETPL = BETPL*(RTOR/(BTOR*ROC*ABS(MU(J)+.0001)))**2
+	endif

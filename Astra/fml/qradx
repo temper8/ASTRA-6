@@ -1,0 +1,4 @@
+C QRADX [MW]:	Integral {0,R} (PRAD) dV
+C			(Yushmanov 11-JAN-89)
+	IF(J.EQ.1)	QRADX=0.
+	QRADX=QRADX+PRADX(J)*VR(J)*HRO

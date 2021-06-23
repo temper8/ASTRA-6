@@ -1,0 +1,17 @@
+C ZINEO [ ]:    Average C charge
+C T [eV] Electron temperature
+C       POST D.E. JENSEN R.V. e.a., Atomic Data and Nuclear Tables,
+C				    Vol.20 (1977) 397.
+C				(Giannone 06-08-96)
+        T=TE(J)*1000.
+        Z=LOG10(T)
+                                        ZINEO=0.
+       IF(T.LT.30..AND.T.GE.8.) ZINEO=-1.2796+3.2771*Z+0.64955*Z*Z
+       IF(T.LT.70.AND.T.GE.30.) ZINEO=-13.654+16.841*Z-2.8851*Z*Z
+       IF(T.LT.110.AND.T.GE.70.) ZINEO=-45.562+52.6*Z-12.898*Z*Z
+       IF(T.LT.150.AND.T.GE.110.) ZINEO=1.6616+6.8441*Z-1.8148*Z*Z
+       IF(T.LT.200.AND.T.GE.150.) ZINEO=83.281-68.095*Z+15.383*Z*Z
+       IF(T.LT.320.AND.T.GE.200.) ZINEO=158.84-127.94*Z+27.082*Z*Z
+       IF(T.LT.1000.AND.T.GE.320.) ZINEO=-65.602+51.405*Z-8.7479*Z*Z
+       IF(T.LT.3150.AND.T.GE.1000.) ZINEO=7.8143+1.1792*Z-0.15892*Z*Z
+       IF(T.GE.3150.) ZINEO=10.

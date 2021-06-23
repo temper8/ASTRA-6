@@ -1,0 +1,299 @@
+set PLATFORM = ${ObjectCode}
+
+# Use line {setenv ACC "cc -O -DAFENV -c"} 
+# if feenableexcept/fedisableexcept is available
+setenv ACC	"cc -O -c"
+setenv ACL	"cc -O -o"
+setenv XLBR	-lX11
+# setenv ACC	"cc -O -DAFENV -c"
+
+#echo ${PLATFORM:r}
+#switch ( ${PLATFORM:r} )
+
+switch ( ${PLATFORM} )
+case "Aix":
+   setenv AFL	"xlf -o"
+   setenv AFC	"xlf -O -qmaxmem=-1 -c"
+   setenv AFC	"xlf -C -c"
+   breaksw
+case "Aix.dbl":
+   setenv AFL	"xlf -qautodbl=dbl4 -o"
+   setenv AFC	"xlf -O -qmaxmem=-1 -c"
+   setenv AFC	"xlf -qautodbl=dbl4 -C -c"
+   setenv AFC	"xlf -qautodbl=dbl4 -c"
+   breaksw
+case "Alpha":
+   setenv AFL	"f77 -fpe1 -I. -o"
+   setenv AFC	"f77 -fpe1 -C -I. -c"
+#   setenv AFC	"f77 -fpe1 -C -I. -c"
+   breaksw
+case "Alpha.dbl":
+# -real_size 64 defines REAL as REAL*8
+   setenv AFL	"f77 -real_size 64 -O -fpe1 -I. -w -o"
+   setenv AFC	"f77 -real_size 64 -O -fpe1 -I. -w -c"
+   breaksw
+case "Cygwin":
+   setenv AFL	"g77 -I. -O -o"
+   setenv AFC	"g77 -I. -O -w -c"
+   setenv XLBR	/usr/X11R6/lib/libX11.dll.a
+   setenv ACC	"cc -O -DAFENV -c"
+# changes in for/serv.c :
+# rename #include <fenv.h> to #include <mingw/fenv.h>
+# comment everything inside feenableexcept, fedisableexcept,fenvdvx,fenvex
+   breaksw
+case "Culham"
+   setenv AFL	"f77 -O -I. -w -f -B108 -W -o"
+   setenv AFC	"f77 -O -I. -w -f -B108 -W -c"
+   setenv XLBR	"/usr/X11R6/lib/libX11.a -lU77"
+   breaksw
+case "g95":
+case "g95_64":
+   set G95=g95
+   setenv AFL	"$G95 -I. -o"
+   setenv AFC	"$G95 -I. -c"
+   breaksw
+case "gfortran":
+case "gfortran_64":
+   setenv AFL	"gfortran -O -w -I. -o"
+   setenv AFC	"gfortran -O -w -I. -c"
+   breaksw
+case "Intel":
+case "Intel_64":
+#   source ./.exe/ifortvars.csh
+   setenv AFL	"ifort -O3 -w -I. -o"
+   setenv AFC	"ifort -O3 -w -I. -c"
+   breaksw
+case "Intel-oneAPI":
+#   source ./.exe/ifortvars.csh
+   setenv AFL	"ifort -w -I. -o"
+   setenv AFC	"ifort -w -I. -c"
+   setenv ACC	"icc -O -c"
+   setenv ACL	"icc -O -o"      
+   breaksw
+
+case "Icheck":
+   source ./.exe/ifortvars.csh
+   setenv AFL	"ifort -check all -I. -o"
+   setenv AFC	"ifort -check all -I. -c"
+#   setenv AFC	"ifort -check none -I. -c"
+   breaksw
+case "Irix":
+   setenv AFL	"f77 -O3 -w -I. -o"
+   setenv AFC	"f77 -O3 -w -I. -c"
+   setenv XLBR	"-L/usr/openwin/lib -lX11"
+   breaksw
+case lf95:				# Use at JET
+   setenv AFL	"lf95 -O -w -I. -o"
+   setenv AFC	"lf95 -O -w -I. -c"
+   breaksw
+case "Mac":
+   setenv AFL	"/sw/bin/g77 -I. -O -o"
+   setenv AFC	"/sw/bin/g77 -I. -O -w -c"
+   setenv XLBR	"/usr/lib/libgcc.a /usr/X11R6/lib/libX11.a"
+# The option -I/usr/X11R6/include is described as dangerous
+   setenv ACC	"cc -O -I/usr/X11R6/include -c"
+   setenv ACL	"cc -O -I/usr/X11R6/include -lgcc -o"
+   breaksw
+case "RedHat5":
+   setenv AFL	"fort77 -o"
+   setenv AFC	"fort77 -w -Nn1604 -c"
+   setenv XLBR	/usr/X11/lib/libX11.a
+   breaksw
+case "RedHat8":
+   setenv AFL	"f77 -I. -O -o"
+   setenv AFC	"f77 -I. -O -w -c"
+   setenv AFL	"g77 -I. -O -o"
+   setenv AFC	"g77 -I. -w -c"
+   setenv AFL	"g77 -I. -o"
+   setenv XLBR	"/usr/X11R6/lib/libX11.a /usr/lib/libdl.a"
+   breaksw
+case "pgf77":				# To be used on JAC only
+case "jac":				# To be used on JAC only
+   set A=`echo $LD_LIBRARY_PATH | grep pgi-6.0`
+   if ( ${#A} == 0 ) goto PGIerror
+   setenv AFL   "pgf77 -O -I. -o"
+   setenv AFC   "pgf77 -O -I. -w -c"
+#   setenv AFL   "pgf95 -O -I. -o"
+#   setenv AFC   "pgf95 -O -I. -w -c"
+   setenv XLBR  "-lpgf90 -lpghpf -lpghpf_rpm1 -lpgf902 -L/usr/X11R6/lib/ -lX11"
+   breaksw
+case "Linux":
+case "RedHat":
+case "RedHat6":
+case "RedHat9":
+   setenv AFL	"g77 -I. -O0 -fbounds-check -o"
+   setenv AFC	"g77 -I. -O0 -fbounds-check -w -c"
+   setenv AFL	"g77 -I. -O -o"
+   setenv AFC	"g77 -I. -O -w -c"
+   setenv XLBR	/usr/X11R6/lib/libX11.a
+# Add line #include <xlocale.h> in 3 files
+#	   Esc2Any.c
+#	   zkhL.c
+#	   dialogx.c
+   breaksw
+case "RedHat6.dbl":
+   setenv AFL	"f77 -I. -r8 -O -o"
+   setenv AFC	"f77 -I. -r8 -O -w -c"
+   setenv AFL	"f95f --sav --dbl -I. -O -o"
+   setenv AFC	"f95f --sav --dbl -I. -O -c"
+   setenv XLBR	/usr/X11R6/lib/libX11.a
+   breaksw
+# Lahey/Fujitsu compiler:
+# Use -v 6.0 for toklnx and -v 6.2b for i*.bc and j*.bc
+case "Fujitsu":
+   setenv AFL	"f95f -v 6.0 --sav --dbl -I. -O -o"
+   setenv AFC	"f95f -v 6.0 --sav --dbl -I. -O -c"
+   setenv XLBR	/usr/X11R6/lib/libX11.a
+   breaksw
+case "f95f":
+# Lahey/Fujitsu compiler:
+# Use -v 6.0 for toklnx and -v 6.2b for i*.bc and j*.bc
+   setenv AFL	"f95f -v 6.2b --sav -I. -O -o"
+   setenv AFC	"f95f -v 6.2b --sav -I. -O -c"
+   setenv XLBR	/usr/X11R6/lib/libX11.a
+   breaksw
+case "mpif95f":
+# MPI option Fujitsu compiler:
+# Use -v 6.0 for toklnx and -v 6.2b for i*.bc and j*.bc
+   setenv RZG_WRAPPER "silent"
+   setenv AFL	"mpif95f --sav -I. -O -o"
+   setenv AFC	"mpif95f --sav -I. -O -c"
+   setenv XLBR	"/usr/X11R6/lib/libX11.a"
+   breaksw
+case "pgf90":
+# Use for Gateway
+   setenv AFL   "pgf90 -O -I. -o"
+   setenv AFC   "pgf90 -O -I. -w -c"
+#  setenv XLBR  "-lpgf90 -lpghpf -lpghpf_rpm1 -lpgf902 /usr/X11R6/lib/libX11.a"
+   setenv XLBR	"-L/usr/X11R6/lib64/ -lX11"
+#  setenv XLBR  "-lpgf90 -lpghpf -lpghpf_rpm1 -lpgf902 -L/usr/X11R6/lib/ -lX11"
+   breaksw
+case "pgf":
+   setenv AFL   "pgf90 -O -I. -o"
+   setenv AFC   "pgf90 -O -I. -w -c"
+#   setenv AFC   "pgf95 -O -I. -w -c"
+#  setenv XLBR  "-lpgf90 -lpghpf -lpghpf_rpm1 -lpgf902 /usr/X11R6/lib/libX11.a"
+#   setenv XLBR	
+   setenv XLBR  "-lpgf90 -lpghpf -lpghpf_rpm1 -lpgf902 -L/usr/X11R6/lib/ -lX11"
+   breaksw
+case "SuSE":
+   setenv AFL	"yaf77 -O -I. -Nn1604 -o"
+   setenv AFC	"yaf77 -O -I. -Nn1604 -w -c"
+   setenv XLBR	/usr/X11R6/lib/libX11.a
+   breaksw
+case "SuSE.dbl":
+   setenv AFL	"yaf77 -O -I. -r8 -Nn1604 -o"
+   setenv AFC	"yaf77 -O -I. -r8 -Nn1604 -w -c"
+   setenv XLBR	/usr/X11R6/lib/libX11.a
+   breaksw
+case "SuSE1":
+   setenv AFL	"g77 -I. -w -o"
+   setenv AFC	"g77 -I. -w -c"
+   setenv XLBR	/usr/X11/lib/libX11.a
+   breaksw
+case "SuSE8":
+   setenv AFL	"yaf77 -O -I. -Nn1604 -o"
+   setenv AFC	"yaf77 -O -I. -Nn1604 -w -c"
+   setenv XLBR	"/usr/X11R6/lib/libX11.a /usr/lib/libdl.a"
+   breaksw
+case "Sung77":
+   setenv AFL	"g77 -I. -I/usr/openwin/include -w -o"
+   setenv AFC	"g77 -I. -I/usr/openwin/include -w -c"
+   setenv XLBR	"-L/usr/gnu/lib -R/usr/gnu/lib -L/usr/openwin/lib -R/usr/openwin/lib -lsocket -lnsl -lX11"
+   breaksw
+case "Solaris":
+case "Spark":
+case "Sun":
+case "Sunx":
+   setenv AFL	"f77 -w -I. -O -o"
+   setenv AFC	"f77 -w -I. -O -c"
+   setenv XLBR	"-L/usr/openwin/lib -lX11"
+   breaksw
+case "Opteron":
+   setenv AFL	"f77 -w -I. -O -o"
+   setenv AFC	"f77 -w -I. -O -c"
+   setenv XLBR	"/usr/X11R6/lib64/libX11.a"
+   breaksw
+case "SunF95":
+   setenv AFL	"f95 -w -I. -O -o"
+   setenv AFC	"f95 -w -I. -O -c"
+   setenv XLBR	"-L/usr/openwin/lib -lX11"
+   breaksw
+case "i386-g77":
+   setenv AFL	"g77 -w -I. -O -o"
+   setenv AFC	"g77 -w -I. -O -c"
+   setenv XLBR	"-L/lib -lX11"
+   breaksw
+case "i386-f95":
+   setenv AFL	"f95 -w -I. -O -o"
+   setenv AFC	"f95 -w -I. -O -c"
+   setenv XLBR	"-L/lib -lX11"
+   breaksw
+case "x86_64-g77":
+   setenv AFL	"g77 -w -I. -O -o"
+   setenv AFC	"g77 -w -I. -O -c"
+   setenv XLBR	"-L/lib64 -lX11"
+   breaksw
+case "x86_64-f95":
+   setenv AFL	"f95 -w -I. -O -o"
+   setenv AFC	"f95 -w -I. -O -c"
+   setenv XLBR	"-L/lib64 -lX11"
+   breaksw
+case "x86_64-gcc":
+   setenv AFL	"gcc -w -I. -O -o"
+   setenv AFC	"gcc -w -I. -O -ftabstop=6 -c"
+   setenv XLBR	"-L/lib64 -lX11"
+   breaksw
+case "Cygwin-g77":
+   setenv AFL	"g77 -w -I. -O3 -o"
+   setenv AFC	"g77 -w -I. -O3 -c"
+   setenv XLBR	"-L/usr/X11R6/lib -lX11"
+   breaksw
+case "Cygwin-f95":
+   setenv AFL	"f95 -w -I. -O3 -o"
+   setenv AFC	"f95 -w -I. -O3 -c"
+   setenv XLBR	"-L/usr/X11R6/lib -lX11"
+   breaksw
+case "Solaris.dbl":
+case "Spark.dbl":
+#   set    MAPPING = "real:64,double:64,integer:64"
+# The next definition works although in contradiction with the f77 manuel
+#   set    MAPPING = "real:64,double:64,integer:32"	# 5.3.1 setting
+   set    MAPPING = "real:64,double:64,integer:mixed"	# TORBEAM setting
+   setenv AFL	"f77 -xtypemap=$MAPPING -O -o"
+   setenv AFC	"f77 -xtypemap=$MAPPING -O -w -c"
+   setenv AFL	"f77 -xtypemap=$MAPPING -o"
+   setenv AFC	"f77 -xtypemap=$MAPPING -w -c"
+   unset  MAPPING
+   setenv XLBR	"-L/usr/openwin/lib -lX11"
+   breaksw
+default:
+   echo " >>> ERROR >>> Unknown ObjectCode" \"${PLATFORM}\"
+   exit 1
+endsw
+exit 0
+PGIerror:
+echo " >>> ERROR >>> Inconsistensy in PFG compilere versions"
+echo "               Prabably you need to source /usr/local/etspgi6.env"
+exit 1
+
+######################################################################
+# AFC - Astra_Fortran_Compiler command line
+# ACC - Astra_C_Compiler command line
+# AFL - Astra_Linker command line
+#
+# Fortran compiler command line options:
+#
+# -w	suppress all warning messages
+# -c	suppress linking
+# -o file_name	produce the named output file "file_name"
+#		option "-o" should be the last in the command string
+# -I    the option -I is required only when the current directory "."
+#               is not on the default path (PATH variable)
+# -C    check that indices are within the declared array bounds
+######################################################################
+# Possibly, the	auxiliary path to search for the "llibX11.a" library
+#	    has to be given. For Sun the latter is:
+#OWL=${OPENWINHOME}/lib/libX11
+#XLIBS=${OWL}.sa.1.0 ${OWL}.sa.4.3 ${OWL}.so.1.0 ${OWL}.so.4.3
+######################################################################

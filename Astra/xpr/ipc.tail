@@ -1,0 +1,33 @@
+/*---------------------------------------------------------------------*/
+  swatch(&(My.CPUse));
+  /* If SemID exists then lock myself, otherwise, exit */
+  Mysemun.val = 0;
+  if (semctl(SemID, My.OrdNr, SETVAL, Mysemun) < 0) goto Exit;
+  goto Loop;
+
+ Exit:
+  if (errno != EIDRM && errno != EINVAL)
+     { printf(">>> %s >>> Unrecognised sem error: errno = %d\n",
+	      My.Path,errno);
+     // printf("errno = %d, EINVAL = %d, EIDRM = %d\n",errno,EINVAL,EIDRM);
+       printf("EACCES = %d, EFAULT = %d, ERANGE = %d\n"
+	      ,EACCES,      EFAULT,      ERANGE);
+       printf("EFBIG = %d, EINTR = %d,, EAGAIN = %d E2BIG\n",
+	       EFBIG,      EINTR,       EAGAIN,     E2BIG);
+     }
+  for(i=0; i < My.OrdNr; i++)   printf("     ");
+  printf("Process # %d exit: ",My.OrdNr);
+  swatch(&(My.CPUse));
+  printf("CPUse %g\n",My.CPUse);
+  exit(0);
+
+ AvOst:
+  for(i=0; i < My.OrdNr; i++)   printf("     ");
+  printf(">>> ERROR: Process # %d exit\n",My.OrdNr);
+  swatch(&(My.CPUse));
+  printf("CPUse %g\n",My.CPUse);
+  exit(1);
+}
+/*---------------------------------------------------------------------*/
+void AstraEvent () { }
+/*---------------------------------------------------------------------*/

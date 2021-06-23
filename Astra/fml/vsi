@@ -1,0 +1,3 @@
+C   VSI    [m/s]  Ion Sound Velocity	VSI=sqrt((T_e+T_i)/(m_p*AMAIN))
+Cmp.					CS=sqrt(T_e/(m_p*AMAIN))
+	VSI=3.09E5*SQRT((TE(j)+TI(j))/AMAIN(j))

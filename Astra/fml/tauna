@@ -1,0 +1,3 @@
+C	 Neo-Alcator formula for TauE for ITER
+C				 Pereverzev (25.05.90)
+	TAUNA	=0.007*ABC*RTOR*RTOR*NEAVR(ROC)/MU(NA1)

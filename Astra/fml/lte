@@ -1,0 +1,8 @@
+C LTE [m]:	Characteristic Length of T_e profile
+C			mapped to the minor radius "a"
+C	LTE=T_e/abs(dT_e/da)
+C			(Pereverzev 15-12-98)
+	if (j .lt. NA1) then
+	   LTE=max(1.e-6,abs(TE(j+1)-TE(j)))
+	   LTE=0.5*(TE(j+1)+TE(j))*abs((AMETR(j+1)-AMETR(j))/LTE)
+	endif

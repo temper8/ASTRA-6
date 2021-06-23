@@ -1,0 +1,10 @@
+C HAQ1 [m#2/s]: Heat conductivity anomalous due to sawtooth oscillations (q<1)
+C	HE=8*10#19/Ne/Rt
+C			NUCL. FUS v. 26 (1976) 1515.
+C			(Tarasyan K.N. 23-02-89)
+C			(Revised by G.Pereverzev 19-07-90)
+	IF (J.EQ.1)	JSAWT	=0
+	IF (MU(J).LT.1.)	HAQ1=0.
+	IF (MU(J).GE.1.)	JSAWT	=MAX(J,JSAWT)
+	JSAWT1	=1.42*JSAWT
+	IF (J.LE.JSAWT1)	HAQ1=8./NE(J)/RTOR

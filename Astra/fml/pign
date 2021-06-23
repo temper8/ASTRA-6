@@ -1,0 +1,13 @@
+C PIGN [MW/m#3]: Ion heat power density due to particle flux
+C	PIGN=5/2*GRAD(V'*Ti*ni/ne*GN)/V'[/625]
+C	Use:	PI=-PIGN			(Pereverzev 26-OCT-90)
+C		Use this formula for output only. 
+C	5/2*div(Ti*GNi) should be included in equations by defining
+C	coefficients DN, HN, XN or CN or by defining flux GNX
+	IF(J.GT.1.and.J.lt.NA1)	PIGN=(GN(J)*(VR(J)+VR(J+1))
+     1	*(TI(J+1)+TI(J))*(NI(J+1)+NI(J))/(NE(J+1)+NE(J))-GN(J-1)*
+     2	(VR(J)+VR(J-1))*(TI(J)+TI(J-1))*(NI(J)+NI(J-1))/
+     3	(NE(J)+NE(J-1)))/(1000.*HRO*VR(J))
+	IF(J.EQ.1)	PIGN=
+     1	GN(1)*(TI(2)+TI(1))*(NI(2)+NI(1))/(NE(2)+NE(1))/(250.*HRO)
+	IF(J.GE.NA1)	PIGN=0.

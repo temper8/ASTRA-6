@@ -1,0 +1,20 @@
+	double precision	RC,RE,RI,DRE,DRI,ARD
+        common /CNBTA/RC(NRD),RE(NRD),RI(NRD),
+     ,	DRE(NRD),DRI(NRD),ARD(3,NRD)
+	double precision YFI,F,YFE,YANBA,YAQBA,YACBA,DTCX,DTE,DTI,YATBA
+        common /CHION/YFI(3,NRD),F(3,NRD),YFE(3,NRD),YANBA(3,NRD),
+     ,	YAQBA(3,NRD),YACBA(3,NRD),DTCX(3,NRD),DTE(3,NRD),DTI(3,NRD),
+     ,		YATBA(3,NRD)
+	double precision	AMU,PL,PN0,PM,PLI, SVEX,SVII,VNB
+        common /CDISTR/ AMU(NRD),PL(NRD),PN0(NRD),PM(NRD),PLI(NRD)
+	common /CSIGM/ SVEX(4,4),SVII(3),VNB(3)
+	double precision YASBA
+	double precision HB,RBMIN1,RBMAX1,EB,QB,PB,Hocu,YSLEJ0,YSLEJ2
+	integer	IHB,IRB,IEB,JEB,N1,JTANG,NTET1
+	common /CBEAM/ HB,RBMIN1,RBMAX1,IRB,IEB,JEB,IHB,EB,QB,PB,Hocu
+	double precision AZ,YAQB,YDZ,YDRY,X,XJ,DX,ELON1,TRIA1,R,A,BZ
+        common /CBEAM1/ AZ(82),YAQB(3),YDZ(NRD),YDRY(82)
+        common /CGEOM/X(NRD),XJ(NRD),DX(NRD),ELON1(NRD),TRIA1(NRD),
+     ,  R,A,BZ,JTANG,N1
+	common /CSOURS/ YSLEJ0(3,NRD),YSLEJ2(3,NRD),NTET1
+	common /CSRS/	YASBA(3,NRD,51)

@@ -1,0 +1,22 @@
+LLIB=-lm
+OBJECTS=
+AFL=$(myFC) -I. -o
+AFC=$(myFC) -I. -c
+ACC=cc -c
+ACL=cc -o
+ALIB=.lbr/$(ObjectCode)/
+
+# Call as
+# make -f xpr/makexglf xpr/glf23p
+
+xpr/glf23p:	xpr/glf23p.f xpr/glf23c.o xpr/ipc.o
+		$(AFL) xpr/glf23p xpr/glf23p.f xpr/glf23c.o xpr/ipc.o \
+			 $(ALIB)sbr.a
+
+xpr/glf23c.o:	xpr/glf23p.c
+		$(ACC) xpr/glf23p.c -o xpr/glf23c.o
+
+xpr/ipc.o:	ipc/ipc_control.c
+		$(ACC) ipc/ipc_control.c -o xpr/ipc.o
+#---------------
+

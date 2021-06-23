@@ -1,0 +1,4 @@
+C PBR2 [MW/m#3]: Bremsstrahlung radiation due to 2nd impurity species
+C	N.A.Uckan//	ITER-TN-PH-8-6	Final Draft , 30 Nov.1988
+c							Pereverzev 03-Apr-03
+	PBR2=5.06E-5*NE(J)*SQRT(TE(J))*NIZ2(J)*ZIM2(J)*ZIM2(J)

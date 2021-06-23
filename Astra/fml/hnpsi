@@ -1,0 +1,7 @@
+C HNPSI [m#2/s]:  Heat conductivity Neoclassical Pfirsh-Shluter Ion
+C	H=ROip#2*NUi*(1+1.6*q#2)	( Nui=Nuii*(1+1.4*(ZEF-1)) )
+C			Plasma Phys. v. 8 (1966) 314.
+C			(Yushmanov 23-APR-87)
+	INCLUDE	'fml/nui'
+	HNPSI=NUI*2.1E-5*AMAIN(J)*TI(J)/(BTOR*ZMAIN(J))**2
+     *		*(1.+1.6/MU(J)**2)

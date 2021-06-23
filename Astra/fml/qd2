@@ -1,0 +1,4 @@
+C QD2 [F2/s]:	Integral {0,R} (SD2) dV
+C			(Pereverzev 9-OCT-07)
+	if(J.eq.1)	QD2=0.
+	QD2=QD2+SD2(J)*VR(J)*HRO

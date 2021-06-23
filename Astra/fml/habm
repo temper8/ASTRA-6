@@ -1,0 +1,20 @@
+C HABM [m#2/s]:	Heat conductivity Anomalous by Taroni for L-mode
+C	BOHM=c*Te/(e*B)=TE/BTOR*10^3[m^2/s]
+C	HABM=A_e*BOHM*q^2*(dp/dr)*a/p;
+C		A_e recommended = 2.5E-4 is included in YHABM
+C		Source:	M.Erba et al. JET-R(95)02
+C			(Pereverzev 04-AUG-95)
+C		According to M.Erba et al. JET-P(96)10
+C		a*(dp/dr)/p is replaced with a*(dp_e/dr)/p_e
+C			(Pereverzev 31-MAR-98)
+C		Difference with HATL in ABC <-> ROC
+C	Usage:		HE=HABM+HAGB+...
+C	Usage:		XI=2*HABM+HAGB+...
+C
+	if( J.eq.1 )	then
+		YLP = 0.
+		YHABM = 0.5*ABC/HRO/BTOR
+	else
+	    YLP = YHABM*abs(NE(J)*TE(J)-NE(J-1)*TE(J-1))/(NE(J)+NE(J-1))
+	endif
+	HABM = YLP/MU(J)**2

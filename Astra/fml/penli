@@ -1,0 +1,7 @@
+C PENLI [MW/m#3]: Electron heat losses due to cold neutrals Radiation
+C	PENLI=<sigma*v>*Ne*Nn*(0.0102keV)
+C	PE=...-PENLI
+C			(Pereverzev 09-JULY-90)
+	YY	=.0102/TE(J)
+	PENLI	=0.48/(0.28+YY)*SQRT(YY*(1.+YY))*EXP(-YY)
+	PENLI	=16.3*PENLI*(NNCL+NNWM)*NN(J)*NE(J)

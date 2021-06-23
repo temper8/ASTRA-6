@@ -1,0 +1,2 @@
+C HANAL [m#2/s]:	Heat conductivity Anomalous Neo-ALcator
+	HANAL=143.*SQEPS(J)**2*MU(J)/(NE(J)*RTOR*SQRT(AMAIN(J)))

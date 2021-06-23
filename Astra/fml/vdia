@@ -1,0 +1,10 @@
+C VDIA [m/s]:	Diamagnetic velocity
+C	V_dia=1/(e*Z_i*B_t)*(dp_i/dr)
+C		K_1=0.8839*f_t/(0.3477+0.4058*f_t)
+C		f_t=1.-1.46*sqeps+0.46*EPS^(3/2)
+C			(Pereverzev 24-AUG-1999)
+C
+	if (j.lt.NA) VDIA=2.E3/(ZMAIN(j)*BTOR*HRO)
+     &		*(TI(j+1)*NI(j+1)-TI(j)*NI(j))/((NI(j+1)+NI(j)))
+	if (j.eq.NA) VDIA=2.E3/(ZMAIN(j)*BTOR*HROA)
+     &		*(TI(j+1)*NI(j+1)-TI(j)*NI(j))/((NI(j+1)+NI(j)))

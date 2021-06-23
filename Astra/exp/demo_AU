@@ -1,0 +1,22 @@
+ ASDEX-U
+ Name	Time	Value	Error
+AB              .50
+RTOR            1.65
+BTOR            2.5     .05
+ELONM           1.6
+ELONG           1.6
+IPL             1.      .01
+AMJ             2.
+ZMJ             1.
+NNCL    1.      .001               cold  10#19 m-3
+NNWM            .0001              warm  10#19 m-3
+NB1             61
+ Number of points in arrays (radial positions are assumed to be distributed
+ equidistantly in the radial coordinate - equivalent radius of flux surfase)
+POINTS  16
+ Name Time	Values										    Aerr Rerr
+NE    2.20 3.43 3.40 3.32 3.20 3.04 2.87 2.70 2.52 2.36 2.20 2.04 1.87 1.67 1.42 1.13 0.80
+TE    0.99 1.69 1.67 1.62 1.55 1.45 1.33 1.21 1.07 0.94 0.80 0.67 0.55 0.43 0.32 0.22 0.14
+TI    1.60  .97  .96  .92  .85  .78  .69  .61  .52  .44  .37  .31  .25  .20  .16  .12  .06
+ZEF   1.60 1.80 1.80 1.80 1.80 1.80 1.80 1.80 1.80 1.80 1.80 1.80 1.80 1.80 1.80 1.80 1.80      .3
+END

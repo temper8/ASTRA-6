@@ -1,0 +1,4 @@
+C CHOTF [1/mkOhm*m] or [MA/V*m]: Conductivity Hot Fisch
+C			(Pereverzev 05-MAY-89)
+	ZZ=ZEF(J)
+	CHOTF=GP2*TE(J)*(5.+ZZ)/(3.+ZZ)/NE(J)

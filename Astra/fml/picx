@@ -1,0 +1,6 @@
+C PICX	[MW/m#3]: Ion heat source due to charge exchange with cold neutrals
+C	PICX=3/2*<sigma*v>*Ni*Nn*(Ti-Tn)
+C	PI=-PICX+...
+C			(Pereverzev 14-MAY-87)
+	SVCX	=10.**(5.+0.9+0.3*LOG10(TI(J)))
+	PICX	=0.0024*SVCX*NI(J)*(NNCL+NNWM)*NN(J)*(TI(J)-TN(J))

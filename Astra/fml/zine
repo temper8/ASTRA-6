@@ -1,0 +1,10 @@
+C ZINE [ ]:	Average Ne chNEge
+C       POST D.E. JENSEN R.V. e.a. PPPL-1352 1977
+C				(G. Pacher 01-04-1993)
+	T=TE(J)
+       Z=LOG10(T)
+					ZINE=1.
+       IF(T.LT..09) ZINE=max(1.d0,3.+5.714*(Z+1.92))
+       IF(T.LT..3.AND.T.GE..09) ZINE=8.
+       IF(T.LT..7.AND.T.GE..3) ZINE=8.+5.435*(Z+0.5229)
+       IF(T.ge.0.7)      ZINE=10.

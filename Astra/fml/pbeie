@@ -1,0 +1,5 @@
+C PBEIE [MW/m#3]: Electron heat losses due to NBI neutrals Ionization
+C	PBEIE=SNEBM*(0.013keV)
+C	PE=...-PBEIE
+C			(Polevoi 14-FEB-97)
+	PBEIE	=2.08E-5*SNEBM(J)

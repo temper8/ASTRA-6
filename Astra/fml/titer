@@ -1,0 +1,4 @@
+C	 Ushmanov's formula for TauE for ITER
+C	by Polevoy (03.01.90)
+	TITER=IPL**0.85*SQRT(AMAIN(1)*ELON(NA1)/ABS(QTOTR(ROC)+.001))*
+     * .038*(BTOR*ABC)**.2*RTOR**1.2*(ABC*NEAVR(ROC)+.001)**.1

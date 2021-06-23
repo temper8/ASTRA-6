@@ -1,0 +1,18 @@
+C PHICL [MW/m#3]: H-i collisional thermal equilibration
+C					(Pereverzev 04-MAR-97)
+C	dT_i/dt=\nu_{ij}(T_j-T_i)
+C	here \nu_{ij}=744*Z_i^2*Z_j^2*\sqrt{mu_i*\mu_j}*n_j
+C			/(\mu_i*T_j+\mu_j*T_i)^(3/2)		 [1/s]
+C	Assumptions:
+C	   1) 17 is used for Coulomb logarithm
+C	   2) n_i -> NI;    Z_i -> ZMain;    T_i -> TI;    \mu_i = AMain;
+C		j(minority) -> protons;      Z_j = 1;      \mu_j = 1;
+C		T_j -> F1;  n_j = NHYDR
+C	Usage:
+C		Let: 	T_d=TI		T_p=F1
+C		PHICL=2.4E-3*n_H*(dT_H/dt)
+C		PI = ... + PHICL
+C		SF1= ... - 466.7*PHICL/NHYDR
+C
+	PHICL=1.78*ZMAIN(J)*ZMAIN(J)*sqrt(AMAIN(j))*NI(J)*NHYDR(J)
+     .			*(F1(J)-TI(J))/(AMAIN(J)*F1(J)+TI(J))**1.5

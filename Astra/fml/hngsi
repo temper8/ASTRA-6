@@ -1,0 +1,10 @@
+C HNGSI [m#2/s]:  Heat conductivity Neoclassical Galeev-Sagdeev Ion
+C	H=PL*BA/(PL+BA)+PS
+C	PL=1.3*q*ROi#2*Vti/Rt		PS=ROip#2*NUi*(1+1.6*q#2)
+C	BA=SQRT(eps)*ROip#2*NUi*.57
+C			(Yushmanov 29-APR-87)
+C	Coulomb logarithm 15 is used
+	INCLUDE	'fml/hngsp'
+	INCLUDE	'fml/hngsb'
+	INCLUDE	'fml/hnpsi'
+	HNGSI=1./(1./HNGSP+1./HNGSB)+HNPSI

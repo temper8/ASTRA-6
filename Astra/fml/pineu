@@ -1,0 +1,14 @@
+C PINEU  [MW/m#3]: Ion heat sourse due to cold neutral
+C	ionization and charge exchange
+C	PINEU=3/2*[<sigE*v>*Ne*Nn*Tn+
+C	     +<sigI*v>*Ni*Nn*Tn-<sigCX*v>*Ni*Nn*(Ti-Tn)]
+C	PI=...+PINEU
+C			(Pereverzev 13-MAY-87)
+	include	'fml/svie'
+	include	'fml/svii'
+	PINEU	=0.0024*(NNCL+NNWM)*NN(J)*
+     1	(SVIE*NE(J)+SVII*NI(J))*TN(J)
+C	Explicit form of PICX is used
+	SVCX	=10.**(5.+0.9+0.3*LOG10(TI(J)))
+	PICX	=0.0024*SVCX*NI(J)*(NNCL+NNWM)*NN(J)*(TI(J)-TN(J))
+	PINEU	=PINEU-PICX

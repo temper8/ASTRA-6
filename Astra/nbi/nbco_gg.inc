@@ -1,0 +1,100 @@
+C<<< 222 loop from R = RE(A) to R = RC (RE(0)) or to R(Y=0) <<<<<<<<<<<
+	do  222	JJ	=1,JJN
+		JN	=N1-JJ
+		JN1	=JN+1
+	if(Y2.EQ.0.) GO TO 226
+C<<< R = R(Y=0) go to  226 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+		Y12	=(RE(JN)-AZ(JR))*(RE(JN)+AZ(JR))
+		Y1	=Y2
+		Y2	=0.
+		YC1	=YC2
+	if(Y12.GT.0.)	THEN
+		Y2	=-SQRT(Y12)
+		YC2	=AZ(JR)*DRE(JN)
+		RCR	=Y12*DRE(JN)
+			ELSE
+		RCR	=0.
+		YC2	=1.
+	ENDIF
+		JT1	=NTET*YC1+1
+		JT2	=NTET*YC2+1
+	include 'nbco_1g.inc'
+     		YDEX	=EXP(-YDYS)
+		YFE(JE,JN)=YDEX
+	include 'nbco_2gg.inc'
+ctest	write(*,*) '221 passed',jn
+	IF(YC1.GT.YC2)	WRITE(*,*)	'YC1,YC2,221',YC1,YC2,JN
+ 222	continue
+ 		JN	=JH-1
+	if(Y2.EQ.0.) GO TO 226
+C>> beam touch R = R(0) (R=RC)  go to 226  >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	do 223	JN	=JH,N
+C>> 223 loop from R = R(0) (R=RC) to R = R(Y=0) or to R = RI(A) >>>>>>>
+		JN1	=JN+1
+	if(Y2.EQ.0.) GO TO 224
+		Y12	=(RI(JN1)-AZ(JR))*(RI(JN1)+AZ(JR))
+		Y1	=Y2
+		Y2	=0.
+		YC1	=YC2
+	if(Y12.GT.0.)	THEN
+		Y2	=-SQRT(Y12)
+		YC2	=AZ(JR)*DRI(JN1)
+		RCR	=Y12*DRI(JN1)
+	ELSE
+		YC2	=1.
+		RCR	=0.
+	ENDIF
+		JT1	=NTET*YC1+1
+		JT2	=NTET*YC2+1
+	include 'nbco_1g.inc'
+     		YDEX	=EXP(-YDYS)
+		YFI(JE,JN)=YDEX
+	include 'nbco_2gg.inc'
+ctest	write(*,*) '231 passed',jn
+	IF(YC1.GT.YC2)	WRITE(*,*)	'YC1,YC2,231',YC1,YC2,JN
+ 223	continue
+	if(JN1.EQ.N1) GOTO 220
+C<< beam to internal wall : go to 220 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+ 224	continue
+C>>>>>>>>>>>>>>>> R increases >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+C>> 225 loop from R = R(Y=0) to R =R(0) (R=RC)>>>>>>>>>>>>>>>>>>>>>>>>>
+		JNN	=JN1-1
+		JHP1	=JH+1
+	do 225	JJN	=JHP1,JNN
+		JN1	=JNN-JJN+JHP1
+		JN	=JN1-1
+		Y1	=Y2
+		Y12	=(RI(JN)-AZ(JR))*(RI(JN)+AZ(JR))
+		Y2	=SQRT(Y12)
+		YC1	=YC2
+		YC2	=AZ(JR)*DRI(JN)
+		RCR	=Y12*DRI(JN)
+		JT2	=NTET*YC1+1
+		JT1	=NTET*YC2+1
+	include 'nbco_1g.inc'
+     		YDEX	=YFI(JE,JN)
+C	EXP(-YDYS)
+	include 'nbco_2gg.inc'
+ctest	write(*,*) '251 passed',jn
+	IF(YC1.LT.YC2)	WRITE(*,*) 'YC1,YC2,251',YC1,YC2,JN
+ 225	continue
+		JN	=JH-1
+ 226		JNN	=JN+1
+C>> 227 loop from R = R(0) (R=RC) or from R = R(Y=0) to R = RE(A) >>
+	do 227	JN	=JNN,N
+		JN1	=JN+1
+		Y1	=Y2
+		Y12	=(RE(JN1)-AZ(JR))*(RE(JN1)+AZ(JR))
+		Y2	=SQRT(Y12)
+		YC1	=YC2
+		YC2	=AZ(JR)*DRE(JN1)
+		RCR	=Y12*DRE(JN1)
+		JT2	=NTET*YC1+1
+		JT1	=NTET*YC2+1
+	include 'nbco_1g.inc'
+     		YDEX	=YFE(JE,JN)
+C		EXP(-YDYS)
+	include 'nbco_2gg.inc'
+ctest	write(*,*) '271 passed',jn
+	IF(YC1.LT.YC2)	WRITE(*,*) 'YC1,YC2,271',YC1,YC2,JN
+ 227	continue

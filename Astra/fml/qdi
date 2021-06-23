@@ -1,0 +1,4 @@
+C QDI [MW]:	Integral {0,R} (PDI) dV
+C			(Pereverzev 9-OCT-07)
+	IF(J.EQ.1)	QDI=0.
+	QDI=QDI+PDI(J)*VR(J)*HRO

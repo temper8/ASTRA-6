@@ -1,0 +1,4 @@
+C QDV7 [F7/s]:	Integral {0,R} (SDV7) dV
+C			(Pereverzev 9-OCT-07)
+	if(J.eq.1)	QDV7=0.
+	QDV7=QDV7+SDV7(J)*VR(J)*HRO

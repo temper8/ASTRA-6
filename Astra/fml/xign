@@ -1,0 +1,6 @@
+C XIGN  [m#2/s]:	Experemental ion heat conductivity
+C			Convection flux subtracted
+C			(Yushmanov 15-FEB-89)
+	YR=(J-.5)*HRO
+	XIGN =625.*(QITOTR(YR)-QIDWTR(YR)-QIGNR(YR))
+	XIGN =-XIGN/(G11(J)*NI(J)*GRAD(TI,J))

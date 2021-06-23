@@ -1,0 +1,4 @@
+C QRAD [MW]:	Integral {0,R} (PRAD) dV
+C			(Pereverzev 26-JULY-89)
+	IF(J.EQ.1)	QRAD=0.
+	QRAD=QRAD+PRAD(J)*VR(J)*HRO

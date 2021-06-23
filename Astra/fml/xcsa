@@ -1,0 +1,29 @@
+C XCSA []:		Bootstrap current density	
+C			Jbs = HCSA*ln(Te)'+DCSA*ln(Ne)'+XCSA*ln(Ti)'
+C                       Sauter, Angioni, Lin-Liu
+C			Physics of Plasmas, 6, 2834 (1999)
+C			(Angioni 29-MAY-2002)
+C	Example:	XC=XCSA
+	INCLUDE 'fml/betpl'
+	ZZ=ZEF(J)
+        ZFT=FTLLMR(RHO(J))	
+C       INCLUDE 'fml/tpf'
+C       ZFT=TPF
+	INCLUDE	'fml/nues'
+	INCLUDE 'fml/nuis'
+	ZDF = 1.+(1.-0.1*ZFT)*SQRT(NUES)	
+	ZDF = ZDF + 0.5*(1.-0.5*ZFT)*NUES/ZZ
+        ZFTE = ZFT/ZDF
+	XCSA = (1+1.4/(ZZ+1))*ZFTE-1.9/(ZZ+1)*ZFTE*ZFTE
+        XCSA = XCSA + (0.3*ZFTE*ZFTE+0.2*ZFTE*ZFTE*ZFTE)*ZFTE/(ZZ+1)
+C       AI=NIZ1(J)*ZIM1(J)/NI(J)*ZMAIN(J)
+C	A0 = -(0.62+1.5*AI)/(0.53+AI)*(1.-ZFT)
+	A0 = -(1.17)*(1.-ZFT)
+        A0 =A0/(1.-0.22*ZFT-0.19*ZFT*ZFT)
+	ALP =(A0+0.25*(1-ZFT*ZFT)*SQRT(NUIS))/(1.+0.5*SQRT(NUIS))
+        A1 = NUIS*NUIS*ZFT*ZFT*ZFT*ZFT*ZFT*ZFT
+        ALP = (ALP + 0.315*A1)/(1.+0.15*A1)
+        INCLUDE 'fml/dcsa'
+        XCSA = BETPL*(XCSA*ALP)*TI(J)/ZZ/TE(J)
+        XCSA = XCSA+DCSA/(1+ZZ*TE(J)/TI(J))
+	IF(J.EQ.1) XCSA=0.

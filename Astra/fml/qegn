@@ -1,0 +1,9 @@
+C QEGN [MW]:	Electron heat power due to particle flux
+C	QEGN=2.5*Gn*Te*Stor
+C	dWe/dt=...-QEGN
+C			(Yushmanov 20-FEB-89)
+	IF(J.EQ.NA1)	THEN
+	QEGN=G11(NA)*TE(NA1)*GN(NA)/250.
+			ELSE
+	QEGN=(G11(J)+G11(J+1))*(TE(J+1)+TE(J))*GN(J)/1000.
+			ENDIF

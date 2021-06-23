@@ -1,0 +1,13 @@
+C HATLI [m#2/s]:	Heat conductivity Anomalous by Taroni for L-mode
+C	BOHM=c*Te/(e*B)=TE/BTOR*10^3[m^2/s]
+C	HATL=A_e*BOHM*q^2*(dp/dr)*a/p;		A_e recommended = 3.3E-4
+C			(Pereverzev 04-AUG-95)
+C		Source:	M.Erba et al. JET-R(95)02
+	if( J.eq.1 )	then
+		YHATLI = 0.
+	else
+		YHATLI = 2.*ROC/HRO*
+     .	abs(NE(J)*TE(J)+NI(J)*TI(J)-NE(J-1)*TE(J-1)-NI(J-1)*TI(J-1))/
+     .	   (NE(J)*TE(J)+NI(J)*TI(J)+NE(J-1)*TE(J-1)+NI(J-1)*TI(J-1))
+	endif
+	HATLI = 0.33*TE(J)/BTOR*YHATLI/MU(J)**2

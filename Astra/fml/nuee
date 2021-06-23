@@ -1,0 +1,5 @@
+C NUEE [1/s]:	Frequency of electron-electron collisions
+C	NUEE=4*SQRT(3.14)/3*Ne*e#4*lambd/SQRT(Me)/Te#1.5
+C		(Yushmanov 25-APR-87, updated by Pereverzev 9-NOV-94)
+	include	'fml/coulg'
+	NUEE=670.*COULG*NE(J)/(TE(J)*SQRT(TE(J)))

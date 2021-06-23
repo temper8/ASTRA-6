@@ -1,0 +1,4 @@
+C WI [MJ]:	0.0016 * Integral {0,R} (3/2*Ne*Ti) dV
+C			(Yushmanov 11-JAN-89)
+	IF(J.EQ.1)	WI=0.
+	WI=WI+NI(J)*TI(J)*VR(J)*HRO*.0024

@@ -1,0 +1,4 @@
+C QDE [MW]:	Integral {0,R} (PDE) dV
+C			(Pereverzev 9-OCT-07)
+	IF(J.EQ.1)	QDE=0.
+	QDE=QDE+PDE(J)*VR(J)*HRO

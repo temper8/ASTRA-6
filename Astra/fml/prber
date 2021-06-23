@@ -1,0 +1,49 @@
+C PRBER [MW*m#3] For Berillium radiation power Z=4 A=9
+C	Prad =PRBER*ne*nBe	[ne,nBe 10#19 m-3]
+C				(Polevoy 07-10-93)
+        T=TE(J)
+        IF(T.LE..02)	THEN
+        IF(T.LT..002)	T=.002
+	Y0	=-3.425149E2
+	Y1	=-9.471260E2
+	Y2	=-1.035776E3
+	Y3	=-5.382415E2
+	Y4	=-1.349198E2
+	Y5	=-1.319063E1
+					ENDIF
+        IF(T.LE..2.AND.T.GT..02)	THEN
+	Y0	=-3.429832E1
+	Y1	=-5.804948E1
+	Y2	=-1.032570E2
+	Y3	=-8.853015E1
+	Y4	=-3.530521E1
+	Y5	=-5.134460
+					ENDIF
+        IF(T.LE.2..AND.T.GT..2)		THEN
+	Y0	=-2.177747E1
+	Y1	= 4.617764E-2
+	Y2	= 4.411196E-1
+	Y3	=-2.972147E-1
+	Y4	= 4.526295E-1
+	Y5	= 1.266794E-1
+					ENDIF
+        IF(T.LE.20..AND.T.GT.2.)	THEN
+	Y0	=-2.177388E1
+	Y1	= 1.478620E-2
+	Y2	= 5.269617E-1
+	Y3	=-3.816430E-1
+	Y4	= 1.583400E-1
+	Y5	=-2.891062E-2
+					ENDIF
+        IF(T.GT.20.)			THEN
+	Y0	=-2.031496E1
+	Y1	=-4.202600
+	Y2	= 5.289472
+	Y3	=-3.002456
+	Y4	= 8.528627E-1
+	Y5	=-9.687936E-2
+c	IF(T.GT.100.)	WRITE(*,*) Te>100 'Illegal Prber'
+					ENDIF
+        Z=      LOG10(T)
+	Y	=Y0+Z*(Y1+Z*(Y2+Z*(Y3+Z*(Y4+Z*Y5))))+19.
+ 	PRBER	=10**Y

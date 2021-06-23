@@ -1,0 +1,8 @@
+C DCKM1 []:	Electrical particle  convection	 Neoclassical Kim
+C		inclusion of finite collision times (all collisionality
+C		regimes: banana - plateau - Pfirsch - Schlueter)
+C			Phys. Fluids B 3,2050 (1991).
+C			(Alexander 04-JAN-95)
+C	Example:	DC=DCKM1
+	include 'fml/dhkim'
+	DCKM1=BETPL*DHKIM*(1.+TI(J)/(TE(J)*ZEF(J)))

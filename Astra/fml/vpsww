@@ -1,0 +1,13 @@
+C VPSWW [m/s]:	Neoclassic formula for the poloidal rotation velocity
+C		according to Kim Y.B., et al. Phys. Fluids B 3 (1991) 2050
+C		cited by G.M.Staebler, R.E.Waltz, J.C.Wiley
+C		Nuclear Fusion, Vol.37, No.3, (1997) pp.287-291.
+C	V_pol=K_1/(e*Z_i)*B_t/B^2*(dT_i/dr)
+C		K_1=0.8839*f_t/(0.3477+0.4058*f_t)
+C		f_t=1.-1.46*sqeps+0.46*EPS^(3/2)
+C			(Pereverzev 24-AUG-1999)
+C
+	YFT=1.+(0.46*SQEPS(j)*SQEPS(j)-1.46)*SQEPS(j)
+	YFT=883.9*YFT/(0.3477+0.4058*YFT)/ZMAIN(j)/BTOR
+	if(j.lt.NA) VPSWW=YFT*(TI(j+1)-TI(j))/HRO
+	if(j.eq.NA) VPSWW=YFT*(TI(j+1)-TI(j))/HROA

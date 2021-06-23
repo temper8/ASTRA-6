@@ -1,0 +1,33 @@
+AB      m            Limiter position in the mid-plane
+ABC     m            Calculation boundary in the mid-plane
+AIM1                 Impurity 1 ions atom mass/Mp
+AIM2                 Impurity 2 ions atom mass/Mp
+AIM3                 Impurity 3 ions atom mass/Mp
+ALBPL                Albedo of plasma (Neutral outflux)/(Neutral influx)
+AMJ                  (Main ions atom mass)/Mp
+BTOR    T            Toroidal field at vacuum chamber center
+ELONG                Elongation of boundary surface
+ENCL    keV          Edge cold neutrals energy
+ENWM    keV          Edge warm neutrals energy
+IPL     MA           Plasma current
+LEXT    mkH          External inductance
+NNCL    10^19/m^3    Edge cold neutrals density
+NNWM    10^19/m^3    Edge warm neutrals density
+QECR    MW           Total EC power input
+QFW     MW           Total FW power input
+QICR    MW           Total IC power input
+QLH     MW           Total LH power input
+QNBI    MW           Total beam power
+ROC     m            Limiter/separatrix radius (in the variable "rho")
+RTOR    m            Major radius (vacuum chamber center)
+SHIFT   m            Edge magnetic surface shift
+TRIAN                Triangularity of the boundary surface
+UEXT    V            External voltage
+UPDWN   m            Plasma up- or down-shift
+VOLUME  m^3          Total volume
+VSB     Vs           Poloidal flux at the plasma edge
+VSC     Vs           Poloidal flux at the magnetic axis
+WNE     m            Width of NE exponential decay in SOL (j > NA1)
+WTE     m            Width of TE exponential decay in SOL (j > NA1)
+WTI     m            Width of TI exponential decay in SOL (j > NA1)
+ZMJ                  Main-ion charge

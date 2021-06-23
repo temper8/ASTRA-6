@@ -1,0 +1,6 @@
+C SHAT []: Shear for usage in the IFS/PPPL transport model
+C                       a   dq
+C          defined as  --- ---- 	Pereverzev 22-04-02
+C                       q   da
+	if (j .le. NA)
+     >	   SHAT =-AMETR(j)/MU(j)*(MU(j+1)-MU(j))/(AMETR(j+1)-AMETR(j))

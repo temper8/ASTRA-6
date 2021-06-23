@@ -1,0 +1,53 @@
+NAME
+	View  - display Astra result file; save or delete result file;
+		retrieve the source model file
+ 
+SYNOPSIS
+	View [-h] [-l] [-s file_name] [-d file_name] [-r file_name] [file_name]   
+	View help		(equivalent to "View -h")
+	View @			(equivalent to "View -l")  
+	View file_name sav[e]	(equivalent to "View -s file_name")
+	View file_name del[ete]	(equivalent to "View -d file_name")
+  
+DESCRIPTION
+	'View' without parameters displays the most recent ASTRA run.
+ 	'View file_name' displays data stored in the named file.
+	Other options allow to list all available data files, 
+	delete any of them, store the results of the most recent run 
+	in a named file, retrieve input files used in calculations 
+ 	providing the results stored in file_name.
+ 	
+ OPTIONS
+ 	-h	display this page
+  
+ 	-l	list contents of a directory with stored data
+  
+ 	-d file_name
+ 		remove the data file 'file_name'
+  
+ 	-r file_name
+ 		retrieve the equation (model) file[s] used for 'file_name'
+  
+ 	-s file_name
+ 		save the most recent Astra run in 'file_name'
+  
+ USAGE
+ 	Only one option can be used in a command line.
+ 	Options 'd', 'r', 's' require a filename to be specified.
+ 	'file_name' can comprise up to 20 alpha-digit symbols.
+  
+ EXAMPLES
+ 		example% View
+ 		example% View asd
+ 		example% View -s asdexNB 
+ 		example% View asdexNB save
+ 		example% View -r 1234 
+  
+ 	The following commands:
+  
+ 		example% View -d highfield 
+ 		example% View highfield del
+ 		example% View highfield delete
+  
+ 	are equivalent.
+

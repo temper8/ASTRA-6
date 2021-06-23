@@ -1,0 +1,4 @@
+C WEX [MJ]:	0.0016 * Integral {0,R} (3/2*Nexp*Texp) dV
+C			(Pereverzev 25-MAR-92)
+	IF(J.EQ.1)	WEX=0.
+	WEX=WEX+NEX(J)*TEX(J)*VR(J)*HRO*.0024

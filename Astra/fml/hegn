@@ -1,0 +1,6 @@
+C HEGN  [m#2/s]:	Experemental electron heat conductivity
+C			without convection flux
+C			(Yushmanov 15-FEB-89)
+	YR=(J-.5)*HRO
+	HEGN =625.*(QETOTR(YR)-QEDWTR(YR)-QEGNR(YR))
+	HEGN =-HEGN/(G11(J)*NE(J)*GRAD(TE,J))

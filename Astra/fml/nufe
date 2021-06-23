@@ -1,0 +1,10 @@
+C NUFE [1/s]:	Slowing down frequency for fast ions
+C		fast_ion -> electron collision frequency
+C	
+C The following quantities are not defined in versions > 5.3
+C   ZBEAM      Beam ion charge in the proton charge units
+C   ABEAM      Beam ion mass in the proton mass units
+	ZBEAM = 1.
+	ABEAM = 2.
+	include	'fml/coulg'
+	NUFE = .51*ZBEAM**2*COULG*NE(J)*sqrt(ABEAM/TE(j))/(ABEAM*TE(j))

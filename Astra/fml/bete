@@ -1,0 +1,5 @@
+C BETE:	Local toroidal Beta Electron
+C		Pereverzev	
+C	beta_e=8\pi*n_e*T_e/B_0^2
+C
+	BETE = 4.02E-3*NE(j)*TE(j)/BTOR**2

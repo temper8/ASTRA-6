@@ -1,0 +1,14 @@
+C D2TI [?]:	~ shear poloidal velocity according to Parail et al.,
+C		  Plasma Phys. Control. Fusion 40, (1998) 805-810.
+C			(Pereverzev 20-Jun-98)
+	if (j.eq.1)	then
+	    YD2TI1 = 2.23E-6*RTOR**2/BTOR/HRO**3
+	    YD2TI = 0.5*(TI(3)-TI(2))/MU(2)
+	    D2TI=YD2TI1*(YD2TI-(TI(2)-TI(1))/MU(1))/SQRT(TI(1)/AMAIN(1))
+	elseif (j.eq.2 .or. j.gt.NA)	then
+	    D2TI = D2TI
+	else
+	    YY1 = YD2TI
+	    YD2TI = (TI(j+1)-TI(j))/MU(j)/j
+	    D2TI = YD2TI1*(YD2TI-YY1)/MU(j)/SQRT(TI(j)/AMAIN(j))
+	endif

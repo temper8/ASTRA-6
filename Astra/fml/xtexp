@@ -1,0 +1,5 @@
+C XTEXP [m#2/s]:	Effective diffusivity for the toroidal momentum
+C			(G.Pereverzev 20-AUG-01)
+	YR=(J-.5)*HRO
+	XTEXP = 5.98E7*VINT(SCUBM,YR)
+	XTEXP = -XTEXP/(G11(J)*AMAIN(J)*NI(J)*GRAD(VTORX,J))

@@ -1,0 +1,9 @@
+C PEHCL [MW/m#3]: Electron H-ion heat exchange due to Coulomb collisions
+C	PEHCL=3/taueH*Ne*(Te-Ti)*m/M
+C	here tauei=(7.3E-8)*Te#(3/2)/(Z#2*Ni) [s]
+C	Usage:
+C		PE=...-PEHCL
+C		SF1=...+417*PEHCL/NHYDR
+C			(Corrected  26-MAR-97)
+	YCOUL=0.00246*(15.94+LOG(TE(j))-.5*log(NE(j)))
+	PEHCL=YCOUL*NE(J)*NHYDR(J)*(TE(J)-TI(J))/TE(J)/SQRT(TE(J))

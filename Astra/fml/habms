@@ -1,0 +1,17 @@
+C HABMS [HABM]: Heat diffusivity Anomalous Giro Bohm Smoothed
+C Usage:
+C   or	HE=...+HABMS;	XI=...+2*HABMS;
+C			(Pereverzev 31-MAR-98)
+C		Difference with HATL in ABC <-> ROC
+	if (j.eq.1)	then
+		do  jj	=1,NA
+		j = jj
+		include	'fml/habm'
+		if (jj .eq. 1)	YY = HABM
+		call	SMOFML(-1.,JJ,HABM,'HABMS')
+		enddo
+		j = 1
+		HABM = YY
+	endif
+	call	SMOFML(.002,J,HABMS,'HABMS')
+

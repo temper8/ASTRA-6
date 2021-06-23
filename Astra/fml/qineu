@@ -1,0 +1,5 @@
+C QINEU [MW]:	Integral {0,R} (PINEU) dV
+C			(Yushmanov 11-JAN-89)
+	include	'fml/pineu'
+	IF(J.EQ.1)	QINEU=0.
+	QINEU=QINEU+PINEU*VR(J)*HRO

@@ -1,0 +1,3 @@
+C NUI [1/s]:	Full frequency of ion collisions
+C	Coulomb logarithm 15 is used
+	NUI=ZMAIN(J)**4*NI(J)*322./(TI(J)*SQRT(TI(J)*AMAIN(J)))

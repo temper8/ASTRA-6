@@ -1,0 +1,4 @@
+C   CS  [m/s]  Sound Velocity 	CS  = sqrt[T_e/M_i]
+C   Note! Z-dependence is not included
+Cmp. 				VSI = sqrt[(T_e+T_i)/M_i]
+	CS=3.096E5*SQRT((TE(j))/AMAIN(j))

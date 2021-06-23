@@ -1,0 +1,15 @@
+C ENHH0 []:  Electrical heat convection Neoclassical Hinton-Hazeltine
+C	C=K0
+C			Rev. Mod. Phys. v.48, part 1 (1976) 297.
+C			(Yushmanov 28-APR-87)
+C			(Corrected by Polevoi 12-APR-89)
+	ZZ=ZEF(J)
+	include	'fml/nues'
+	include	'fml/nuis'
+	YF2=NUIS*NUIS
+	E=SQEPS(J)*SQEPS(J)
+	SF=SQRT(NUIS)
+	E2=E*E
+	E3=E2*E
+	ENHH0=((1.17-0.35*SF)/(1.0+0.7*SF)-2.1*YF2*E3)/
+     .		((1.0+YF2*E3)*(1.0+NUES*NUES*E2))

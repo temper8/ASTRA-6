@@ -1,0 +1,9 @@
+C NUAS [1/s]:	Slowing down frequency for DT alpha
+C	from 3.5 MeV to VCA [C.Estrada-Mila PoP Vol.13 (2006) 112303]
+C Here  NUAS = 1/tau_s*,	tau_s* = I_2*tau_s
+C						Pereverzev-July-2008
+C Usage: Sink of fast alphas is SFFx =-NUAS 
+	include	'fml/coulg'
+C	include	'fml/vca'
+	NUAS = sqrt(TE(j))
+	NUAS = 1.505*NE(j)*COULG/(TE(j)*NUAS*log(1.d0+10.28/NUAS))

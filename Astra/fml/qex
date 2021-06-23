@@ -1,0 +1,4 @@
+C QEX [MW]:	Integral {0,R} ( PEX ) dV
+C			(Yushmanov 11-JAN-89)
+	IF(J.EQ.1)	QEX=0.
+	QEX=QEX+PEX(J)*VR(J)*HRO

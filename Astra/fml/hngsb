@@ -1,0 +1,7 @@
+C HNGSB [m#2/s]:  Heat conductivity Neoclassical Galeev-Sagdeev Banana Ion
+C	H=SQRT(eps)*ROip#2*NUi*.57	( Nui=Nuii*(1+1.4*(ZEF-1)) )
+C			Vopr. Teor. Plasmy v.7 (1973) 211
+C			(Yushmanov 28-APR-87)
+	INCLUDE	'fml/nui'
+	HNGSB=NUI*1.2E-5*AMAIN(J)*TI(J)/
+     1	SQEPS(J)**3/(ZMAIN(J)*BTOR*MU(J))**2

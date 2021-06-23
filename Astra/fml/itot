@@ -1,0 +1,5 @@
+C ITOT [MA]:	Toroidal current inside surface (ro)
+C	at the shifted mesh (cp. QCU(ro) is given at the main mesh)
+C		(Pereverzev 30-JAN-89)
+	ITOT=5.*G22(J)*BTOR*IPOL(J)*J*HRO*MU(J)/RTOR
+	if (j.eq.NA1) ITOT=5.*G22(J)*BTOR*IPOL(J)*ROC*MU(J)/RTOR

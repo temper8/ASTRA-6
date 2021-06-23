@@ -1,0 +1,22 @@
+C RLTKD []:		R/L_Tcrit for ITG mode 		(IFS/PPPL model)
+C 	according to M.Kotschenreuther, W.Dorland et al. 
+C					Ph.P.,Vol.2(6) 2381 (1995)
+C See also RLTCZ: 	R/L_Tcrit for carbon branch
+C    zth -> ZEF(j)*NE(j)/(NE(j)-NIBM(j)) = (n_i + 36 n_C)/(n_e - n_beam)
+C		(Pereverzev 26-03-00) copied from the original routine
+C
+! This formula differs from RLTCR by definition of SHEAR <-> SHAT
+C
+	YTAUB=TI(j)/TE(j)/(1.-NIBM(j)/NE(j))
+	include 'fml/shat'
+	YSHAT = MAX(SHAT,5.d-1)  ! Formula is not applicable for shat<0.5
+	include	'fml/lni'
+	YRLN = RTOR/LNI
+	YRLN = MIN(ABS(YRLN),6.d0)*SIGN(1.d0,YRLN)
+	YNU = 0.84 * 2.5*RTOR*NE(j)/sqrt(TI(j)*TE(j)**3)
+
+      RLTKD= 2.46*(1.+2.78*MU(j)**2)**0.26*(ZEF(j)/2.)**0.7*YTAUB**0.52
+     .       *( (0.671+0.570*YSHAT-0.189*YRLN)**2
+     .       +0.335*YRLN+0.392-0.779*YSHAT+0.210*YSHAT**2)
+     .       *( 1.-0.942*(2.95*(AMETR(j)/RTOR)**1.257/YNU**0.235-0.2126)
+     .       *ZEF(j)**0.516 / ABS (YSHAT)**0.671)

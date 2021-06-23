@@ -1,0 +1,7 @@
+C CCSPX [1/mkOhm*m] or [MA/V*m]: Conductivity Classical SPitzer
+C	with experimental temperature Tex
+C		Hirshman, Hawryluk, Birge, NF, v.17, No.3, (1977) 611.
+C			(Pereverzev 15-APR-87, updated 17-SEP-96)
+	include	'fml/coulg'
+	CCSPX = 1041./COULG*TEX(J)*SQRT(TEX(J))*
+     *		(1.13+ZEF(J))/(2.67+ZEF(J))/ZEF(J)

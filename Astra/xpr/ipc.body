@@ -1,0 +1,31 @@
+/*---------------------------------------------------------------------*/
+/* Create My shared memory segment */
+  My.ShMid = shmget(My.Key, lS, 0660|IPC_CREAT);
+  /* Attach My shared memory to the process */
+  /* My shared memory segment starts at ShmAdr */
+  ShmAdr = shmat(My.ShMid, NULL, 0);
+  i = My.OrdNr;
+//  sleep(i);   printf("My.OrdNr = %d\n",My.OrdNr);
+
+  i = write_aipc(My, AWD, &lS);
+
+ Loop:						    /* Main loop start*/
+  /* Increments the PRIMARY semaphore immediately, i.e. lets it run   */
+  /*            and proceeds to the next line or exits if semop fails */
+  if (semop(SemID, &buf0, 1) < 0)     goto Exit;    
+  /* PRIMARY makes time step and fills shared memories                */
+  /* printf("Primary let,  buf0.sem_op = %d\n",buf0.sem_op);          */
+  /* printf("Process # %d \"%s\" is idling\n",My.OrdNr,My.Path);      */
+  /* Wait until PRIMARY opens track making SEMVAL = 1 or              */
+  /*   exit if SemID has been destroyed                               */
+  /*   sembuf members:	   {sem_num,sem_op,sem_flag};
+     static struct sembuf buf0 = {0, 1, IPC_NOWAIT};
+     static struct sembuf bufN = {My.OrdNr, -1, ~SEM_UNDO&~IPC_NOWAIT};
+     bufN.sem_num = My.OrdNr;			    		      */
+  if (semop(SemID, &bufN, 1) < 0)  goto Exit;
+  // printf("Process # %d \"%s\" is running\n",My.OrdNr,My.Path);
+  // AVARS = (struct A_vars *)shmat(ShMid0, NULL, 0);
+  AVARS = (struct A_vars *)ShmAd0;
+  // AARRS = (struct A_arrs *)shmat(ShMid1, NULL, 0);
+  AARRS = (struct A_arrs *)ShmAd1;
+/*--------------------------------------------------------------------*/

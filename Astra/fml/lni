@@ -1,0 +1,8 @@
+C LNI [m]:	Characteristic Length of n_i profile
+C			mapped to the minor radius "a"
+C	LNI=n_i/abs(dn_i/da)
+C			(Pereverzev 15-12-98)
+	if (j .lt. NA1) then
+	   LNI=max(1.d-6,abs(NI(j+1)-NI(j)))
+	   LNI=0.5*(NI(j+1)+NI(j))*abs((AMETR(j+1)-AMETR(j))/LNI)
+	endif

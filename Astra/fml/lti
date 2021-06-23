@@ -1,0 +1,8 @@
+C LTI [m]:	Characteristic Length of T_i profile
+C			mapped to the minor radius "a"
+C	LTI=T_i/abs(dT_i/da)
+C			(Pereverzev 15-12-98)
+	if (j .lt. NA1) then
+	   LTI=max(1.d-6,abs(TI(j+1)-TI(j)))
+	   LTI=0.5*(TI(j+1)+TI(j))*abs((AMETR(j+1)-AMETR(j))/LTI)
+	endif

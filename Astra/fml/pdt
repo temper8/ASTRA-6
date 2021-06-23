@@ -1,0 +1,6 @@
+C PDT	[MW/m#3]   D-T	Fusion power
+C	S.V.Putvinskij//VANT,v.2,1988,p.3
+C	Corrected by S.V.Putvinskij 22.11.89
+C				Polevoy		22.11.89
+	INCLUDE 'fml/svdt'
+	PDT = 5.632*NDEUT(J)*NTRIT(J)*SVDT

@@ -1,0 +1,2 @@
+C FPA []:	Parabolic profile with respect to "a"
+	FPA=1.000001-(AMETR(J)/ABC)**2

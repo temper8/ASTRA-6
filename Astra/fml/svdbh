@@ -1,0 +1,10 @@
+C SVDBH [10#-19m#3/s]:	The formula is a fit to D-D reaction rate
+C	according to Bosch and Hale, NUC. FUS.,32,p. 611, (1992)
+C	D+D=n(2.452MeV)+3He(0.817MeV)
+C	Use:	P3He=Nd*Nd*SVD1*817./625. [MW/m#3]
+C			(Stober 15-APR-99)
+        SVDBH=1.0+TI(J)*(7.68222E-3-TI(J)*2.96400E-6)
+        SVDBH=TI(J)/(1.0-TI(J)*5.85778E-3/SVDBH)
+        YSVD =(31.3970**2/4.0/SVDBH)**.333333
+	SVDBH=5.43360E-12*SVDBH*sqrt(YSVD/937814.0/TI(J)**3)
+        SVDBH=SVDBH*EXP(-3.0*YSVD)*1.0E13

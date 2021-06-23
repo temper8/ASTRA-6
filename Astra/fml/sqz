@@ -1,0 +1,7 @@
+C SQZ [1/s]:  Squeezing factor for main ions
+C   1-w_{ExB}/w_{Bi}*(RTOR/rho/mu)**2
+C		K.C.Shaing and R.D.Hazeltine, Phys. Fluids B4, 2547 (1992)
+C					(Pereverzev 17-May-99)
+	include 'fml/rotsh'
+	SQZ=ROTSH*AMAIN(j)/ZMAIN(j)/9.6E7/BTOR*(RTOR/MU(j)/RHO(j))**2
+	SQZ=1+abs(SQZ)

@@ -1,0 +1,15 @@
+C HCHH []:	Electrical particle  convection	 Neoclassical Hinton-Hazeltine
+C			Rev. Mod. Phys. v.48, part 1 (1976) 297.
+C			(Yushmanov 28-APR-87)
+C	Example:	HC=HCHH
+	INCLUDE 'fml/betpl'
+	YZ=ZEF(J)
+	include	'fml/nues'
+	YE=SQEPS(J)
+	YD=YE*(0.95+1.43*YZ)/(0.03+YZ)
+	YA=(1.27+.65*YZ)/(.88+YZ)*SQRT(NUES)+(.52*YZ-.29)/(YZ-.79)*NUES
+	HCHH=YD/(1.+YA)/(1.+(0.66+0.34*YZ)/(-0.07+YZ)*NUES*YE*YE*YE)
+	YD=(-0.41+3.39*YZ)/(-0.29+YZ)
+	YA=(.72+.42*YZ)/(1.+YZ)*SQRT(NUES)+(.32*YZ-.29)/(YZ-.94)*NUES
+	HCHH=(YE*YD/(1.+YA)/(1.+(0.32+0.19*YZ)/(-0.17+YZ)*NUES*YE*YE*YE)
+     -		-1.5*HCHH)*BETPL

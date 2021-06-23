@@ -1,0 +1,4 @@
+C QD9 [F9/s]:	Integral {0,R} (SD9) dV
+C			(Pereverzev 9-OCT-07)
+	if(J.eq.1)	QD9=0.
+	QD9=QD9+SD9(J)*VR(J)*HRO

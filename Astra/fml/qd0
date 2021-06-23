@@ -1,0 +1,4 @@
+C QD0 [F0/s]:	Integral {0,R} (SD0) dV
+C			(Pereverzev 9-OCT-07)
+	if(J.eq.1)	QD0=0.
+	QD0=QD0+SD0(J)*VR(J)*HRO

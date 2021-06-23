@@ -1,0 +1,42 @@
+# Make command:	make -f for/makereview review && Mview
+# To suppress auxiliary information use:
+#	((make -f for/makereview review > /dev/null) >& /dev/tty) && \
+#		(Mview > /dev/tty ) >& /dev/null
+#
+OBF=${ALBR}review.o ${ALBR}outdsp.o ${ALBR}stdfun.o ${ALBR}surv.o ${ALBR}typdsp.o
+OBC=${ALBR}Astra2XW.o ${ALBR}dialogx.o ${ALBR}serv.o
+
+${ALBR}review:	${OBC} ${OBF}
+	echo "      subroutine drawconfig(I1,I2,R1,R2)"	 > dummy.f
+	echo "      implicit none"			>> dummy.f
+	echo "      integer  I1,I2"			>> dummy.f
+	echo "      double precision R1,R2"		>> dummy.f
+	echo "      end"				>> dummy.f
+	${AFC} -o dummy.o dummy.f			> /dev/null
+	${AFL} ${ALBR}review  ${OBC}  dummy.o ${OBF} -lm ${XLBR}
+	rm dummy.*	> /dev/null
+
+${ALBR}review.o:	for/review.f
+	${AFC} -o ${ALBR}review.o	for/review.f	> /dev/null
+	#
+
+${ALBR}Astra2XW.o:	for/Astra2XW.c
+	${ACC} -o ${ALBR}Astra2XW.o	for/Astra2XW.c	> /dev/null
+
+${ALBR}dialogx.o:	for/dialogx.c
+	${ACC} -o ${ALBR}dialogx.o	for/dialogx.c	> /dev/null
+
+${ALBR}serv.o:	for/serv.c
+	${ACC} -o ${ALBR}serv.o		for/serv.c	> /dev/null
+
+${ALBR}outdsp.o:	for/outdsp.f
+	${AFC} -o ${ALBR}outdsp.o	for/outdsp.f	> /dev/null
+
+${ALBR}stdfun.o:	for/stdfun.f
+	${AFC} -o ${ALBR}stdfun.o	for/stdfun.f	> /dev/null
+
+${ALBR}surv.o:	for/surv.f
+	${AFC} -o ${ALBR}surv.o		for/surv.f	> /dev/null
+
+${ALBR}typdsp.o:	for/typdsp.f
+	${AFC} -o ${ALBR}typdsp.o	for/typdsp.f	> /dev/null

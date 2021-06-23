@@ -1,0 +1,4 @@
+C QNTOT [10#19/s]:	Integral {0,J} ( SNTOT ) dV
+C			(Yusmanov 11-JAN-89)
+	IF(J.EQ.1)	QNTOT=0.
+	QNTOT=QNTOT+SNTOT(J)*VR(J)*HRO

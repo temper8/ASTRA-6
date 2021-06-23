@@ -1,0 +1,35 @@
+C PETSL [MW/m#3/keV]: Longitudinal electron heat loss in SOL: PETSL=q_e/L,
+C		according to G.Becker, NF, Vol.35, No.1, 35 (1995)
+C
+C (1) Longitudinal heat flux
+C	q_{e,||}=-\kappa_{e||}\nabla(T_e) 	(Braginski)
+C	\kappa_{e,||}=3.16*N_e*T_e*\tau_e/m_e
+C
+C                  3.11E7 * T_{keV}^(7/2)    3.16           
+C	q_{e,||}= ------------------------ * ----- 	[MW/m^2]
+C                 (lambda/10) * L_{||,[m]}   Z_eff
+C 
+C			(3.16/Z_eff) is replaced with
+C		k_0=(4.546+7.732*ZEF)/(0.823+2.44*ZEF+0.62*ZEF**2)
+C			3.11E7/(lambda/10)	 with  2.13E7
+C			\nabla(T_e)		 with  T_e/L_||
+C		so that
+C	q_{e,||}=2.13e7*k_0*T_e^(7/2)/L_||,	[keV,m -> MW/m^2]
+C
+C (2) In addition, heat loss is limited to the free flow value
+C
+C			q_e=q_{e,||}*q_FL/(q_{e,||}+q_FL)
+C
+C	q_FL=C_FL*n_e*m_e*v_e^3,	v_e=sqrt(T_e/m_e),	C_FL=0.2
+C
+C	q_FL=C_FL*2.12e4*n_13*T_e^(3/2),	[keV,1e13m^-3]
+C	
+C (3)	L=\pi/2*q_a*R_0,	L_|| is assumed to be = L
+C
+C   Usage:		(for implicit scheme)
+C	PET=...-PETSL
+C			(Pereverzev 15-MAR-99)
+	PETSL = 2.1E4*.2*NE(j)*TE(j)**2.5*(4.546+7.732*ZEF(j))
+     &		/(1.E-4*GP*RTOR/MU(NA1)*NE(j)+TE(j)**2)
+     &		/(0.823+2.44*ZEF(j)+0.62*ZEF(j)**2)
+     &		/(0.5*GP*RTOR/MU(NA1))

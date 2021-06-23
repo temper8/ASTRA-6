@@ -1,0 +1,4 @@
+C QD5 [F5/s]:	Integral {0,R} (SD5) dV
+C			(Pereverzev 9-OCT-07)
+	if(J.eq.1)	QD5=0.
+	QD5=QD5+SD5(J)*VR(J)*HRO

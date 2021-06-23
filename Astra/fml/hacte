@@ -1,0 +1,11 @@
+C HACTE [m#2/s]: Heat conductivity Anomalous Collisionless Trapped Electrons
+C	H=0.452*eps#1.5*(ROep*Vte)#2*NUe*d[Ln(Te)]/dr*d[Ln(Ne)]/dr/(1+.1/Nue*)
+C			Nuclear Fusion v. 26 (1986) 1515.
+C			(Yushmanov 23-APR-87)
+	include	'fml/nues'
+	if(J.ne.NA1)	then
+	HACTE=SQEPS(J)**3*180.*TE(J)**2*SQRT(TE(J))
+     1	*(TE(J+1)-TE(J))*(NE(J+1)-NE(J))/HRO**2
+     2	/(BTOR*NE(J))**2/(1.+.1/NUES)
+	endif
+

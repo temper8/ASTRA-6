@@ -1,0 +1,34 @@
+C HETAI [m#2/s]:  Heat conductivity Anomalous ETa-i 
+C	H=7*ROi#2*Vti/R*Te/Ti*[0.7*sqrt(Te/Ti/en)*sqrt(etai-etaicr)+
+C		+0.75*sqrt(2*r/R)....]
+C		F.Romanelli Pl.Phys.and Contr.Fus.,V.31 (1535) 1989.			C			(Pereverzev 23-JUN-92)
+
+	IF(TI(J) .GT. TI(J+1) .AND. NE(J) .GT. NE(J+1))	THEN
+	include	'fml/etae'
+	include	'fml/etai'
+	include	'fml/etan'
+	include	'fml/nues'
+	YTIOTE	= TI(J)/TE(J)
+	YHETA0	= 1.4142*SQEPS(J)/(1.+125.*NUES)
+	YHETA1	= 1.+YTIOTE*(1.-ETAE)*YHETA0
+
+	ETAN1	= YHETA1/(2.*(1.+YTIOTE)-YTIOTE*YHETA0)
+	ETAN2	= 1.5*(YHETA1-ETAI)/(1.+YTIOTE)
+	ETANC	= 1.-ETAN/max(ETAN1,ETAN2)
+	if(ETANC.le.0.)	ETANC=0.
+	ETAIC	= ETAI-1.333*(1.+YTIOTE*(1.-.75*YHETA0))*max(ETAN1,ETAN)
+	if(ETAIC.le.0.)	ETAIC=0.
+
+	YHETA	= 22.7*sqrt(TI(J))*TE(J)/(RTOR*BTOR*BTOR)
+	YHETA1	= 0.7*sqrt(ETAIC/ETAN/YTIOTE)
+	YHETA2	= 1.06*SQEPS(J)*(2.5+ETAE)/(1.5+2.25*NUES)
+C ion temperature gradient destabilization
+C	HETAI	= YHETA*YHETA1
+C trapped electron effect
+C	HETAI	= YHETA*YHETA2*ETANC**2.5
+C full model:
+	HETAI	= YHETA*(YHETA1+YHETA2*ETANC**2.5)
+							ELSE
+	HETAI	= 0.
+							ENDIF
+

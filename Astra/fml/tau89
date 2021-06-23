@@ -1,0 +1,5 @@
+C	[s] Ushmanov et al.:  ITER scaling '89 for TauE
+C				 Pereverzev (25.01.90)
+	TAU89=RTOR/ABC
+	TAU89=0.0307*IPL**1.7*TAU89*AMAIN(1)/(TEAVR(ROC)+TIAVR(ROC))
+     .		*(TAU89*BTOR/NEAVR(ROC)**2)**0.4

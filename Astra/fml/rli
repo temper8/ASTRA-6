@@ -1,0 +1,4 @@
+C RLI [m]:	Ion Larmor radius v_Ti/\omega_Bi
+C		Note ! v_Ti=sqrt(T_i/M_i) without 2 !
+C			(Pereverzev 15-12-98)
+	RLI=0.003235*sqrt(AMAIN(j)*TI(j))/BTOR

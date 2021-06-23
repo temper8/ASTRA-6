@@ -1,0 +1,15 @@
+C RLTCZ []:		R/L_Tcrit for carbon branch 	(IFS/PPPL model)
+C 	according to M.Kotschenreuther, W.Dorland et al. 
+C					Ph.P.,Vol.2(6) 2381 (1995)
+C See also RLTCZ: 	R/L_Tcrit for ITG mode
+C Note  zth -> ZEF(j)*NE(j)/(NE(j)-NIBM(j)) = (n_i + 36 n_C)/(n_e - n_beam)
+C		(Pereverzev 26-03-00) copied from the original routine
+
+	YTAUB=TI(j)/TE(j)/(1.-NIBM(j)/NE(j))
+	YSHAT = MAX(SHEAR(j),5.d-1) ! Formula is not applicable for shat<0.5
+	include	'fml/lne'
+	YRLNe = RTOR/LNE
+      YRLNe = MIN (ABS (YRLNe), 6.d0)
+      RLTCZ = 0.75 * (1.0+YTAUB) * (1.0+YSHAT)
+     .                * MAX (1.d0, 3.0 - 2.0 * YRLNe / 3.0)
+     .                * (1.0 + 6.0 * MAX (0.d0, 2.9-ZEF(j)))

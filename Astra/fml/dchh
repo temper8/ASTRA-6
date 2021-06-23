@@ -1,0 +1,12 @@
+C DCHH []:	Electrical particle  convection	 Neoclassical Hinton-Hazeltine
+C			Rev. Mod. Phys. v.48, part 1 (1976) 297.
+C			(Yushmanov 28-APR-87)
+C	Example:	DC=DCHH
+	INCLUDE 'fml/betpl'
+	YZ=ZEF(J)
+	include	'fml/nues'
+	YE=SQEPS(J)
+	YD=YE*(0.95+1.43*YZ)/(0.03+YZ)
+	YA=(1.27+.65*YZ)/(.88+YZ)*SQRT(NUES)+(.52*YZ-.29)/(YZ-.79)*NUES
+	DCHH=YD/(1.+YA)/(1.+(0.66+0.34*YZ)/(-0.07+YZ)*NUES*YE*YE*YE)
+	DCHH=DCHH*BETPL*(1.+TI(J)/(YZ*TE(J)))

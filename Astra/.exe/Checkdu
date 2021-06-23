@@ -1,0 +1,70 @@
+foreach A ( dat .res .tsk $cwd )
+   if ( $A == dat )	set	B = DAT
+   if ( $A == .res )	set	B = RES
+   if ( $A == .tsk )	set	B = TSK
+   if ( $A == $cwd )	set	B = TOT
+   eval set LEN  = `du -ks $A | cut -f1`
+   set MAX = `cat tmp/astra.log | grep $B':' | cut -c7-`
+   if ( $MAX == "" )	then
+	echo ">>> Error in tmp/astra.log file"
+	exit 1
+   endif
+   set MAXMB = `expr $MAX / 1000`
+   if ( $LEN >= $MAX && $MAX > 0 )	then
+      echo " "
+      if ( $A == .tsk )	then
+         echo ">>> ASTRA Warning >>> A size of all executables modules"\
+              exceeds $MAXMB MB
+      else if ( $A == .res )	then
+	 if ( ${PRNAME} == "" )	goto	Next
+         echo ">>> ASTRA Warning >>> A size of the post-view-file folder "\
+              exceeds $MAXMB MB
+      else
+        echo ">>> ASTRA Warning >>> Directory" \"$A\" length exceeds $MAXMB MB
+      endif
+# du -ks dat
+# du -ks .res
+# du -ks .tsk
+# du -ks .
+# ls -l dat/*
+# ls -l .res/*
+# ls -l .tsk/*
+      echo "    Options:"
+      echo "              "\"c\" - change the warning limit
+      echo "              "\"i\" - ignore this message \(default\)
+      echo "              "\"l\" - summarize disk usage and exit
+      echo "              "\"p\" - purge work directories
+      echo "              "\"s\" - suppress this message
+      echo \ 
+      echo -n "    Your choice > "
+      set VAR = $<
+      if ( $VAR == "c" )	then
+         echo \ 
+         if ( $A == .res )	then
+            echo -n "    Enter" maximal length \[MB\] for post-view folder
+         else
+            echo -n "    Enter" maximal length \[MB\] for \"$A\"\  
+         endif
+         set VAR = $<
+         ${ALBR}startA $B ${VAR}000
+      endif
+      if ( $VAR == "i" )	exit 0
+      if ( $VAR == "p" )	then
+         rm 	.tsk/*.exe		>& /dev/null
+         rm 	.tsk/*/*.exe		>& /dev/null
+         exit 0
+      endif
+      if ( $VAR != "l" )	goto	Continue
+      if ( $B == "TOT" )	then
+         du -k $A
+      else if ( $B == "TSK" )	then
+         du -k $A
+      else
+         ls -l $A
+      endif
+      exit 1
+Continue:
+      if ( $VAR == "s" )	${ALBR}startA $B -1
+   endif
+Next:
+end

@@ -1,0 +1,5 @@
+C HEEFF [m#2/s]:	Effective electron heat conductivity
+C 			(Pereverzev 26-APR-99)
+	YR=(J-.5)*HRO
+	HEEFF=625.*(QETOTR(YR)-QEDWTR(YR))
+	HEEFF=-HEEFF/(G11(J)*NE(J)*GRAD(TE,J))

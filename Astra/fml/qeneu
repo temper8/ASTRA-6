@@ -1,0 +1,5 @@
+C QENEU [MW]:	Integral {0,R} (PENEU) dV
+C			(Yushmanov 11-JUN-89)
+	INCLUDE	'fml/peneu'
+	IF(J.EQ.1)	QENEU=0.
+	QENEU=QENEU+PENEU*VR(J)*HRO

@@ -1,0 +1,5 @@
+#  By default git ignores the folder .exe 
+!.exe/
+!.exe/astra.log
+.lbr/
+.rep/

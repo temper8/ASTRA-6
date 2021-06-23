@@ -1,0 +1,4 @@
+c WTOT [MJ]:	0.0016 * Integral {0,R} (3/2*Ne*(Ti+Te)) dV
+C			(Yushmanov 11-JAN-89)
+	IF(J.EQ.1)	WTOT=0.
+	WTOT=WTOT+(NI(J)*TI(J)+NE(J)*TE(J))*VR(J)*HRO*.0024

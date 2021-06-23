@@ -1,0 +1,25 @@
+OBJECTS=${ALBR}/model.o ${ALBR}/model1.o ${ALBR}/model2.o ${ALBR}/model3.o ${ALBR}/model4.o
+
+model:			$(OBJECTS)
+			$(AFL) ${ALBR}/model	$(OBJECTS)
+
+${ALBR}/model.o:	.srv/model.f
+			$(AFC) .srv/model.f
+			mv model.o ${ALBR}/model.o
+
+${ALBR}/model1.o:	.srv/model1.f
+			$(AFC) .srv/model1.f
+			mv model1.o ${ALBR}/model1.o
+
+${ALBR}/model2.o:	.srv/model2.f
+			$(AFC) .srv/model2.f
+			mv model2.o ${ALBR}/model2.o
+
+${ALBR}/model3.o:	.srv/model3.f
+			$(AFC) .srv/model3.f
+			mv model3.o ${ALBR}/model3.o
+
+${ALBR}/model4.o:	.srv/model4.c
+			$(ACC) .srv/model4.c
+			mv model4.o ${ALBR}/model4.o
+

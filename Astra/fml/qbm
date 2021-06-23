@@ -1,0 +1,8 @@
+C QBM [d/l]:	Safety factor q(rho) due to the NB current alone
+C			(Pereverzev 20-SEP-90)
+	if(J.eq.1)	then
+		YQBMXC	=.1/(GP*BTOR)
+		YQBMXM	=0.
+			endif
+	YQBMXM	=YQBMXM+YQBMXC*CUBM(J)*VR(J)/IPOL(J)**2
+	QBM	=J*G22(J)/(YQBMXM+1.E-5)

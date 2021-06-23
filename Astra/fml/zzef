@@ -1,0 +1,10 @@
+C ZZEF [ ]: calc. Zeff according to guidelines
+C	limited to 8.
+C He3 added on 2.12.2008 (GVP)
+	ZZEF= ZIM1(j)*(ZIM1(j)-1)*NIZ1(J)
+     .       +ZIM2(j)*(ZIM2(j)-1)*NIZ2(J)
+     .       +ZIM3(j)*(ZIM3(j)-1)*NIZ3(J)
+     .       +(NALF(J)+NHE3(J))*2.
+	ZZEF=1.+ZZEF/max(1.d-2,NE(J))
+	IF(ZZEF.ge.8.) ZZEF=8.
+        ZZEF=max(ZZEF,1.d0)

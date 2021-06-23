@@ -1,0 +1,9 @@
+C PEIGN [MW/m#3]: Electron ion heat exchange due to particle flux
+C	Peign=-GN/Ne*GRAD(Ne*Ti)
+C	Use:	PE=PEIGN;	PI=-PEIGN
+C			(Yushmanov 21-MAR-88)
+	IF(J.EQ.1) PEIGN=-GN(1)*(NE(2)*TI(2)-NE(1)*TI(1))
+     1	/(625.*(NE(2)+NE(1))*HRO)
+	IF(J.GT.1.and.J.ne.NA1) PEIGN=-GN(J)*(NE(J+1)*TI(J+1)
+     1	-NE(J)*TI(J))/((NE(J)+NE(J+1))*HRO*625.)-GN(J-1)*
+     2	(NE(J)*TI(J)-NE(J-1)*TI(J-1))/((NE(J-1)+NE(J))*HRO*625)

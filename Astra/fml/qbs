@@ -1,0 +1,8 @@
+C QBS [d/l]:	Safety factor q(rho) due to the bootstrap current alone
+C			(Pereverzev 20-SEP-90)
+	if(J.eq.1)	then
+		YQBSXC	=.1/(GP*BTOR)
+		YQBSXM	=0.
+			endif
+	YQBSXM	=YQBSXM+YQBSXC*CUBS(J)*VR(J)/IPOL(J)**2
+	QBS	=J*G22(J)/(YQBSXM+1.E-5)

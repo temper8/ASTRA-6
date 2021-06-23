@@ -1,0 +1,4 @@
+C QDV6 [F6/s]:	Integral {0,R} (SDV6) dV
+C			(Pereverzev 9-OCT-07)
+	if(J.eq.1)	QDV6=0.
+	QDV6=QDV6+SDV6(J)*VR(J)*HRO

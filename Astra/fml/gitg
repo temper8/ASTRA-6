@@ -1,0 +1,9 @@
+C [1/s]	linear growth rate Gamma for ITG instability
+C	copied from the original Dorland's routine (Pereverzev 02-08-00)
+C! In original code, SHEAR is defined as aq'/q rather than rho*q'/q
+C-----------------------------------------------------------------------
+      include	'fml/lti'
+      include	'fml/rltcr'
+      include	'fml/gitg0'
+      if (j .le. NA)
+     >   GITG = GITG0*(RTOR/LTI-RLTcr)

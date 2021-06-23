@@ -1,0 +1,27 @@
+C HARL [keV/m]: Heat diffusivity Anomalous Rebut-Lallia
+C  \chi_2=
+C   =0.6*(1/L_Te+2/L_ne)*sqrt(Te/Ti)*R/r*q^2/(|grad(q)|*Bt*sqrt(R))
+C Usage:
+C	HE=...+HARL;	XI=...+HARL*XIRL;	CE=...-HARL*CERL;
+C   or	HE=...+HARLS;	XI=...+HARLS*XIRL;	CE=...-HARLS*CERL;
+C			(Pereverzev 21-APR-92)
+	include	'fml/tecrl'
+	if( J.lt.NA1 )	then
+		YGRADT = abs(TE(J+1)-TE(J))/HRO
+	if( YGRADT.gt.TECRL .and. MU(J+1) .lt. MU(J) )	then
+C Internal Report IPP 5/29 (1988)
+C		HARL = 1.2/(BTOR*(J-.5))*sqrt(RTOR*TE(J)/TI(J))
+C     .			/(MU(J)-MU(J+1))
+C     .			*(YGRADT/(TE(J+1)+TE(J))
+C     .			+2.*abs(NE(J+1)-NE(J))/(NE(J+1)+NE(J))/HRO)
+C Phys.Fl.B3(8),August (1991), p.2209
+C				c^2*sqrt{mu_0*m_p} = 4.13
+C
+		HARL = sqrt(AMAIN(J)*(ZEF(J)+1)*TE(J)/TI(J)/RTOR)
+     .			*4.13*(abs(TE(J+1)-TE(J))/(TE(J+1)+TE(J))
+     .			+2.*abs(NE(J+1)-NE(J))/(NE(J+1)+NE(J)))
+     .			/(MU(J)-MU(J+1))*(1.-SQEPS(J))/BTOR
+	else
+		HARL = 0.
+	endif
+	endif

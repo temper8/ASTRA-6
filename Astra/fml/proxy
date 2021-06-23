@@ -1,0 +1,16 @@
+C PROXY [MW*m#3] Oxygen radiation power
+C       POST D.E. JENSEN R.V. e.a., Atomic Data and Nuclear Tables,
+C                                   Vol.20 (1977) 397.
+C       Giannone ( September 1996 )
+C       Usage:          PE=...-PROXY*NE*NIZ1
+        T=TE(J)*1000.
+        Z=LOG10(T)
+        IF(T.LE.10.)                 Y=-2.5039+4.4066*Z-1.2924*Z*Z
+        IF(T.GT.10..AND.T.LE.22.)    Y=-7.0188+12.574*Z-4.9513*Z*Z
+        IF(T.GT.22..AND.T.LE.56.)    Y=1.7475+2.9345*Z-2.5932*Z*Z
+        IF(T.GT.56..AND.T.LE.140.)   Y=35.441-37.599*Z+9.5808*Z*Z
+        IF(T.GT.140..AND.T.LE.400.)  Y=-25.309+20.864*Z-4.4619*Z*Z
+        IF(T.GT.400..AND.T.LE.4000.) Y=7.996-5.6584*Z+0.81038*Z*Z
+        IF(T.GT.4000..AND.T.LE.1.E4) Y=2.4304-2.4367*Z+0.34463*Z*Z
+        IF(T.GT.1.E4)                Y=-1.1215-0.62068*Z+0.11287*Z*Z
+        PROXY   =10.**(Y)

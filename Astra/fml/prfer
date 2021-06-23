@@ -1,0 +1,21 @@
+C PRFER [MW*m#3] Ferrum radiation power
+C       POST D.E. JENSEN R.V. e.a., Atomic Data and Nuclear Tables,
+C				    Vol.20 (1977) 397.
+C	(PPPL-1352 1977)
+C				(Yushmanov 27-12-89)
+C	Corrected by Pereverzev 29-07-96
+C	Usage:		PE=...-PRFER*NE*NIZ1
+	T=TE(J)*1000.
+        Z=      LOG10(TE(J))
+	IF(T.le.1.E3)			then
+	        Y1=     .5-1.765*(1.2+Z)**2
+        	Y2=     -.3-4.96*(.08333+Z)**2 
+	        PRFER	=.5+10.**(Y1+1.)+10.**(Y2+1.)
+					endif
+	IF(T.gt.1.E3.and.T.le.2.5E3)	then
+		Y=  0.7-2.5*Z	 
+                PRFER	=10.**Y
+					endif
+	IF(T.gt.2.5E3) 			then
+	        PRFER	=5.E-1
+					endif

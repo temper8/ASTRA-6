@@ -1,0 +1,8 @@
+C QNIND [d/l]:	Safety factor q(ro) due to non-inductive current CD+CUBS
+C			(Pereverzev 20-SEP-90)
+	if(J.eq.1)	then
+		YQNIXC	=.1/(GP*BTOR)
+		YQNIXM	=0.
+			endif
+	YQNIXM	=YQNIXM+YQNIXC*(CD(J)+CUBS(J))*VR(J)/IPOL(J)**2
+	QNIND	=J*G22(J)/(YQNIXM+1.E-5)

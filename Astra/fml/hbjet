@@ -1,0 +1,19 @@
+C HBJET [m#2/s]:	Bohm term in JET Transport Model 
+C 		Private communication of 14.01.1999 with references to:
+C 	V.V.Parail et al. Plasma Physics and Contr. Fusion,  40 (1998) 805
+C	Hahm, Burrel, Phys. Plasmas 2 (1995) 1648.
+C				(Implemented by Pereverzev 19-Jan-99)
+C	HBJET=0.01*(R/B)*q^2*(dp_e/dr)/n_e*4(Te(0.8*rob)-Teb)/Teb;
+C	Usage:		HE=2*HBJET+HGBJ+...
+C			XI=4*HBJET+(0.2-:-0.5)*HGBJ+...
+C
+	if (J .eq. 1)	then
+	    YLP = .8*ROC
+	    YHBJET = .08*RTOR/HRO/BTOR*(RADIAL(TE,YLP)-TE(NA1))/TE(NA1)
+	    YLP = .0
+	else
+	    YLP =YHBJET*abs(NE(J)*TE(J)-NE(J-1)*TE(J-1))/(NE(J)+NE(J-1))
+	endif
+	HBJET = YLP/MU(J)**2
+C=======================================================================
+

@@ -1,0 +1,33 @@
+C HCHA []:	Bootstrap current density
+C		Jbs = HCHA*ln(Te)'+DCHA*ln(Ne)'+XCHA*ln(Ti)'
+C Neoclassical finite-aspect-ratio Hirshman + collisions by
+C	G.R.Harris "Comparisons of Different Bootstrap Current Calculations"
+C		EUR-CEA FC 1436 (1991).
+C						(Polevoy 25-JAN-94)
+C	Example:	HC=HCHA
+	INCLUDE 'fml/betpl'
+C	YLN=16.
+	YE=SQEPS(J)*SQEPS(J)
+	YE32=YE*SQEPS(J)
+	YX=(1.46*SQEPS(J)+2.4*YE)/(1.-YE)/SQRT(1.-YE)
+	YZ=ZEF(J)
+	YA=YZ*YZ
+	YA13=2.666667E-2*YA-.21*YZ+1.2033
+	YB13=0.14*YA-.87*YZ+1.8
+	YC13=9.666669E-2*YA-.67*YZ+1.6433333
+	YA23=.01*YA-.08*YZ+0.64
+	YB23=8.833333E-2*YA-.535*YZ+1.056667
+	YC23=.06*YA-.41*YZ+.96
+c	Y=RTOR*NE(J)*YZ*YLN/MU(J)/TE(J)**2/YE32
+c	YVE=6.94E-3*Y
+c	YVI=4.9E-3*Y
+	include 'fml/nues'
+	if(yve.le.0.)write(*,*) 'yve,yvi h', yve,yvi
+	YVE12=SQRT(NUES)	
+	YD=1.414*YZ+YA+YX*(.754+2.657*YZ+2.*YA)+YX*YX*(.348+1.243*YZ+YA)
+	YL31=YX*(.754+2.21*YZ+YA+YX*(.348+1.243*YZ+YA))
+	YL32=-YX*(.884+2.074*YZ)
+	YK13=YL31/(1+YA13*YVE12+YB13*NUES)/(1+YC13*NUES*YE32)
+	YK23=(2.5*YL31+YL32)/(1+YA23*YVE12+YB23*NUES)/(1+YC23*NUES*YE32)
+	HCHA=(-1.5*YK13+YK23)/YD*BETPL
+	IF(J.EQ.1) HCHA=0.

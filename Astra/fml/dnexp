@@ -1,0 +1,3 @@
+C DNEXP [m#2/s]:	Experimental diffusion coefficient
+C			(Yushmanov 11-JAN-90)
+	DNEXP=-QNTOTR(HRO*(J-.5))/(G11(J)*GRAD(NEX,J))

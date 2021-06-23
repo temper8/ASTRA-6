@@ -1,0 +1,21 @@
+C PAION1	 D-T Fraction of fusion alpha power deposited to ions
+C D.E.Post, 'Applied Atomic Collision Physics, Vol 2, 381, (1984)
+C C.M.Roach, 5/7/99 (modified by I.A. Vojtsekhovich 12.07.99)
+      YVALP=1.2960e+07
+      YLLAME=23.9+LOG(1.e3*TE(J)/SQRT(1.e19*NE(J)))
+      YY6=SQRT(1.e3*TE(J)/1.e19*NE(J))
+      YY6=YY6*(4.*AMAIN(J)*YVALP)/(4.+AMAIN(J))      
+		if(YY6.lt..1)YY6=0.1
+       YLLAMI=14.2+LOG(YY6)
+       YY6=SQRT(1.0e3*TE(J)/1.0e19*NE(J))*2.0*YVALP
+		if(YY6.lt..01)YY6=.01
+      YLLAMA=14.2+LOG(YY6)
+	YY6=YLLAMI*NI(J)/(AMAIN(J)*NE(J))
+	YY6=7.3e-4/YLLAME*(YY6+YLLAMA*NALF(J)/NE(J))
+	
+		if(YY6.lt.0.0001)YY6=.0001
+	YVC=YY6**0.33*SQRT(2.0*TE(J)*1.7564e+14)
+      YEPS=YVALP/(YVC+0.0001)
+      YY6=atan(0.577*(2.*YEPS-1.))       
+      YY7=log((1.+YEPS)**2/(1.-YEPS+YEPS**2))
+      PAION1=2./YEPS**2*(0.577*YY6-0.167*YY7+0.3)

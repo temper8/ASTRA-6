@@ -1,0 +1,8 @@
+C LNZ1 [m]:	Characteristic Length of NIZ1 profile
+C			mapped to the minor radius "a"
+C	LNZ1=n_z1/abs(dn_z1/da)
+C			(Pereverzev 15-12-98)
+	if (j .lt. NA1) then
+	   LNZ1=max(1.e-6,abs(NZ1(j+1)-NZ1(j)))
+	   LNZ1=0.5*(NZ1(j+1)+NZ1(j))*abs((AMETR(j+1)-AMETR(j))/LNZ1)
+	endif

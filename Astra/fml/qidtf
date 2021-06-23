@@ -1,0 +1,5 @@
+C QIDTF [MW]: Fusion power (with account of fast ions) input to ions 
+C		(Pereverzev 7-APR-03)
+	include	'fml/pidtf'
+	IF(J.EQ.1)	QIDTF=0.
+	QIDTF=QIDTF+PIDTF*VR(J)*HRO

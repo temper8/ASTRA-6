@@ -1,0 +1,8 @@
+C HAPA [m#2/s]:	Heat conductivity Anomalous PArail
+C	HE=c*Te*ROs*|1/Ln-0.5/LT|/e*Bt*
+C			Parail
+C			(Yushmanov 28-JAN-88)
+	J7=J
+	IF(J.EQ.NA1)J7=NA
+	HAPA=2.3*TE(J)*SQRT(TE(J))/BTOR**2/HRO*
+     1	ABS(1.-NE(J7+1)/NE(J7)-0.5*(1.-TE(J7+1)/TE(J7)))

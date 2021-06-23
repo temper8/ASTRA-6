@@ -1,0 +1,66 @@
+ MAST
+ Name   Time    Value   Error Not_used in old format input
+|____|--|____|--|____|--|____|----------------
+NB1             101
+TSTART          0.
+AB              .55
+ABC             .5
+RTOR            .8
+ELONG           1.8
+ELONM           2.2
+TRIAN           0.3
+TRICH           0.45
+SHIFT           0.0
+UPDWN           .05
+BTOR            1.5
+ Plasma current waveform
+NTIMES  3    NAMEXP IPL
+  0.01 0.02  0.4
+  0.1   .2   2.
+ Z effective
+NTIMES    3  NAMEXP ZRD1
+  0.01    0.02    0.1
+  3.      4.      3.
+ Volume average density
+NTIMES    3  NAMEXP ZRD2
+  0.1        .5        1.
+  0.25        1.1      1.6
+ Boundary setting for ESC equilibrium solver:
+  If not set 3-moment boundary is used.
+  Input order: (up to 12 points on the boundary given as pairs (r_i,z_i))
+  Top(1), bottom(2), inward(3), outward(4), other point arbitrary order
+	t_1		t_2		t_3		...	t_NTIMES
+	r_1(t_1)	r_1(t_2)	r_1(t_3)	...	r_1(t_NTIMES)
+	z_1(t_1)	z_1(t_2)	z_1(t_3)	...	z_1(t_NTIMES)
+	r_2(t_1)	r_2(t_2)	r_2(t_3)	...	r_1(t_NTIMES)
+	z_2(t_1)	z_2(t_2)	z_2(t_3)	...	z_2(t_NTIMES)
+NAMEXP BND	NTIMES   3	POINTS	8
+  .0    .1    .5
+  .62   .62   .62
+  0.9   0.9   0.9
+  .62   .6    .57
+ -.98   -1.  -1.12
+  0.3   0.3   0.3
+  0.0   0.0   0.0
+  1.3   1.3   1.3
+  0.0   0.0   0.0
+  .43   .43   .43
+  .78   .78   .78
+  .43   .42   .4
+  -.8   -.8   -.8
+  .94   .94   .94
+  .78   .78   .78
+  .94   .94   .94
+  -.8   -.8   -.8
+
+ Profiles:
+ Density profile vs minor radius [m] in the mid-plane
+POINTS   16   NTIMES     1  NAMEXP NE       GRIDTYPE      10  FILTER 0.001
+  .2
+  1.5152E-02  4.5455E-02  7.5758E-02  1.0606E-01  1.3636E-01  1.6667E-01
+  1.9697E-01  2.2727E-01  2.5758E-01  2.8788E-01  3.1818E-01  3.4848E-01
+  3.7879E-01  4.0909E-01  4.3939E-01  4.6970E-01  5.0000E-01
+  1.3293E+00  1.3290E+00  1.2926E+00  1.2362E+00  1.2023E+00  1.1612E+00
+  1.1245E+00  1.1380E+00  1.1107E+00  1.0331E+00  1.0167E+00  1.0057E+00
+  9.5720E-01  9.2980E-01  9.0195E-01  7.2925E-01  3.8030E-01
+END

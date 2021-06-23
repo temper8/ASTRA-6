@@ -1,0 +1,4 @@
+C QD3 [F3/s]:	Integral {0,R} (SD3) dV
+C			(Pereverzev 9-OCT-07)
+	if(J.eq.1)	QD3=0.
+	QD3=QD3+SD3(J)*VR(J)*HRO

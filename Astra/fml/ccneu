@@ -1,0 +1,4 @@
+C CCNEU [1/mkOhm*m] or [MA/V*m]: Conductivity Classical
+C				 due to collisions with NEUtrals
+C			(Pereverzev 05-JUL-90)
+	CCNEU=NE(J)/(3.*(NNCL+NNWM)*NN(J))

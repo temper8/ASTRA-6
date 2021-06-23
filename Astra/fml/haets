@@ -1,0 +1,17 @@
+C HAETS [m#2/s]:  Heat conductivity Anomalous ETa-i Smoothed
+C	H=2.5*ROi#2*Vti*SQRT(GRAD(Ti)/Ti/Rt)*GRAD(Ln(Ne))*STEP(ETA-Icr/ETA-I)
+C			Nuclear Fusion v. 26 (1986) 1515.
+C			(Yushmanov 24-APR-87)
+C			Smoothing added by Pereverzev 22-JUN-92
+	if (j.eq.1)	then
+		do  jj	=1,NA
+		j = jj
+		include	'fml/haeti'
+		if (jj .eq. 1)	YY = HAETI
+		call	SMOFML(-1.,JJ,HAETI,'HAETS')
+		enddo
+		j = 1
+		HAETI = YY
+	endif
+	call	SMOFML(.002,J,HAETS,'HAETS')
+

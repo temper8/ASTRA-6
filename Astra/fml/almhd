@@ -1,0 +1,14 @@
+C----------------------------------------------------------------------|
+C ALMHD []:	MHD alpha (r) defined as
+C	CGS: \alpha_MHD = -2*R_0*[dp/d\rho]*4\pi[q/B]^2
+C	SI:  \alpha_MHD = -2*R_0*[dp/d\rho]*\mu_0[q/B]^2
+C						(Pereverzev 12-JAN-90)
+C----------------------------------------------------------------------|
+	if (j .lt. NA)	then
+	   ALMHD = (NE(j+1)*TE(j+1)-NE(j)*TE(j)
+     >		   +NI(j+1)*TI(j+1)-NI(j)*TI(j))/HRO
+	else
+	   ALMHD = (NE(NA1)*TE(NA1)-NE(NA)*TE(NA)
+     >	           +NI(NA1)*TI(NA1)-NI(NA)*TI(NA))/HROA
+	endif
+	ALMHD = -4.02E-3*RTOR*ALMHD/(MU(j)*BTOR)**2

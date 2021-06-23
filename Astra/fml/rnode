@@ -1,0 +1,6 @@
+C RNODE [d/l]:	Radial node number nearest to RHO(j)
+C			(Pereverzev 06-04-01)
+	YR = RHO(j)
+	if(YR.le.0.)	RNODE=1
+	RNODE=int(YR/HRO+1)
+	if (YR .gt. ROC-0.5*HROA)	RNODE = NA1

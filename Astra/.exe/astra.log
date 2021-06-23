@@ -1,0 +1,19 @@
+WHOME:
+AROOT:
+AWD:  
+VAR:  readme
+MOD:  showdata
+MACH: 
+SHOT: 
+XFILE:
+RUNN: 
+TIME: 0
+TEND: 
+ATMP: 
+RSNAM:/tmp/profil.bin
+PROFT:
+RTYPE:RUN 
+DAT:  20000
+RES:  20000
+TSK:  30000
+TOT:  80000

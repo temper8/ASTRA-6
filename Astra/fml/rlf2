@@ -1,0 +1,10 @@
+C RLF2 []:	R/L_f2 
+C	RLF2=R*|dlog(n_e)/drho|
+C			(Pereverzev 25-08-08)
+      if (j .lt. NA) then
+         RLF2=max(1.d-6,(F2(j+1)+F2(j)))
+         RLF2=2.*(RTOR+SHIFT)*abs(F2(j+1)-F2(j))/HRO/RLF2
+      else
+         RLF2=max(1.d-6,(F2(NA1)+F2(NA)))
+         RLF2=2.*(RTOR+SHIFT)*abs(F2(NA1)-F2(NA))/HROA/RLF2
+      endif

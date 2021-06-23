@@ -1,0 +1,4 @@
+C QDVI [MW]:	Integral {0,R} (PDVI) dV
+C			(Pereverzev 9-OCT-07)
+	IF(J.EQ.1)	QDVI=0.
+	QDVI=QDVI+PDVI(J)*VR(J)*HRO

@@ -1,0 +1,3 @@
+C EDR [V/m]: Dreicer electric field
+C			(Pereverzev  30-JULY-92)
+	EDR=4.17*NE(J)/TE(J)

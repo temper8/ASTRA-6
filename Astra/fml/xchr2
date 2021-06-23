@@ -1,0 +1,16 @@
+C XCHR []:	Electrical heat convection Neoclassical Hirshman
+C			Phys. Fluids 31,3150 (1988).
+C			(Polevoy, Yushmanov 12-MAR-91)
+C	correction for collisionality (Sauter, Theory of Fus. Plasmas 
+C		Varenna 1994) G. Pacher 1997
+C	Example:	XC=XCHR
+	include 'fml/betpl'
+	include	'fml/nues'
+	YE=SQEPS(J)*SQEPS(J)
+	YX=(1.46*SQEPS(J)+2.4*YE)/(1.-YE)/SQRT(1.-YE)
+	YX=YX/(1.+0.5*sqrt(NUES))**2
+	YZ=ZEF(J)
+	YA=YZ*YZ
+	YD=1.414*YZ+YA+YX*(.754+2.657*YZ+2.*YA)+YX*YX*(.348+1.243*YZ+YA)
+	XCHR2=YX*(.754+2.21*YZ+YA+YX*(.348+1.243*YZ+YA))/YD
+	XCHR2=XCHR2*BETPL*(1.-1.172/(1.0+0.462*YX))*TI(J)/(YZ*TE(J))

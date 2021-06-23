@@ -1,0 +1,11 @@
+C TPF []:  Trapped Particle Fraction (banana)
+C	Sources:
+C	Off axis:	S.P.Hirshman, R.J.Hawryluk, B.Birge, 
+C		Nucl.Fusion - Letters v.17, No.3 (1977) 611
+C	On axis (ions only):	Z.Lin, W.M.Tang, W.W.Lee, 
+C		Phys. Plasmas, Vol.4, No.5, May 1997, p.1707
+C			(Pereverzev 8-Oct-97)
+	TPF=1.-SQEPS(J)*SQEPS(J)
+	TPF = min(1.d0, max(1.-TPF*SQRT(TPF)/(1.+1.46*SQEPS(J)),0.209*
+     ,	(sqrt(TI(j)*AMAIN(j))/(ZMAIN(j)*MU(j)*RTOR*BTOR))**0.33333))
+ 

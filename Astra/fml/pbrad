@@ -1,0 +1,4 @@
+C PBRRAD [MW/m#3]: Electron bremsstrahlung radiation
+C	N.A.Uckan//	ITER-TN-PH-8-6	Final Draft , 30 Nov.1988
+c			by	 Polevoy 21-07-89
+	PBRAD=5.06E-5*ZEF(J)*NE(J)*NE(J)*SQRT(TE(J))

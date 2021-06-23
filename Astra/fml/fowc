@@ -1,0 +1,9 @@
+C FOWC []:  Finite Orbit Width Correction to the neoclassical 
+C					ion heat conductivity
+C	Usage: XI=...+FOWC*HNCHI+
+C   Z.Lin, W.M.Tang, W.W.Lee, Phys. Plasmas, Vol.4, No.5, May 1997, p.1707
+C			(Pereverzev 8-Oct-97)
+C for trapped particle fraction see "fml/tpf"
+	YX0=2820*(BTOR*MU(j)*ZMAIN(j))**2/(RTOR*TI(j)*AMAIN(j))
+	YX0 = YX0*RHO(j)**3
+	FOWC = 1.-(1.+YX0)*exp(-YX0)

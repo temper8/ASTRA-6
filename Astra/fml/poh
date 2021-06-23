@@ -1,0 +1,4 @@
+C POH [MW/m#3]:	Power of Ohmic Heating
+C	P=sigma*Ez**2
+C		(Pereverzev 12-FEB-90)
+	POH=CC(J)*(ULON(J)/(GP2*RTOR*IPOL(J)))**2/G33(J)

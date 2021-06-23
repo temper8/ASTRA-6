@@ -1,0 +1,6 @@
+C CCSP [1/mkOhm*m] or [MA/V*m]: Conductivity Classical SPitzer
+C		Hirshman, Hawryluk, Birge, NF, v.17, No.3, (1977) 611.
+C			(Pereverzev 15-APR-87, updated 17-SEP-96)
+	include	'fml/coulg'
+	CCSP = 1041./COULG*TE(J)*SQRT(TE(J))*
+     *		(1.13+ZEF(J))/(2.67+ZEF(J))/ZEF(J)

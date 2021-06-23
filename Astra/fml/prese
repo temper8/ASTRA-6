@@ -1,0 +1,3 @@
+C PRESE [MJ/m#3]:	Electron pressure
+C		(Pereverzev 12-DEC-98)
+	PRESE=1.6E-3*NE(J)*TE(J)

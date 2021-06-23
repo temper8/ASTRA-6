@@ -1,0 +1,11 @@
+C HNGSE [m#2/s]:  Heat conductivity Neoclassical Galeev-Sagdeev Electron
+C	H=PL*BA/(PL+BA)+PS
+C	PL=1.6*q*ROe#2*Vte/Rt		PS=ROep#2*NUe*(1+1.6*q#2)
+C	BA=SQRT(eps)*ROep#2*NUe*1.18
+C			Voprosy Teorii Plasmy v. 7 (1973) 210.
+C			(G.Pereverzev 11-SEP-90)
+	include	'fml/nue'
+	HNPSE	=NUE*1.14E-8*TE(J)/BTOR**2*(1.+1.6/MU(J)**2)
+	HNBE	=NUE*2.36E-8*TE(J)/SQEPS(J)**3/(BTOR*MU(J))**2
+	HNPE	=0.35*SQRT(TE(J))*TE(J)/(BTOR**2*MU(J)*RTOR)
+	HNGSE	=1./(1./HNPE+1./HNBE)+HNPSE

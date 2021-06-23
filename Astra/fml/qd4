@@ -1,0 +1,4 @@
+C QD4 [F4/s]:	Integral {0,R} (SD4) dV
+C			(Pereverzev 9-OCT-07)
+	if(J.eq.1)	QD4=0.
+	QD4=QD4+SD4(J)*VR(J)*HRO

@@ -1,0 +1,7 @@
+C TH99[s]      TauEth(99) (y,2) (for Elmy H-mode for ITER) (eq. I.3.3.1-1)
+C      "Study of RTO/RC ITER Options", Chapt. I Sec.3.3 Page.2
+C                        Polevoy (11-OCT-99)
+C        TAU     =THQ99/Q**.69
+        THQ99 = 0.0562*IPL**.93*(RTOR*BTOR)**.15*
+     *          AMAIN(1)**.19*ABC**.58*ELONG**.78*
+     *          NECHR(0.d0)**.41*(RTOR+SHIFT)**1.24

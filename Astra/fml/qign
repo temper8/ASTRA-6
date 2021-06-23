@@ -1,0 +1,10 @@
+C QIGN [MW]:	Ion heat convective flux with particles
+C	QIGN=2.5*Gn*Ti*ni/ne*Stor
+C	dW/dt=...-QIGN
+C			(Yushmanov 20-FEB-89)
+	IF(J.EQ.NA1)	THEN
+	QIGN=G11(NA)*TI(NA1)*NI(NA1)/NE(NA1)*GN(NA)/250.
+			ELSE
+	QIGN=(G11(J)+G11(J+1))*(TI(J+1)+TI(J))*(NI(J+1)+NI(J))
+     1		/(NE(J+1)+NE(J))*GN(J)/1000.
+			ENDIF

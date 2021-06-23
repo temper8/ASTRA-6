@@ -1,0 +1,11 @@
+C HAED [m#2/s]:	Heat conductivity Anomalous Electron Drift
+C	HE=2.5*SQRT(eps)*c*Te*ROs/e*Bt*Ln
+C			Drake, Kleva
+C			(Yushmanov 14-MAY-87)
+	IF(J.NE.NA1)	then
+	HAED=5.8*SQEPS(J)*TE(J)*SQRT(TE(J))/BTOR**2*
+     1		ABS(1.-NE(J+1)/NE(J))/HRO
+			else
+	HAED=5.8*SQEPS(J)*TE(J)*SQRT(TE(J))/BTOR**2*
+     1		ABS(1.-NE(NA1)/NE(NA))/HRO
+			endif

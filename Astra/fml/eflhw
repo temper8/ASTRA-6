@@ -1,0 +1,9 @@
+C EFLHW [m/V]: EFficiency of current drive by LH wave with Wide spectrum
+C PHF(MW/m3)=jHF(MA/m2)*(EFLHW-UT/GP2/(RTOR+SHIFT))
+C			(Pereverzev 11-MAY-89)
+	YN1=TE(J)/36.
+	YN2=NE(J)/BTOR**2
+	YN2=1./(SQRT(1.+YN2-.12*SQRT(1.+1./YN2))+SQRT(YN2))**2
+C - Wegrow corrections for temperature dependence and spectrum directivity
+	YTLH	=0.8*(1.+1.8E-3*(50*YN2)**1.13*EXP(0.75/YN2))
+	EFLHW=524.*YTLH*(YN2-YN1)/(LOG(YN2/YN1)*(ZEF(J)+5.)*NE(J))

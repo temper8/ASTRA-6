@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <math.h>
+#include <time.h>
+#include <sys/times.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#include <sys/shm.h>
+#include <errno.h>
+/*#if defined(_SEM_SEMUN_UNDEFINED) */
+union semun {
+  int val;                    /* value for SETVAL */
+  struct semid_ds *buf;       /* buffer for IPC_STAT, IPC_SET */
+  unsigned short int *array;  /* array for GETALL, SETALL */
+  struct seminfo *__buf;      /* buffer for IPC_INFO */
+};
+/*#endif */
+double	swatch (double*);		double	swatch_(double*);
+/*---------------------------------------------------------------------*/
+int     A_NB1, SemID, ShMid0, ShMid1;
+void   *ShmAd0, *ShmAd1, *ShmAdr;
+#define NC1 A_NB1
+#include "A_X_common.h"
+/*---------------------------------------------------------------------*/
+/* The file provides a template for replacing subroutines in the
+   Astra code by child processes. The main part of this file is fixed.
+   The variable part is marked on the rhs.	                       */
+/*------------
+int main(argc, argv, envir)
+int	argc;
+char	*argv[], *envir[];
+--------------*/
+int sbp2shm(char* arg0, char* arg1, int* arg2, int* arg3, int* arg4)
+{ sbp2shm_(arg0, arg1, arg2, arg3, arg4); }
+int sbp2shm_(char* arg0, char* arg1, int* arg2, int* arg3, int* arg4)
+{ int i, lS;
+  static union semun Mysemun;
+  // sembuf members:	   {sem_num,sem_op,sem_flag};
+  static struct sembuf buf0 = {0, 1, IPC_NOWAIT};
+  static struct sembuf bufN = {1,-1, ~SEM_UNDO&~IPC_NOWAIT};
+  // static struct sembuf bufN = {1,-1, SEM_UNDO}; /* discarded 31-10-08*/
+  static char whoami[32];
+  static char AWD[96];
+#include "A_vars.h"
+  static struct A_proc_info Mama, My;
+/*----------------------- Common part start --------------------------*/
+  swatch(&(My.CPUse));
+  /* Analyze the calling command string. Get own PID and name. */
+  My.Pid = getpid();
+  getcwd(My.Path,(size_t)64);
+  strcat(My.Path,"/");
+/*------------
+  strcat(My.Path,argv[0]+2);
+  if (strrchr(argv[0],'/') != NULL)  {
+      sscanf(strrchr(argv[0],'/')+1,"%s",whoami); }
+  else { sscanf(argv[0],"%s",whoami); }
+  sscanf(argv[1],"%s",Mama.Path);      ++argv;	
+  ++argv;	Mama.Pid  = (pid_t)atoi(*argv);
+  ++argv;	Mama.Key  = (key_t)atoi(*argv);
+  ++argv;	My.OrdNr  = atoi(*argv);
+--------------*/
+  strcat(My.Path,arg0+2);
+  if (strrchr(arg0,'/') != NULL)  {
+      sscanf(strrchr(arg0,'/')+1,"%s",whoami); }
+  else { sscanf(arg0,"%s",whoami); }
+  sscanf(arg1,"%s",Mama.Path);
+  Mama.Pid  = (pid_t)*arg2;
+  Mama.Key  = (key_t)*arg3;
+  My.OrdNr  = *arg4;
+/*  printf("My.Path = \"%s\"\n",My.Path);
+    printf("Mama.Path = \"%s\"\n",Mama.Path);
+    printf("Mama.Pid = \"%d\"\n",Mama.Pid);
+    printf("Mama.Key = \"%d\"\n",Mama.Key);
+    printf("My.OrdNr = \"%d\"\n",My.OrdNr);
+*/
+  /* Check of consistency */
+  /* printf("Mama.Key = %d,   %d\n",
+             Mama.Key, ftok(Mama.Path,(int)Mama.Pid));      */
+
+  /* Associate My semaphore with the ordinal process number */
+  bufN.sem_num = My.OrdNr;
+  /* Get semaphore and shmem IDs. */
+  SemID  = semget(Mama.Key, 0,0660);
+  ShMid0 = shmget((key_t)(Mama.Key+0), 0, 0660);
+  ShMid1 = shmget((key_t)(Mama.Key+1), 0, 0660);
+  ShmAd0 = shmat(ShMid0, NULL, 0);
+  AVARS = (struct A_vars *)ShmAd0;
+  A_NB1 = AVARS->nb1;
+  ShmAd1 = shmat(ShMid1, NULL, 0);
+  SP_stamp(Mama, My, SemID);
+  strcpy(AWD,Mama.Path);
+  if (strstr(AWD,".tsk/") == NULL)
+     { printf("SBP launch string error\n"); a_stop(); }
+  else
+     { /* i = strstr(AWD,".tsk/")-AWD;    AWD[i] = '\0'; */
+       *strstr(AWD,".tsk/") = '\0';
+     }
+#include "A_arrs.h"
+  My.Key = ftok( My.Path, (int)My.Pid);
+/*---------------------------------------------------------------------*/

@@ -1,0 +1,9 @@
+C HCKIM []:	Electrical particle  convection	 Neoclassical Kim
+c		inclusion of finite collision times (all collisionality
+C		regimes: banan - plateau - Pfirsch-Schlueter)
+C			Phys. Fluids B 3, 2050 (1991).
+C			(Alexander 04-JAN-95)
+C		DHKIM added 2.11.98 (Pereverzev)
+C	Example:	HC=HCKIM
+	include 'fml/dhkim'
+	HCKIM=BETPL*(DHKIM+DXKIM)

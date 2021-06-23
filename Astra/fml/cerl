@@ -1,0 +1,9 @@
+C CERL [m/s]: Heat pinch anomalous Rebut-Lallia
+C Usage: CE=...-HARL*CERL  or CE=...-HARLS*CERL
+C		Internal Report IPP 5/29 (1988)
+C			(Pereverzev 6-AUG-92)
+	include	'fml/tecrl'
+	CERL=TECRL/TE(J)
+	if(J.lt.NA1)	then
+		if(TE(J).lt.TE(J+1))  CERL=-CERL
+	endif

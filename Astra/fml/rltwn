@@ -1,0 +1,8 @@
+C RLTWN []:	R/L_Tcrit for ITG mode 	(Weiland Nordman model)
+C 	according to T.A.Davydova & J.Weiland, Ph.Pl.,Vol.7(1) 243 (2000)
+C See also RLTCZ & RLTCR (IFS/PPPL model)
+C						(Pereverzev 26-03-00)
+	YTAU=TE(j)/TI(j)
+	include	'fml/lne'
+	YRLN = RTOR/LNE
+	RLTWN= 0.667*YRLN-0.5*YTAU+0.25*YTAU+1.1/YTAU+0.25*YTAU*YRLN**2

@@ -1,0 +1,47 @@
+	This file demonstrates different ways of data presentation
+	The input data are defined by the file "exp/readme".
+
+!  No equation for NE is given. Therefore, NE coincides with NEX at t=t_0 by default. 
+!  However, after TIME=0.5s they diverge.
+
+!  TE follows the evolution of TEX according to specification ASsign.
+TE:AS;		TE=TEX;
+
+!  Arrays CAR1 and CAR1X are always different.
+
+CU:AS;	MU=.2*FPR+.185;		CC=CCSP;	CAR1=(FP-FPC)/(FPB-FPC);
+
+!  The arrays CAR2X, CAR3X, CAR4X represent the same parabolic profile
+!  along a sweeping chord, horizontal chord and vertical chord, respectively.
+!  Note that small truncation errors in the input data cause large extrapolation
+!       errors when the chord is far remoted from a magnetic axis  
+
+Profile output
+
+Here the curve TEX and the set of data TEX are combined (both in red). 
+Calculated quantity TE (No.9) is drawn in the same box in blue.
+	Tex\TEX\\TEX;		! No.1
+Normalized poloidal flux. It is different form the quantity CAR1X.
+	psiN\CAR1\1;		! No.2
+	car1\CAR1X\-2;		! No.3
+Parabolic profile determined alond a moving vertical chord.
+	vert\CAR3X\\CAR3X\1;	! No.4
+	nex\NEX\\NEX;		! No.5
+	Ti\TI\\TIX;		! No.6
+Parabolic profile determined alond a sweeping chord.
+	car2\CAR2X\\CAR2X;	! No.7
+All parabolic profiles are drawn in the same box
+	All\\CAR2X\\CAR3X\\CAR4X\1;		! No.8
+	Te\TE;			! No.9
+	sqps\sqrt(CAR1);	! No.10
+	cax1\\CAR1X\-2;		! No.11
+Parabolic profile determined alond a moving vertical chord.
+	horz\CAR4X\\CAR4X\1;	! No.12
+	ne\NE;			! No.13
+	prad\PRADX\\PRADX;	! No.14
+!  Automatic scale adjustment does not work for this channel (cmp. with No.3,11)
+	cax2\\CAR2X;		! No.15
+	Zeff\ZEF\\ZEF;		! No.16
+
+AB_AB;		NAB_NAB;	ABC_ABC;	NA1_NA1;
+NB1_NB1;	mu_MUB;

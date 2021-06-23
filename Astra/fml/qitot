@@ -1,0 +1,4 @@
+C QITOT [MW]:	Integral {0,R} ( PITOT ) dV
+C			(Yushmanov 11-JAN-89)
+	IF(J.EQ.1)	QITOT=0.
+	QITOT=QITOT+PITOT(J)*VR(J)*HRO

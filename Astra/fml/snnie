@@ -1,0 +1,6 @@
+C SNNIE	[1/s]: 		S=<sigma*v>*Nn
+C	particle Source due to neutral Ionization by Electron impact
+C	SNN=SNNIE
+C			(Pereverzev 22-MARCH-91)
+	INCLUDE	'fml/svie'
+	SNNIE	=SVIE*(NNCL+NNWM)*NN(J)

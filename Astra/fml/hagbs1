@@ -1,0 +1,14 @@
+C HAGBS1 [HAGB]: Heat diffusivity Anomalous Giro Bohm Smoothed
+C Usage:
+C   or	HE=...+HAGBS1;	XI=...+HAGBS1;
+C			(Pereverzev 6-AUG-92) (IBM noncompatible)
+	if (j .eq. 1)	then
+	    do	jj=1,NA1
+		j = jj
+		include	'fml/hagb'
+		YY = EVEN(jj,HAGB,-1.)
+	    enddo
+	    j = 1
+	endif
+	HAGBS1 = EVEN(j,HAGB,.002)
+

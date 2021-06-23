@@ -1,0 +1,6 @@
+C   FTE    []  
+C Possible usage: CC=CCHR*min(CNHR/CCSP,FTE)
+	FTE=(2.13E-4*SQRT(TE(J))/(BTOR*RTOR*MU(j)*ELON(j)))**0.333
+	include	'fml/nue'
+	FTE=280.*TE(j)/(RTOR*RTOR*NUE*BTOR*ELON(j))*FTE
+	FTE=.517/(1+4.0122*FTE-(1.5-4.6809*FTE)**2/(4.66+20.1725*FTE))

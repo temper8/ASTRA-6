@@ -1,0 +1,5 @@
+C PSYNC [MW/m#3]: Electron synchrotron radiation
+C	N.A.Uckan//	ITER-TN-PH-8-6	Final Draft , 30 Nov.1988
+c			by	 Polevoy 25-07-89
+	PSYNC=1.32E-7*(TEAVR(ROC)*BTOR)**2.5
+     .		*SQRT(NEAVR(ROC)/AB*(1.+18.*AB/(RTOR*SQRT(TEAVR(ROC)))))

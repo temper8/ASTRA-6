@@ -1,0 +1,3 @@
+C HIBOM [m#2/s]:	Heat conductivity Anomalous Bohm
+C	HIBOM=c*Ti/(e*B*16)
+	HIBOM=70.*TI(J)/BTOR

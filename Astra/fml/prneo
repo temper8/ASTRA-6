@@ -1,0 +1,16 @@
+C PRNEO [MW*m#3] Neon radiation power
+C T [eV] Electron temperature
+C       POST D.E. JENSEN R.V. e.a., Atomic Data and Nuclear Tables,
+C				    Vol.20 (1977) 397.
+C				(L.Giannone 06-08-96)
+C	Usage:		PE=...-PRNEO*NE*NIZ1
+        T=TE(J)*1000.
+        Z=      LOG10(T)
+        IF(T.LE.20.)                    Y=-18.09+9.8979*Z-3.6044*Z*Z
+        IF(T.LE.35..AND.T.GT.20.)       Y=-10.073-3.3149*Z+1.7445*Z*Z
+        IF(T.LE.70..AND.T.GT.35.)       Y=-40.082+36.658*Z-11.554*Z*Z
+        IF(T.LE.200..AND.T.GT.70.)      Y=30.049-38.298*Z+8.4829*Z*Z
+        IF(T.LE.500..AND.T.GT.200.)     Y=-51.92+30.584*Z-5.9674*Z*Z
+        IF(T.LE.2.E3.AND.T.GT.500.)     Y=-2.6116-5.9817*Z+0.81513*Z*Z
+        IF(T.GT.2.E3)                   Y=-5.8745-4.1134*Z+0.54821*Z*Z
+        PRNEO	=  10.**(Y+12.)

@@ -1,0 +1,10 @@
+C SVREC [m#3/s] :	The formula is a fit to recombination rate
+C			SVREC=<sigma*v>*1.E19
+C	Gordeev, Zinov'ev,Petrov//Sov. Pisma v ZETF,(1977), p.223
+C					Polevoy 29-NOV-91
+	IF(TE(J).LT..002) THEN
+	SVREC=0.
+	ELSE
+	SVREC	=13.6E-3/TE(j)
+	SVREC	=1.27*SVREC*sqrt(SVREC)/(SVREC+.59)
+	ENDIF

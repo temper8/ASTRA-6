@@ -1,0 +1,94 @@
+NAME
+     Astra - execute the Astra code
+ 
+SYNOPSIS
+     Astra [-h] [-b] [-t] [-T] [-V] [-M] 
+           [-v exp_data_file] [-m model_file] [-s start_time]
+           [-p pause_time] [-e stop_time] [-r result_file]
+     Astra exp_data_file model_file start_time stop_time result_file_name
+
+DESCRIPTION
+      Astra (aliased to AWD/.exe/astra) defines input parameter set 
+      and starts ASTRA run.
+
+      Input set of parameters includes: 
+      - a filename with initial and/or experimental data,
+      - a filename for a transport code prototype (model).
+      These two filenames should not exceed 14 characters. 
+      Optionally, start and stop times of a simulation run and 
+      a filename for storing simulation results can be given.
+      
+ OPTIONS
+      -h     display this page and exit.
+  
+      -b     start the code in background.
+  
+      -t     start the code in "test" mode.
+  
+      -T     start the code in "verbose test" mode.
+  
+      -V     list all available data files.
+  
+      -M     list all available model files.
+  
+      -v exp_data_file_name
+           read input data from exp/'exp_data_file_name'. If a data 
+           filename is not defined in the command line then the data
+           file used in the previous Astra run is employed.
+  
+      -m model_file_name
+           use the transport model equ/'file_name'. If a model file
+           name is not defined in the command line then the model file
+           used in the previous Astra run is employed.
+  
+      -r result_file_name
+           save the simulation results under 'result_file_name'. 
+           A valid filename can include up to 20 characters.
+  
+      -s value
+           start the simulation at time = 'value'. Unlike the ealier
+           versions (before 5.2) if the initial time is not given
+           in the command line (and not assigned by a data file) it is 
+           set to 0.
+ 
+      -p value
+           set pause mode at time = 'value'. Default value is infinity.
+  
+      -e value
+           stop the run at time = 'value'. Default value is infinity.
+  
+ USAGE
+     Astra command line allows two different formats: in the older one a
+     positional argument list is only possible. In this format, a meaning 
+     of every argument is determined by its position in the command line. 
+     In the second format, meaning of a parameter can also be defined
+     by a preceeding option letter. Mixture of both formats is possible 
+     under conditions that (i) only the options which do not require an 
+     argument (i.e. h t V M) are used and (ii) all option letters must 
+     appear in the command line before the first positional parameter. 
+     A value of any parameter in the command line can be omitted, 
+     in the positional format, it means be replaced with a comma.
+     Then for the data and model file the previously defined names 
+     are used. For remaining parameters default values are used.
+      
+ EXAMPLES
+           example% Astra
+           example% Astra asdex NBheating .3 3.5 Up_to_20_alphadigits
+           example% Astra , , , , , test
+           example% Astra readme showdata
+           example% Astra aug11111 
+  
+      All commands within the following groups are equivalent:
+  
+      1)   example% Astra -m mymodel 
+           example% Astra , mymodel
+  
+      2)   example% Astra -v mydata 
+           example% Astra mydata
+  
+      3)   example% Astra -tm mymodel 
+           example% Astra , mymodel , , , test
+
+SEE ALSO
+           View -h
+

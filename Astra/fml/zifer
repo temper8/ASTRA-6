@@ -1,0 +1,13 @@
+C ZIFER [ ]:	Average Fe charge
+C T [eV] Electron temperature
+C       POST D.E. JENSEN R.V. e.a., Atomic Data and Nuclear Tables,
+C				    Vol.20 (1977) 397.
+C				(Yushmanov 25-12-89)
+	T=TE(J)
+	Z=LOG10(T)
+					ZIFER=0.
+	IF(T.LT..300.AND.T.GE..020)	ZIFER=4.+9.7*(Z+1.7)
+	IF(T.LT..615.AND.T.GE..300)	ZIFER=15.5+1.65*(Z+.522)
+	IF(T.LT.1.20.AND.T.GE..615)	ZIFER=16.+25.*(Z+.22)
+        IF(T.GE.1.2)			ZIFER=23.5+1.8*(Z-.8)
+	IF(ZIFER.GT.26.)		ZIFER=26.

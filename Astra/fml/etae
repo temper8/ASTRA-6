@@ -1,0 +1,9 @@
+C ETAE []:  d Ln(Te) /d Ln(Ne)
+	if(J.ne.NA1)	then
+	IF(ABS(NE(J)-NE(J+1)).GE..001)	THEN
+	ETAE=(TE(J)-TE(J+1))*(NE(J+1)+NE(J))/
+     1	((TE(J+1)+TE(J))*(NE(J)-NE(J+1)))
+		ELSE
+	ETAE=1000.
+		ENDIF
+	endif

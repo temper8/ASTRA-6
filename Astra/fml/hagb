@@ -1,0 +1,18 @@
+C HAGB [m#2/s]:	Heat conductivity Anomalous gyroBohm
+C	BOHM=c*Te/(e*B)=TE/BTOR*10^3[m^2/s]
+C	HAGB=BOHM*(dTe/dr)*a/Te*ro/a; ro=rl_i/omega_ci		
+C		Source:	M.Erba et al. JET-P(96)10
+C				I.Vojtsekhovich 01-08-96
+C	Usage:		HE=...+0.035*HAGB*XSTEP(0.8);
+C		Modified by G.Pereverzev 14-JAN-97
+C		to include recommended numerical pre-factor 0.035
+C	Usage:		HE=HATL+HAGB+...
+C	Usage:		XI=2*HATL+HAGB+...
+C					
+	if( J.eq.1 )	then
+		YLP = 0.
+		YHAGB = .32*SQRT(AMJ)/HRO/BTOR/BTOR/ZMJ
+	else
+		YLP = YHAGB*abs(TE(J)-TE(J-1))/(TE(J)+TE(J-1))
+	endif
+	HAGB = YLP*TE(J)*SQRT(TE(J))

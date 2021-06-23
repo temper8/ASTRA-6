@@ -1,0 +1,5 @@
+C QOH [MW]:	Integral {0,R} (POH) dV
+C			(Pereverzev 12-FEB-90)
+	INCLUDE 'fml/poh'
+	IF(J.EQ.1)	QOH=0.
+	QOH=QOH+POH*VR(J)*HRO

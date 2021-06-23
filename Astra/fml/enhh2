@@ -1,0 +1,12 @@
+C ENHH2 []:  Electrical heat convection Neoclassical Hinton-Hazeltine
+C	C=SQRT(eps)*K23
+C			Rev. Mod. Phys. v.48, part 1 (1976) 297.
+C			(Yushmanov 28-APR-87)
+C			(Corrected by Polevoi 12-APR-89)
+	ZZ=ZEF(J)
+	include	'fml/nues'
+	YS=SQEPS(J)
+	ENHH2=YS*(-0.41+3.39*ZZ)/(-0.29+ZZ)
+     >       /(1.+(0.72+0.42*ZZ)/(1.00+ZZ)*SQRT(NUES)
+     >	         +(-0.29+0.32*ZZ)/(-0.94+ZZ)*NUES    )
+     >	     /(1.+(0.32+0.19*ZZ)/(-0.17+ZZ)*NUES*YS*YS*YS)

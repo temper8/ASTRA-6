@@ -1,0 +1,18 @@
+C PRarg [MW*m#3] Argon radiation power
+C       POST D.E. JENSEN R.V. e.a. PPPL-1352 1977
+C			(Leonov 13-07-99)
+        T=TE(J)
+        Z=1/(TE(J)+.0001)
+        IF(T.LE..02)                 Y=1000*t
+        IF(T.LE..043.AND.T.GT..02)   Y=0.7*Z-0.55
+        IF(T.LE..07.AND.T.GT..043)   Y=0.65
+        IF(T.LE..25.AND.T.GT..07)    Y=30.*T-1.3
+        IF(T.LE..53.AND.T.GT..25)    Y=2.5*Z-4
+        IF(T.LE..86.AND.T.GT..53)    Y=0.7*Z-0.55
+        IF(T.LE.1.9.AND.T.GT..86)    Y=0.09*T+0.19
+        IF(T.LE.2.53.AND.T.GT.1.9)   Y=0.35
+        IF(T.LE.10..AND.T.GT.2.53)   Y=0.7/(T+.01)+0.09
+        IF(T.LE.23..AND.T.GT.10.)    Y=1/(T-3.4)**2+0.138
+        IF(T.LE.100..AND.T.GT.23.)   Y=9.*10**(-4.01)*T+0.12
+        IF(T.GT.100.) 		     Y=9.*10**(-4.01)*T+0.12
+        PRARG	=Y

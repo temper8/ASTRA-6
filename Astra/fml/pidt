@@ -1,0 +1,6 @@
+C PIDT	[MW/m#3]   D-T	Fusion power deposited to ions
+C D.E.Post, 'Applied Atomic Collision Physics, Vol 2, 381, (1984)
+C C.M.Roach, 5/7/99
+	INCLUDE 'fml/pdt'
+	INCLUDE 'fml/paion1'
+	PIDT = PAION1*PDT

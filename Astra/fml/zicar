@@ -1,0 +1,12 @@
+C ZICAR [ ]:	Average C charge
+C T [eV] Electron temperature
+C       POST D.E. JENSEN R.V. e.a., Atomic Data and Nuclear Tables,
+C				    Vol.20 (1977) 397.
+C				(Yushmanov 25-12-89)
+	T=TE(J)
+	Z=LOG10(T)
+					ZICAR=0.
+       IF(T.LT..014.AND.T.GE..003) ZICAR=1.875+3.18*(Z+2.522)
+       IF(T.LT..060.AND.T.GE..014) ZICAR=4.
+       IF(T.LT..160.AND.T.GE..060) ZICAR=4.+4.7*(Z+1.222)
+       IF(T.GE..160)               ZICAR=6.

@@ -1,0 +1,4 @@
+C QDV8 [F8/s]:	Integral {0,R} (SDV8) dV
+C			(Pereverzev 9-OCT-07)
+	if(J.eq.1)	QDV8=0.
+	QDV8=QDV8+SDV8(J)*VR(J)*HRO

@@ -1,0 +1,12 @@
+C ZIWOL [ ]:	Average C charge
+C T [eV] Electron temperature
+C       POST D.E. JENSEN R.V. e.a., Atomic Data and Nuclear Tables,
+C				    Vol.20 (1977) 397.
+C				(Yushmanov 25-12-89)
+	T=TE(J)
+	Z=LOG10(T)
+					ZIWOL=0.
+	IF(T.LT..300.AND.T.GE..100) ZIWOL=12.8+3.14*(Z+1.)
+       IF(T.LT.1.00.AND.T.GE..300) ZIWOL=14.3+17.8*(Z+.522)
+       IF(T.LT.3.00.AND.T.GE.1.00) ZIWOL=23.6+43.5*Z
+       IF(T.GE.3.00)               ZIWOL=44.3+7.9*(Z-.478)

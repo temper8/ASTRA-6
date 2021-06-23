@@ -1,0 +1,4 @@
+C IBM [MA] - Beam current inside surface Ro
+C			(Yushmanov 11-FEB-91)
+	IF(J.EQ.1)	IBM=0.
+	IBM=IBM+CUBM(J)*VR(J)/IPOL(J)**2*HRO*IPOL(NA)/(GP2*RTOR)

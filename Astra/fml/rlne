@@ -1,0 +1,8 @@
+C RLNE []:	R/L_ne 
+C	RLNE=R*|dlog(n_e)/drho|
+C			(Pereverzev 25-08-08)
+      if (j .lt. NA) then
+         RLNE=2.*(RTOR+SHIFT)*abs(NE(j+1)-NE(j))/HRO/(NE(j+1)+NE(j))
+      else
+         RLNE=2.*(RTOR+SHIFT)*abs(NE(NA1)-NE(NA))/HROA/(NE(NA1)+NE(NA))
+      endif

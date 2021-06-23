@@ -1,0 +1,5 @@
+C HARNQ [m#2/s]:  Heat conductivity Anomalous Ros, Nue, q 
+C	He=ROs#2*NUe*q#2	
+C			(Yushmanov 15-FEB-89)
+	YNUETE=1.E4*NE(J)*(1.+1.4*ZEF(J))/SQRT(TE(J))
+	HARNQ=YNUETE*2.1E-5*AMAIN(J)/(BTOR*ZMAIN(J)*MU(J))**2

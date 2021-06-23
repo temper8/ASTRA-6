@@ -1,0 +1,25 @@
+C HNASI [m#2/s]:  Heat conductivity Neoclassical Angioni and Sauter Ion
+C	C. Angioni and O. Sauter, Phys. Plasmas 7, 1224 (2000)
+C			(Angioni: 25-Jul-2003)
+C	Coulomb logarithm 15 is used
+        ZFT=FTLLMR((J-0.5)*HRO)
+	ZFD = 1.- (1.-ZFT)/B0DB2(J)/BDB02(J)
+	ZFD3 = ZFD*ZFD*ZFD
+	ZAI = -1.+NE(J)*ZEF(J)/NI(J)/ZMAIN(J)**2
+        ZK2IB=(0.75-0.7*ZFD+0.5*ZFD*ZFD)*(1.+2.92*ZAI)
+        ZK2IB=(ZK2IB*ZFD+(1.-0.55)*(1.+1.54*ZAI))*ZFD
+        ZK2IB=-ZK2IB
+	include	'fml/nuis'
+	ZMUIF = NUIS*(1.+1.54*ZAI)/(1.+7.*ZFT*ZFT)
+	ZMUFD = ZMUIF*ZFD3*(1.+ZFD3*ZFD3)
+	ZHP=1.+1.33*ZAI*(1.+0.6*ZAI)/(1.+1.79*ZAI)
+	ZFPS=1.-1./B0DB2(J)/BDB02(J)
+	ZK2IC = ZK2IB/(1.+1.03*SQRT(ZMUIF)+0.31*ZMUIF)
+	ZK2IC = ZK2IC-0.175*ZHP*ZFPS/(0.22+1./ZMUFD)
+C	ZBPOL=(ABS(MU(J))+.0001)*SQEPS(J)**2*BTOR
+	ZBPOL=ABS(MU(J)+.0001)*HRO*(J)*BTOR/RTOR
+	ZRHOIP2 = 2.1E-5*AMAIN(J)*TI(J)/ZMAIN(J)**2/ZBPOL**2
+C	HNASI=1/ZRHOIP2/1000
+C	HNASI=(HRO*J/RTOR)**2
+	HNASI=-ZRHOIP2*NUI*ZK2IC*B0DB2(J)
+	HNASI=HNASI*VRS(j)/G11(j)

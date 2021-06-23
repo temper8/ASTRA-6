@@ -1,0 +1,20 @@
+#!/bin/csh -f
+set OLDWD = $cwd
+if($1 == '')	then
+	cd ..
+	rm -i *%
+	rm -i */*%
+	rm -i .*/*%
+	rm -i */.*%
+	rm -i .*/.*%
+	goto End
+else
+	cd ~/$1
+	rm -i *%
+	rm -i */*%
+	rm -i .*/*%
+	rm -i */.*%
+	rm -i .*/.*%
+endif
+End:
+cd $OLDWD

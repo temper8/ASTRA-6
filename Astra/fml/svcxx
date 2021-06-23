@@ -1,0 +1,5 @@
+C SVCXX [10#19m#3/s]	The formula is a fit to charge exchange rate
+C	Freeman R.L.,Jones E.M., CLM-R137 (1974)
+C			(Pereverzev 07-MAY-87)
+C		corrected with AMAIN (28-JUN-88)
+	SVCXX	=10.**(5.9+0.3*LOG10(TIX(J)/AMAIN(J)))

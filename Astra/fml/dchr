@@ -1,0 +1,12 @@
+C DCHR []:	Electrical particle  convection	 Neoclassical Hirshman
+C			Phys. Fluids 31,3150 (1988).
+C			(Polevoy, Yushmanov 12-MAR-91)
+C	Example:	DC=DCHR
+	INCLUDE 'fml/betpl'
+	YE=SQEPS(J)*SQEPS(J)
+	YX=(1.46*SQEPS(J)+2.4*YE)/(1.-YE)/SQRT(1.-YE)
+	YZ=ZEF(J)
+	YA=YZ*YZ
+	YD=1.414*YZ+YA+YX*(.754+2.657*YZ+2.*YA)+YX*YX*(.348+1.243*YZ+YA)
+	DCHR=YX*(.754+2.21*YZ+YA+YX*(.348+1.243*YZ+YA))/YD
+	DCHR=DCHR*BETPL*(1.+TI(J)/(YZ*TE(J)))

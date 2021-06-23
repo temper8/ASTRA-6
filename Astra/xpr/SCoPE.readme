@@ -1,0 +1,12 @@
+      At highway SCoPE is created as
+
+cd  AWD
+ifort -c xpr/callscope.f -o xpr/callscope.o
+cc -c for/ipc_control.c -o xpr/ipc.o
+cc -c xpr/scope.c -o xpr/scope.o
+cd  ../SCoPE/
+ifort -c ../SRC_SCoPE/scope2astra.for -o ../SRC_SCoPE/scope2astra.o
+rm -f 1* 2* [A-Z]*
+ifort -o scope ../SRC_SCoPE/*.o ../astra/xpr/*.o
+
+      and called from a model as ../SCoPE/scope&:;

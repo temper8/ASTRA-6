@@ -1,0 +1,14 @@
+C PROXI [MW*m#3] Oxigen radiation power
+C       POST D.E. JENSEN R.V. e.a., Atomic Data and Nuclear Tables,
+C				    Vol.20 (1977) 397.
+C	(PPPL-1352 1977)
+C				(Yushmanov 27-12-89)
+C	Corrected by Pereverzev 29-07-96
+C	Usage:		PE=...-PROXI*NE*NIZ1
+	T=TE(J)*1000.
+	Z=      LOG10(TE(J))
+        IF(T.LE.91.)                    Y=-4.165*(Z+1.8)**2
+        IF(T.LE.500..AND.T.GT.91.)      Y=-2.-2.8*(Z+.6)**2
+        IF(T.LE.1.E4.AND.T.GT.500.)     Y=-2.9+.741*(Z-.6)**2
+	IF(T.GT.1.E4)	     		Y=-2.8+0.4*(Z-1)
+	PROXI	=10.**(Y+1.)

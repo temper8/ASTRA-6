@@ -1,0 +1,6 @@
+C HNGSP [m#2/s]:  Heat conductivity Neoclassical Galeev-Sagdeev Plateau Ion 
+C	H=1.3*q*ROi#2*Vti/Rt
+C			Voprosy Teorii Plasmy v. 7 (1973) 210.
+C			(Yushmanov 24-APR-87)
+	HNGSP=12.*SQRT(AMAIN(J)*TI(J))*TI(J)/((BTOR*ZMAIN(J)
+     1	)**2*MU(J)*RTOR)

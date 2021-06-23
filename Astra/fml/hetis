@@ -1,0 +1,15 @@
+C HETIS [m#2/s]:  Heat conductivity Anomalous ETa-i Smoothed
+C	H=7*ROi#2*Vti/R*Te/Ti*[0.7*sqrt(Te/Ti/en)*sqrt(etai-etaicr)+
+C		+0.75*sqrt(2*r/R)....]
+C		F.Romanelli Pl.Phys.and Contr.Fus.,V.31 (1535) 1989.			C			(Pereverzev 23-JUN-92)
+	if (j.eq.1)	then
+		do  jj	=1,NA
+		j = jj
+		include	'fml/hetai'
+		if (jj .eq. 1)	YY = HETAI
+		call	SMOFML(-1.,JJ,HETAI,'HETIS')
+		enddo
+		j = 1
+		HETAI = YY
+	endif
+	call	SMOFML(.002,J,HETIS,'HETIS')

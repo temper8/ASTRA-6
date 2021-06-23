@@ -1,0 +1,4 @@
+C HABOM [m#2/s]:	Heat conductivity Anomalous Bohm
+C	HABOM=c*Te/(e*B*16)
+C			(Yushmanov 27-JUN-88)
+	HABOM=70.*TE(J)/BTOR

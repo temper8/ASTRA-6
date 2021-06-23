@@ -1,0 +1,189 @@
+#!/bin/csh -f
+set AWD = $0 ; set AWD = ${AWD:h} ; set AWD = ${AWD:h}/ ; cd ${AWD}
+cd for ; set AROOT = `pwd` ; set AROOT = ${AROOT:h}/ ; cd ${AWD}
+set A1 = ${AROOT:h} ; set ART = ${A1:t} ; set ARH = ${A1:h} ; set ARH = ${ARH:t}
+set A2 = ${AWD:h} ; set AWT = ${A2:t} ; set AWH = ${A2:h} ; set AWH = ${AWH:t}
+if ( ${ARH}/${ART} == ${AWH}/${AWT} )	set M_ASTER
+
+source .exe/getvargs || exit
+
+if ( -e .exe/astrarc  ) then
+   source .exe/astrarc
+   set PROFT = ${PLATFORM}/
+else
+   source .lbr/astrarc
+   set PROFT = 
+endif
+set URS = .res/${PROFT}
+if ( ${?M_ASTER} ) then
+   setenv ALBR  .lbr/${PROFT}
+else
+   set    ALBR = .lbr/${PROFT}
+endif
+
+if ( ${?L_flag} )  goto Listres
+if ( ${?l_flag} )  goto Listres
+if ( ${?D_flag} )  goto Delete
+if ( ${?S_flag} )  goto Save
+if ( ${?R_flag} )  goto Listres
+if ( ${?Flag0} )   goto Review		# No parameters supplied
+echo \>\>\> Review: Unknown input
+exit
+
+Review:
+rm *.o err.tmp	>&	/dev/null
+
+if ( !(${?M_ASTER}) )	goto Runreview
+
+if (${PLATFORM:r} == "Aix" || ${PLATFORM:r} == "g95")	then
+   mv for/typdsp.f for/typdsp
+   sed '1,$s/ACCESS/POSITION/' for/typdsp > for/typdsp.f
+endif
+echo \ 
+# Question mode: Do not run; return an exit status
+make -q -f .exe/makereview ${ALBR}review	&&  goto Runreview
+# Now run:
+# make -f .exe/makereview ${ALBR}review		||  exit	! Report
+make -s -f .exe/makereview ${ALBR}review	||  exit	! Silent
+#( make -f .exe/makereview ${ALBR}review > /dev/null ) >& err.tmp || goto Error
+
+if ( -e for/typdsp )  mv for/typdsp  for/typdsp.f
+
+Runreview:
+if ( $PROFILE == '' ) then
+   set WHERE = `fgrep RSNAM tmp/astra.log | cut -d':' -f2`
+   if ( -e ${WHERE} && `echo ${WHERE} | grep "${PLATFORM}"` != '' ) then
+       ${ALBR}startA PRO
+       ( ${ALBR}review > /dev/tty ) >& /dev/null
+       exit
+   else if (`echo ${WHERE} | grep "${PLATFORM}"` == '' ) then
+       echo 
+       echo "Sorry, default post-view file for "\"$PLATFORM\"" is not found"
+       goto Listres
+   else if ( -e ${WHERE} ) then
+       echo "Sorry, default post-view file has been created at "${WHERE}
+       goto Listres
+   else
+       echo 
+       echo "Sorry, default post-view file "\"${WHERE}\"" is not found"
+       goto Listres
+   endif
+endif
+
+if ( -e ${URS}${PROFILE} ) then
+#   echo ${ALBR}review ${URS}${PROFILE}
+   ( ${ALBR}review ${URS}${PROFILE} > /dev/tty ) >& /dev/null
+   set EXI = EXIST
+   goto Exit
+endif
+
+set LIS = `ls -1 ${URS} | grep -v '[\%\*]' | fgrep $PROFILE`
+set EXI = NOTEXIST
+foreach A ( $LIS )
+   if ( $A == $PROFILE ) then
+      ${ALBR}startA PRO ${PROFT}$PROFILE
+      ( ${ALBR}review > /dev/tty )			>& /dev/null
+      set EXI = EXIST
+   endif
+end
+
+Exit:
+if ( $EXI != EXIST ) then
+   echo \ 
+   if ( ${?M_ASTER} ) then
+      echo \ Post-run viewer: \>\>\> File: \ \"$cwd/${URS}$PROFILE\" not found
+   else
+      echo \ Post-run viewer: \>\>\> File: \ \"$PROFILE\" not found
+   endif
+   echo \ 
+   goto Listres
+endif
+exit
+
+Listres:
+#  if ( ${?M_ASTER} ) source .exe/Checkres
+   if ( ${?M_ASTER} ) then
+      set IF_NEW = anything
+      if ( -e ${ALBR}listres ) \
+         set IF_NEW = `find .srv/listres.f -newer ${ALBR}listres -print`
+      if ( "$IF_NEW" != '' )  ${AFL} ${ALBR}listres .srv/listres.f
+   endif
+
+   if ( ${?l_flag} )	goto	Listres1
+   if ( ${?R_flag} )	goto	Listres1
+   if ( ${?M_ASTER} && ${?L_flag} ) source .exe/Listreview && exit
+
+Listres1:
+   cd ${URS}
+   rm core 					>& /dev/null
+   if ( ${?R_flag} )  then
+      rm ${AWD}model.* 				>& /dev/null
+      rm ./model.*				>& /dev/null
+      echo  _Retrieve_${PROFILE} | ${AWD}${ALBR}listres 
+   else
+      set LIST = `ls -1 . | grep -v '[\%\*]'`
+      if ( ${#LIST} == 0 ) then
+         echo \ 
+         if ( ${PROFT} == '' )	then
+            echo \>\>\> No files for Astra post-viewer found
+         else
+            echo \>\>\> No files for ${PLATFORM} post-viewer found
+         endif
+         echo \ 
+      else
+         if ( ${?t_flag} )  then
+            ls -1rt . | grep -v '[\%\*]' | ${AWD}${ALBR}listres
+         else
+            ls -1 . | grep -v '[\%\*]' | ${AWD}${ALBR}listres
+         endif
+      endif
+   endif
+   if ( -e model.log && -z model.log )	rm model.log
+   if ( -e model.log ) mv model.log ${AWD}
+   if ( -e model.tmp ) sed '1,$s/^ $//' model.tmp > ${AWD}/model.tmp \
+			&& ( rm model.tmp >& /dev/null )
+   cd ${AWD}
+   if ( -e model.tmp && -z model.tmp )	rm model.tmp
+   if ( -e model.log && ${?R_flag} ) then
+      echo \	Files \'model.tmp\' and \'model.log\' are created in ${AWD}
+      echo \	Move them to ${AWD}equ with proper names.
+      echo \	Otherwise they can be destroyed by a subsequent call.
+      echo \ 
+   else if ( -e model.tmp && ${?R_flag} ) then
+      echo \	File model.tmp is created in ${AWD}
+      echo \	Move it to ${AWD}equ with a proper name.
+      echo \	Otherwise it can be destroyed by a subsequent call.
+      echo \ 
+   endif
+exit
+
+Save:
+if ( ${PROFILE} == '' )  then
+   echo \ 
+   echo \>\>\> Please, specify a file name for saving
+   echo \ 
+else
+   set DEFNAME = `fgrep 'RSNAM' tmp/astra.log | cut -c7-`
+   cp $DEFNAME ${URS}$PROFILE			# No check for existing file
+endif
+exit
+
+Delete:
+if ( ${PROFILE} == '' )  then
+   echo \ 
+   echo \>\>\> Please, specify a file to delete
+   echo \ 
+   exit
+endif
+ls ${URS}* | fgrep $PROFILE > r.tmp
+if ( !(-z r.tmp) ) then
+   rm ${URS}$PROFILE
+   rm r.tmp	>&	/dev/null
+else
+   rm r.tmp	>&	/dev/null
+   echo \ 
+   echo \ Post-run viewer: \>\>\> File: \ \"${URS}$PROFILE\" not found
+   echo \ 
+   goto Listres
+endif
+exit

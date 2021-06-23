@@ -1,0 +1,6 @@
+C QEIGN [MW]:	Integral {0,R} ( PEIGN ) dV
+C			(Yushmanov 29-APR-87)
+C Geometry effect (VR -> G11) included by G.Pereverzev 21-JAN-2006
+	INCLUDE 'fml/peign'
+	IF(J.EQ.1)	QEIGN=0.
+	QEIGN=QEIGN+PEIGN*G11(J)

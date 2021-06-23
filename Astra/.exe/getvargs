@@ -1,0 +1,80 @@
+set argv = `getopt hlLts:d:r: $argv` || goto Error
+
+set  PROFILE = 
+while ( ${#argv} )
+# echo ${#argv} $argv
+   switch ( $1 )
+   case -h:
+      goto Help
+   case -l:
+      set l_flag
+      shift
+      breaksw
+   case -L:
+      set L_flag
+      shift
+      break
+   case -d:
+      set D_flag
+      shift
+      set PROFILE = $1
+      break
+   case -s:
+      set S_flag
+      shift
+      set PROFILE = $1
+      break
+   case -r:
+      set R_flag
+      shift
+      set PROFILE = $1
+      break
+   case -t:
+      set t_flag
+      shift
+      breaksw
+   case --:
+      if ( ${#argv} == '1' )	then
+         set Flag0
+         break
+      endif
+      shift
+      switch ( ${#argv} )
+      case 2:
+         if ( $2 == 'del' || $2 == 'delete' ) set D_flag = 
+         if ( $2 == 'delet' || $2 == 'dele' ) set D_flag = 
+         if ( $2 == 'sav' || $2 == 'save'   ) set S_flag = 
+         if ( !(${?D_flag}) && !(${?S_flag}) ) goto Help
+      case 1:
+         if ( $1 == '@' ) then
+            set L_flag
+            exit 0
+         endif
+         if ( $1 == 'help' ) goto Help
+         set PROFILE = $1
+         if ( $1 == ',' ) set PROFILE = 
+         set Flag0
+         break
+      default:
+         goto Help
+      endsw
+   endsw
+end
+if ( ${?t_flag} && !(${?l_flag}) )  then
+   echo ">>> VIEW >>> Input error >>> Option "\"t\" ignored
+   exit 1
+endif
+exit 0
+
+Error:
+   /usr/bin/echo '\07'
+   echo \>\>\>  Wrong argument or option list
+   echo \ \ \ \ Use \'View -h\'
+exit 1
+
+Help:
+   cat .exe/man_view > /dev/tty
+   exit 1
+
+Exit:
+exit 0

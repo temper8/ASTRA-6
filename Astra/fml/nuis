@@ -1,0 +1,7 @@
+C NUIS []:	Relative frequency of ion collisions
+C	NU*=Nui*q*Rt/eps#1.5/Vti
+C	Full ion collision frequency NUI is used
+C			(Yushmanov 30-APR-87)
+	INCLUDE	'fml/nui'
+	NUIS=3.2E-6*NUI*RTOR/(ABS(MU(J)+.0001)*
+     *		SQEPS(J)**3*SQRT(TI(J)/AMAIN(J)))

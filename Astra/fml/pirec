@@ -1,0 +1,7 @@
+C PIREC [MW/m#3]: Electron ion heat loss due to recombination
+C	PIREC=ne*ni*Ti*Xrec*1.5
+C	here Xrec=0.0032*((0.0136/TE)**1.5)/((0.0136/TE)+0.59)
+C	PI=...-PIREC
+C			(Alexander 10-FEB-95)
+	PIREC=0.00305*NE(J)*NI(J)*TI(J)*((0.0136/TE(J))**1.5)/
+     1	((0.0136/TE(J))+0.59)

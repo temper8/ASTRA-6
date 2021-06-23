@@ -1,0 +1,4 @@
+C DIDT [MA/sec]:	Total plasma current time derivative
+C			(Pereverzev 15-Feb-90)
+	DIDT	=G22(NA)*IPOL(NA1)/(0.4*GP*RTOR*HROA*TAU)
+	DIDT	=DIDT*(FP(NA1)-FP(NA)-FPO(NA1)+FPO(NA))

@@ -1,0 +1,5 @@
+C CCMHD  [1/mkOhm*m] or [MA/V*m]: Conductivity anomalous due to
+C		sawtooth oscillations (q<1)	(G.Pereverzev 19-07-90)
+C	CC=Const inside q<1, CC is unchanged elsewhere
+	IF (J.EQ.NA1)	call MIX('CC')
+	CCMHD	=0.

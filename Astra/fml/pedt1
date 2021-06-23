@@ -1,0 +1,8 @@
+C PEDT1 [MW/m#3]   D-T Fusion power deposited to electrons
+C     P.Pavlo  22.06.89/A.Polevoi 20-MAY-94
+        y2 = 88./TE(J)
+        y = sqrt(y2)
+        PEDT1    = 2.* (  0.166666667*LOG( (1.-y+y2)/(1.+2.*y+y2) ) +
+     + 0.57735026*(ATAN( 0.57735026*(2.*y-1.) )+0.52359874) ) / y2
+	include 'fml/svdt'
+	PEDT1 = 5.632*NDEUT(J)*NTRIT(J)*SVDT*(1.-PEDT1)

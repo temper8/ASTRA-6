@@ -1,0 +1,5 @@
+C NUPP [1/s]:	Frequency of proton-proton collisions
+C	Coulomb logarithm 15 is used
+C	NUPP=4*SQRT(3.14)/3*Ni*e#4*lambd/SQRT(Mi)/Ti#1.5
+C			(Yushmanov 05-MAY-87)
+	NUPP=230.*NI(J)/(TI(J)*SQRT(TI(J)))

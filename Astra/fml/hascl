@@ -1,0 +1,4 @@
+C HASCL [m#2/s]: Heat Anomalous Skin Collisional
+C	Xe=c#2/Ompe#2*Nuee*(1+1.4*Zef)
+C			(Yushmanov 04-JAN-88)
+	HASCL=0.03*(1.+1.4*ZEF(J))/(TE(J)*SQRT(TE(J)))

@@ -1,0 +1,246 @@
+************************************************************************
+*                                                                      *
+*           INSTRUCTIONS FOR THE USE OF THE RAYIC CODE                 *
+*                                                                      *
+************************************************************************
+*
+*     The ray tracing code RAYIC has been written for the
+*     evaluation of the power deposition profiles during
+*     Ion Cyclotron Heating in large Tokamak plasmas. The
+*     main method is ray-tracing, supplemented by a 3-D
+*     analysis of the singular layers (ion cyclotron and
+*     Two-Ion Hybrid resonances), and a 3-D plane-layered
+*     model of the antenna.
+*
+*     The plasma poloidal cross-section can have arbitrary
+*     shape. The poloidal magnetic field distribution is
+*     evaluated from the current density profile consistently
+*     with the MHD equilibrium equations.
+*
+*     The hot-plasma dispersion relation correct to first
+*     order in the Finite Larmor Radius approximation is
+*     used, with electrons and up to eight ion species, each
+*     with its own density and temperature profile. To
+*     allow coupling RAYIC to transport codes, the profile
+*     quantities have to be specified at discrete mesh points,
+*     and cubic spline interpolation is used to guarantee
+*     a smooth integration of the ray equations.
+*
+*     The call to the ray-tracing program is a call to the
+*     subroutine RAYIC:
+*
+*           CALL RAYIC
+*
+*     In the standard version the USER is PROGRAM MAIN. It is
+*     hovever possible to call RAYIC from any other program,
+*     with a simple interface to provide the necessary data
+*     to RAYIC. To this end, the USER code must include the
+*     labelled COMMONs
+*
+*          /CPLDIM/,   /CPLPAR/,   /CPROIC/,
+*          /CPOWIC/,   /CANTIC/,   /CPRTIC/,
+*          /OUTPIC/
+*
+*     and must initialize their variables as indicated in the
+*     segment COMINDEX. No dataset (NAMELIST, etc.) is required.
+*
+*     At the RETURN from RAYIC the USER program has available
+*     (through the above labeled COMMONS) the power deposition
+*     profiles for each species of charged particle. The
+*     values of the input variables are returned unaltered.
+*
+*     In addition, the USER package must include the function
+*     defining the initial wavefront:
+*
+*                 Function   PSIWFR(THETA,ZDPSDT)
+*
+*     and the two functions providing the poloidal (y) and
+*     toroidal (z) Fourier spectra of the current distribution
+*     in the antennas:
+*
+*                 Function CFUNJY(ZNY)
+*                 Function CFUNJZ(NPH)
+*
+*     A description of these modules is found at the end of
+*     this manual. The standard MAIN is provided with versions
+*     of CFUNJY and CFUNJZ capable of dealing with dipole and
+*     quadrupole antennas, either with equatorial feeders and
+*     up-down shorts, or viceversa (options through JPOLE and
+*     JALIM parameters, cfr. instructions in segment COMINDEX).
+*
+*     RAYIC contains the only STOP of the Ray Tracing package:
+*     the program is stopped if the input data are inconsistent.
+*     In this case a diagnostic is printed.
+*
+*     REFERENCES:
+*
+*     M. BRAMBILLA - The dispersion relation of Ion Cyclotron waves,
+*         Report IPP 4/209, Novembre 1982
+*
+*     M. BRAMBILLA - Ray tracing of ion cyclotron waves in tokamak
+*         plasmas, Report IPP 4/210, March 1983
+*
+*     M. BRAMBILLA, M. OTTAVIANI - Ion-ion hybrid resonances and
+*         cyclotron absorption in tokamak plasmas, Report IPP 4/212,
+*         Novembre 1983
+*
+*     M. BRAMBILLA - RAYIC, a numerical code for the study of IC
+*         heating of large tokamak plasmas, Report IPP 4/216,
+*         Februar 1984
+*
+*     M. BRAMBILLA - Ion Cyclotron Heating of the JET plasma,
+*         Report IPP 4/217, April 1984
+*
++     M. Brambilla, Comput. Phys. Rep., Vol. 4 (1986) 1.
+*
+*=======================================================================
+*
+*     RAYIC consists of three essentially independent packages:
+*
+*        A) the ray-tracing package proper,
+*        B) the antenna package,
+*        C) the package providing the graphical output.
+*
+*     An alphabetic list of all subroutines of RAYIC, with a
+*     brief description and all cross-calls is to be found in
+*     in the segment SUBINDEX.
+*
+*-----------------------------------------------------------------------
+*
+*     A) The ray-tracing package is steered by the control
+*     subroutine RAYIC, and can be subdivided into the
+*     following sections:
+*
+*        a) the initialization section, which is steered by
+*           subroutine INITAL, and includes the subroutines
+*              INITAL,    PROFIN,    INIWFR,    METRIN,
+*              CYTWIN
+*           In addition, ANTIC and its package logocally
+*           belong to this section.
+*
+*        b) The section implementing ray tracing, steered by
+*           subroutine RAYPAT, and including the subroutines
+*              RAYPAT,    PROFIX,    DERHIC,    DISPIC,
+*              COORDS,    WAVECT,    INVERT,    PROFIX,
+*              ZETA,      IBESSN,    ABSORB
+*
+*        c) The section dealing with singularities (cyclo-
+*           tron and ion-ion hybrid resonances), i.e. the
+*           subroutines
+*              CYCRES,    TIHRES,    INTHRM
+*
+*        d) The output subroutines
+*              OUTRUN,    OUTPUT
+*           In addition, the graphical output subroutine OUTGRA
+*           and its package also belong to this group.
+*
+*        e) The 'cubic spline interpolation' subroutines
+*                CUBSPL,    VALSPL
+*
+*        f) The predictor-corrector subroutine
+*                HPCSD
+*
+*-----------------------------------------------------------------------
+*
+*     B) the antenna package, steered by subroutine ANTIC,
+*     includes the subroutines
+*
+*              ANTIC,     INIANT,    CYSFIC,    OUTANT,
+*              FUANTY,    ZBFAC2,    POYNTX
+*
+*     It is completely modular, since only ANTIC is called
+*     by RAYIC; the other subroutines are private of ANTIC.
+*     Thus the evaluation of the antenna could be easily
+*     modified if the present model were found inadequate.
+*     ANTIC provides the RAYIC package with the power spectre
+*     of the antenna over toroidal modes, and the poloidal
+*     distribution of power flux for each mode. These quan-
+*     tities are transmitted to RAYIC through labelled COMMONs,
+*     just as any other input run parameter (Cfr. COMINDEX).
+*
+*     With the option 'NANTS = 0', the call to ANTIC is
+*     skipped, and the antenna is initialised by INITAL
+*     with a (sin(Nphi*D)/Nphi)**2 toroidal spectre, and a
+*     (sin(z*h)/z)**2 poloidal distribution of the power flux
+*     (D = width, h = heigth of the antenna element). This
+*     occurs if ANTIC detects a resonance in the near-field
+*     region and is therefore obliged to stop.
+*
+*     With the option JOUTA=-1 it is possible to run the
+*     ANTIC package alone (without Ray Tracing).
+*
+*-----------------------------------------------------------------------
+*
+*     C) The graphical output consists of the subroutines
+*
+*              OUTGRA,    GERGRA,    GRAPHS,    PLOPSI
+*
+*     It is also modular, since only the steering subroutine
+*     OUTGRA is called by RAYIC. This should simplify
+*     rewriting the plot package if the code is to be used
+*     at installations with different plotting facilities.
+*
+*     Subroutines GERGRA, GRAPHS and PLOTPSI contain calls
+*     to plotting subroutines of a plot library available
+*     at IPP-Garching. Normally, only these calls need to be
+*     modidied to adapt this package to other installations.
+*
+************************************************************************
+*                                                                      *
+*          User-defined functions required by the RAYIC code           *
+*                                                                      *
+************************************************************************
+*
+*           FUNCTION PSIWFR(THETA,ZDPSDT)
+*
+*     This function specifies the equation of the initial wave-
+*     front, psi = psi(theta).
+*     The input argument is THETA (real, poloidal angle in rad.).
+*     The return arguments are
+*
+*            PSIWFR = psi(theta)
+*
+*     (real, flux variable psi normalized between 0 on the
+*     magnetic axis and 1 at the plasma edge), and the deri-
+*     vative ZDPSDT (real):
+*
+*            ZDPSDT = d(psi)/d(theta)
+*
+*     The name PSIWFR cannot be altered.
+*
+*=======================================================================
+*
+*           FUNCTION CFUNJY(ZNY)
+*
+*     This complex function must provide the y complex Fourier
+*     transform of the current distribution along each element of
+*     the antenna, as function of the poloidal wavenumber Ny.
+*     It is not necessary to normalize the Fourier transform.
+*
+*     Input argument is ZNY (real), the poloidal wave index
+*     (c*ky/omega).
+*     The output is the Fourier component CFUNJY, which must be
+*     declared as COMPLEX.
+*
+*     The evaluation of CFUNJY usually requires the parameters of
+*     of the input-output COMMONs.
+*
+*=======================================================================
+*
+*           FUNCTION CFUNJZ(NPH)
+*
+*     This complex function must provide the z complex Fourier
+*     transform of the poloidal current distribution in each
+*     antenna element (all elements identical), as function of
+*     the toroidal wavenumber Nphi. It is not necessary to
+*     normalize the Fourier transform.
+*
+*     Input argument is NPH (integer), the toroidal wavenumber.
+*     The output is the complex Fourier component CFUNJZ, which
+*     must be declared as complex.
+*
+*     The evaluation of CFUNJZ usually requires the parameters of
+*     of the input-output COMMONs.
+*
+*=======================================================================
+*

@@ -1,0 +1,12 @@
+C ZIAR [ ]:	Average Ar charge
+C       POST D.E. JENSEN R.V. e.a. PPPL-1352 1977
+C				(G. Pacher 01-04-1993)
+	T=TE(J)
+       Z=LOG10(T)
+					ZIAR=1.
+       IF(T.LT..045.AND.T.GE..0055) ZIAR=3.+7.6545*(Z+2.)
+       IF(T.LT..12.AND.T.GE..045) ZIAR=8.
+       IF(T.LT..55.AND.T.GE..12) ZIAR=8.+12.1*(Z+0.92)
+       IF(T.LT.1.8.and.T.GE..55)      ZIAR=16.
+	IF(T.LT.4.0.and.T.ge.1.8)	ZIAR=16+5.767*(Z-.2553)
+	if(T.gt.4.)		ZIAR=18.

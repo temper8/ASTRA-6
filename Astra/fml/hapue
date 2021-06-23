@@ -1,0 +1,4 @@
+C HAPUE [m#2/s]: Heat conductivity Anomalous Parail-yUshmanov-Esipchuk
+C	HE=c#2/OMpe#2*VTe*sqrt(eps)*q/R
+C			(Yushmanov 15-FEB-89)
+	HAPUE=70.*SQRT(TE(J))/(NE(J)*RTOR*MU(J))*SQEPS(J)

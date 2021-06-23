@@ -1,0 +1,28 @@
+C HCHII [m#2/s]:  Neo-classical Ion Heat conductivity, Improved Chang+Hinton
+C	H=SQRT(eps)*RLip**2*NUii*K2
+C where K2 is a complicated expression!
+C This has some finite aspect ratio terms, generalising the Chang Hinton 
+C to tight aspect ratio.
+C  See reference: Chang + Hinton Phys Fluids, Vol 29, p3314, 1986
+C			(C M Roach 30-JAN-94)
+	include 'fml/nui'
+	include 'fml/rli'
+	include 'fml/nuis'
+	include 'fml/dpsi'
+	include 'fml/gro2'
+      YDELTA = SQEPS(J)**2
+      YALPHA = NE(J)*ZEF(J)/(NI(J)*ZMAIN(J)**2) - 1.0
+      IF (YALPHA.LE.0.) YALPHA=0.0
+      YHP = 1.0 + 1.33*YALPHA*( 1.0 + 0.6*YALPHA )/
+     +                        ( 1.0 + 1.79*YALPHA )
+      YF = 0.5/SQRT(YDELTA)*(B0DB2(J)-1.0/(BDB02(J)+0.0001))
+      YMUSTI = NUIS * (1.0 + 1.54*YALPHA)
+      YK2P = 1.166*YMUSTI*YDELTA**1.5*YHP*YF/
+     +            (1.0 + 0.74*YMUSTI*YDELTA**1.5)
+      YK2HAT = ( 0.66*( 1.0+1.54*YALPHA ) + 
+     +          ( 1.88*SQRT(YDELTA)-1.54*YDELTA )*( 1.0+3.75*YALPHA ) )
+     +          *B0DB2(J)
+      YK2B  = YK2HAT/( 1.0+1.03*SQRT(YMUSTI)+0.31*YMUSTI )
+      HCHII = SQRT(YDELTA)*NUI*(YK2B+YK2P)*
+     +		(GP2*RLI*IPOL(J)*RTOR*BTOR/DPSI)**2/GRO2
+

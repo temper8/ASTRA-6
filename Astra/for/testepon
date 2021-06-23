@@ -1,0 +1,264 @@
+C======================================================================|
+	program  astra
+C----------------------------------------------------------------------|
+	implicit double precision (a-h,o-z)
+	include	'for/parameter.inc'
+	include	'for/const.inc'	
+	include	'for/status.inc'
+	include	'for/outcmn.inc'
+	include	'for/timeoutput.inc'
+	include	'tmp/declar.fml'
+	include	'tmp/declar.fnc'
+	include	'tmp/declar.usr'
+	integer getpid,J,IFKEY,IFIPC,JIT,JEX,JDETV,JCALL,ND,ND1,IPART
+	integer	IFSBP(NSBMX)
+	double precision YWA(NRD),YWB(NRD),YWC(NRD),YWD(NRD),ARRNA1
+C	double precision NE1(NRD),TE1(NRD),TI1(NRD)
+	double precision YA,YB,YC,YD,YE,YF,YG,YI,YM,YJ,YU,YYD,YCU
+	double precision YMF,YHC,YFP0
+	character STRING*132
+	data	JEX/1/ JIT/0/ IPART/0/
+C----------------------------------------------------------------------|
+	call	fenvex()	!  Enable floating exception handling
+C	call	fenvdx()	! Disable floating exception handling
+C--------------------- Preliminary definitions ------------------------|
+	do j=0,iargc()
+	   call	getarg(j,STRING)
+	   if (j .eq. 0) write(*,'(3a,1i6)')
+     &		'Task: "',STRING(1:length(STRING)),'",   PID =',getpid()
+	   if (j .gt. 0) write(*,'(a,i2,3a)')
+     &		'      Argument #',j,'  "',STRING(1:length(STRING)),'"'
+	enddo
+	call	getarg(0,STRING)
+	j = min(len(TASKID),length(STRING))
+	TASKID = STRING(1:j)
+	if (iargc() .gt. 0)	then
+	   call	getarg(1,STRING)
+	   j = length(STRING)
+	   if (STRING(1:j) .eq. 'background')	TASK = 'BGD'
+	endif
+C----------------------- Astra start ----------------------------------|
+ 1	continue
+C	write(*,*)"Entering ASTRA"
+	call	OPENRD(1,'tmp/astra.log',0,IERR)
+ 434	read(1,'(1A40)',END=444)STRING
+C	write(*,*)STRING
+	if (STRING(1:6).eq.'RTYPE:')	then
+		j = nextwd(STRING(7:))
+C		write(*,*)j,STRING(7:)
+		WTIME = -1.E10
+		if (j.ne.0) read(STRING(6+j:),*,ERR=444)WTIME
+	else
+		goto	434
+	endif
+ 444	close(1)
+C----------------------------------------------------------------------|
+C	write(*,*)WTIME
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"ininam   "
+					endif
+C-------------------- Initial settings --------------------------------|
+	include	'tmp/ininam.tmp'
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"READAT   "
+					endif
+	call	READAT
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"SETARX   "
+					endif
+	call	SETARX(1)
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"inivar 1 "
+					endif
+	include	'tmp/inivar.tmp'
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"setvar   "
+					endif
+	include	'tmp/setvar.tmp'
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"detvar   "
+					endif
+	include	'tmp/detvar.tmp'
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"inivar 2 "
+					endif
+	include	'tmp/inivar.tmp'
+C-------------------- Initial iterations ------------------------------|
+	JEX = 20
+	do   2	JIT=1,JEX
+					if (TIME .ge. WTIME)	then
+					   write(*,11)
+					   write(*,12)JIT
+					   write(*,13)
+					   include 'tmp/printout'
+					   write(*,9)"DEFARR   "
+					endif
+	   call	DEFARR
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"INTVAR   "
+					endif
+	   call	INTVAR
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"detvar   "
+					endif
+	   include 'tmp/detvar.tmp'
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"METRIC   "
+					endif
+	   call	METRIC
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"SETARX   "
+					endif
+	   call	SETARX(1)
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"inivar   "
+					endif
+	   include 'tmp/inivar.tmp'
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"init.inc "
+					endif
+	   include 'tmp/init.inc'
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"IFKEY    "
+					endif
+	   j = IFKEY(256)
+ 2	continue		! End initial iteration loop
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"METRIC   "
+					endif
+	IPART = 1
+	call	METRIC
+C-------------------- Time step loop ----------------------------------|
+ 3	continue
+					if (TIME .ge. WTIME)	then
+					   write(*,11)
+					   write(*,14)TIME
+					   write(*,13)
+					   include 'tmp/printout'
+					   write(*,9)"IFKEY(0) "
+					endif
+	if (IFKEY(0) .eq. 1)	goto	1
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"Time step entry "
+					endif
+	JIT = 0			! Time step loop
+	JEX = max(1,int(ITEREX+0.1))
+ 4	JIT = JIT+1		! External iteration loop (JIT<=JEX)
+					if (TIME .ge. WTIME)	then
+					   if (JEX .gt. 1)	then
+					      write(*,15)
+					      write(*,12)JIT
+					      write(*,16)
+					   endif
+					   include 'tmp/printout'
+					   write(*,9)"DEFARR   "
+					endif
+	call	DEFARR
+	if (JIT .eq. 1) then
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"INTVAR   "
+					endif
+	   call	INTVAR		! Set simple exp variables
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"detvar   "
+					endif
+	   include 'tmp/detvar.tmp'
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"METRIC   "
+					endif
+	   call	METRIC		! 
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"SETARX   "
+					endif
+	   call	SETARX(2)	! Set exp arrays (time interpolation on)
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"OLDNEW   "
+					endif
+	   call	OLDNEW		! Time advance [setting f(t-tau)=f(t)]
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"ADCMP    "
+					endif
+	   call	ADCMP		! 
+	endif
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"eqns.inc "
+					endif
+	include	'tmp/eqns.inc'	! Sbrs & Eqs call
+				! Time step (TAU) control (in IFSTEP)
+			if (JIT.lt.JEX .and. TIME.ge.WTIME)	then
+					   include 'tmp/printout'
+					   write(*,9)"Time iterations "
+					endif
+	if (JIT .lt. JEX)	goto	4
+					if (TIME .ge. WTIME)	then
+					   include 'tmp/printout'
+					   write(*,10)"Time step done "
+					endif
+	goto	3
+C----------------------------------------------------------------------|
+ 9	format(/"Before ",1A)
+ 10	format(1X,1A)
+ 11	format(/20("=")$)
+ 12	format(" iter =",I3,$)
+C 13	format(" ===========================")
+ 13	format(" ",16("="))
+ 14	format(" t =",F10.6,$)
+ 15	format(/20("-")$)
+ 16	format(" ",20("-"))
+ 100	format(3(2F10.5,2X))
+	end
+C======================================================================|
+	subroutine RADOUT
+C	implicit none
+	implicit double precision (a-h,o-z)
+	include	'for/parameter.inc'
+	include	'for/const.inc'
+	include	'for/status.inc'
+	include	'for/outcmn.inc'
+	include	'tmp/declar.fml'
+	include	'tmp/declar.fnc'
+	include	'tmp/declar.usr'
+C	call	fenvdx()
+	include	'tmp/radout.tmp'
+C	call	fenvex()
+	end
+C======================================================================|
+	subroutine TIMOUT
+C	implicit none
+	implicit double precision (a-h,o-z)
+	include	'for/parameter.inc'
+	include	'for/const.inc'
+	include	'for/status.inc'
+	include	'for/outcmn.inc'
+	include	'for/timeoutput.inc'
+	include	'tmp/declar.fml'
+	include	'tmp/declar.fnc'
+	include	'tmp/declar.usr'
+C	call	fenvdx()
+	include	'tmp/timout.tmp'
+C	call	fenvex()
+	end
+C======================================================================|

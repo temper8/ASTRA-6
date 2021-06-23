@@ -1,0 +1,4 @@
+C QIX [MW]:	Integral {O,R} ( PIX ) dV
+C			(Yushmanov 11-JAN-89)
+	IF(J.EQ.1)	QIX=0.
+	QIX=QIX+PIX(J)*VR(J)*HRO

@@ -1,0 +1,12 @@
+C ZIBE [ ]:	Average Be charge
+C       POST D.E. JENSEN R.V. e.a. PPPL-1352 1977
+C				(G. Pacher 01-04-1993)
+	T=TE(J)
+       Z=LOG10(T)
+					ZIBE=1.
+       IF(T.LT..003.AND.T.GE..001) ZIBE=1.8+0.2*(Z+3.)
+       IF(T.LT..01.AND.T.GE..003) ZIBE=2.
+       IF(T.LT..05.AND.T.GE..01) ZIBE=2.+5.01*(Z+1.7)
+       IF(T.GE..05)               ZIBE=4.
+C	patch to check helium exhaust
+C	ZIBE=4.

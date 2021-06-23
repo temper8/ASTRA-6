@@ -1,0 +1,443 @@
+
+                    ION CYCLOTRON RAY-TRACING CODE RAYIC
+                               April 18 1994          
+                         f = 30.00 Mhz - n-phi =   4
+
+          Major radius =                        1.650 m
+          Radius of the magnetic axis =         1.695 m
+          Minor radius =                        0.500 m
+          Inner plasma edge at X =             -0.545 m
+          Outer plasma edge at X =              0.455 m
+          Toroidal magnetic field, center        2.00 Tesla
+          Toroidal magnetic field, axis =        1.95 Tesla
+          Toroidal current =                     0.75 MA
+          Safety factor at the edge =            4.07
+          Safety factor on the axis =            1.40
+          Shift of the magnetic axis =          0.045 m
+          Ellipticity at the axis =             1.000
+          Ellipticity of the outer surface =    1.600
+          Triangularity at outer surface =     -0.150
+
+          Central density =                 8.000E+13 cm-3
+          Central electron temperature =        2.000 keV
+
+          Majority ion species is species n.  1
+          Sp.  1 A =  2.0 Z =  1.0 Z*n(j)/n(e) =  0.950 Ti =  2.000 keV
+          Sp.  2 A =  1.0 Z =  1.0 Z*n(j)/n(e) =  0.050 Ti =  2.000 keV
+
+          Applied frequency =                  30.000 Mhz
+          Wavelength in vacuum =                9.993 m
+          Toroidal wavenumber Nphi =                4
+          Rays in the poloidal cross-section       20
+
+          Singular layers:
+          Sp.  1 Fundam. res. at X    =  -0.8565 (R =   0.8385)
+                 First harm. res at X =  -0.0180 (R =   1.6770)
+          Sp.  2 Fundam. res. at X    =  -0.0180 (R =   1.6770)
+                 First harm. res at X =   1.6590 (R =   3.3540)
+          Cutoff at X                 =  -0.0153 (R =   1.6797)
+          Hybrid resonance at X       =  -0.0349 (R =   1.6601)
+
+ Nphi =  4 The ray from theta = -57.30
+     crosses the 1 cycl. harm. of sp. 2 at phase    2.19
+     Entry point: X =   0.044 Z =  -0.423 power =   4.215E-02
+     N par =   2.035E+00 N perp =   6.604E+01 x(i) =   1.710E+00
+     Exit point: X =   0.023 Z =  -0.387 at phase   2.4679E+00
+     N par =   2.1920E+00 N perp =   6.3131E+01 x(i) =  -1.5857E+00
+
+ Reflection from a vertical plane at phase   2.810
+     X =   0.006 Z =  -0.333 power =   4.061E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta = -51.26
+     crosses the 1 cycl. harm. of sp. 2 at phase    2.33
+     Entry point: X =   0.040 Z =  -0.400 power =   4.451E-02
+     N par =   1.296E+00 N perp =   6.634E+01 x(i) =   1.711E+00
+     Exit point: X =   0.026 Z =  -0.383 at phase   2.4755E+00
+     N par =   1.3736E+00 N perp =   6.4162E+01 x(i) =  -1.6324E+00
+
+ Reflection from a vertical plane at phase   2.858
+     X =  -0.001 Z =  -0.324 power =   4.407E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta = -45.23
+     crosses the 1 cycl. harm. of sp. 2 at phase    2.49
+     Entry point: X =   0.037 Z =  -0.370 power =   4.667E-02
+     N par =   7.224E-01 N perp =   6.682E+01 x(i) =   1.693E+00
+     Exit point: X =   0.029 Z =  -0.362 at phase   2.5655E+00
+     N par =   7.6743E-01 N perp =   6.5442E+01 x(i) =  -1.6494E+00
+
+ Reflection from a vertical plane at phase   2.939
+     X =  -0.006 Z =  -0.308 power =   4.654E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta = -39.20
+     crosses the 1 cycl. harm. of sp. 2 at phase    2.66
+     Entry point: X =   0.035 Z =  -0.333 power =   4.861E-02
+     N par =   3.125E-01 N perp =   6.744E+01 x(i) =   1.691E+00
+     Exit point: X =   0.031 Z =  -0.331 at phase   2.6932E+00
+     N par =   3.3640E-01 N perp =   6.6769E+01 x(i) =  -1.6254E+00
+
+ Eikonal approximation fails at phase   2.942
+     X =   0.000 Z =  -0.305 power =    4.86E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta = -33.17
+     crosses the 1 cycl. harm. of sp. 2 at phase    2.83
+     Entry point: X =   0.033 Z =  -0.291 power =   5.031E-02
+     N par =   8.243E-02 N perp =   6.816E+01 x(i) =   1.594E+00
+     Exit point: X =   0.032 Z =  -0.290 at phase   2.8375E+00
+     N par =   9.0413E-02 N perp =   6.7955E+01 x(i) =  -1.6785E+00
+
+ Eikonal approximation fails at phase   3.028
+     X =   0.007 Z =  -0.275 power =    5.03E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta = -27.14
+     crosses the 1 cycl. harm. of sp. 2 at phase    2.98
+     Entry point: X =   0.032 Z =  -0.244 power =   5.176E-02
+     N par =   5.776E-02 N perp =   6.902E+01 x(i) =   1.642E+00
+     Exit point: X =   0.031 Z =  -0.243 at phase   2.9840E+00
+     N par =   6.4294E-02 N perp =   6.8865E+01 x(i) =  -1.6054E+00
+
+ Eikonal approximation fails at phase   3.143
+     X =   0.010 Z =  -0.233 power =    5.17E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta = -21.11
+     crosses the 1 cycl. harm. of sp. 2 at phase    3.10
+     Entry point: X =   0.032 Z =  -0.192 power =   5.293E-02
+     N par =   2.805E-01 N perp =   7.005E+01 x(i) =   1.646E+00
+     Exit point: X =   0.029 Z =  -0.191 at phase   3.1241E+00
+     N par =   3.1352E-01 N perp =   6.9311E+01 x(i) =  -1.5936E+00
+
+ Eikonal approximation fails at phase   3.289
+     X =   0.006 Z =  -0.183 power =    5.29E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta = -15.08
+     crosses the 1 cycl. harm. of sp. 2 at phase    3.18
+     Entry point: X =   0.034 Z =  -0.137 power =   5.382E-02
+     N par =   8.105E-01 N perp =   7.111E+01 x(i) =   1.559E+00
+     Exit point: X =   0.024 Z =  -0.135 at phase   3.2549E+00
+     N par =   9.0233E-01 N perp =   6.9021E+01 x(i) =  -1.6859E+00
+
+ Eikonal approximation fails at phase   3.422
+     X =  -0.001 Z =  -0.129 power =    5.37E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta =  -9.05
+     crosses the 1 cycl. harm. of sp. 2 at phase    3.21
+     Entry point: X =   0.039 Z =  -0.081 power =   5.440E-02
+     N par =   1.697E+00 N perp =   7.219E+01 x(i) =   1.684E+00
+     Exit point: X =   0.018 Z =  -0.078 at phase   3.3679E+00
+     N par =   1.8612E+00 N perp =   6.7997E+01 x(i) =  -1.6101E+00
+
+ Eikonal approximation fails at phase   3.516
+     X =  -0.005 Z =  -0.074 power =    5.38E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta =  -3.02
+     crosses the 1 cycl. harm. of sp. 2 at phase    3.19
+     Entry point: X =   0.047 Z =  -0.024 power =   5.467E-02
+     N par =   2.979E+00 N perp =   7.345E+01 x(i) =   1.738E+00
+     Exit point: X =   0.010 Z =  -0.022 at phase   3.4654E+00
+     N par =   3.1397E+00 N perp =   6.5747E+01 x(i) =  -1.6512E+00
+
+ Eikonal approximation fails at phase   3.588
+     X =  -0.011 Z =  -0.021 power =    5.24E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta =   3.02
+     crosses the 1 cycl. harm. of sp. 2 at phase    3.13
+     Entry point: X =   0.054 Z =   0.034 power =   5.453E-02
+     N par =   4.523E+00 N perp =   7.408E+01 x(i) =   1.574E+00
+     Exit point: X =  -0.003 Z =   0.030 at phase   3.5495E+00
+     N par =   4.4746E+00 N perp =   5.9973E+01 x(i) =  -1.9468E+00
+
+ Eikonal approximation fails at phase   3.618
+     X =  -0.016 Z =   0.029 power =    4.28E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta =   9.05
+     crosses the 1 cycl. harm. of sp. 2 at phase    3.00
+     Entry point: X =   0.064 Z =   0.095 power =   5.406E-02
+     N par =   5.769E+00 N perp =   7.471E+01 x(i) =   1.687E+00
+     Exit point: X =  -0.007 Z =   0.084 at phase   3.5443E+00
+     N par =   5.4486E+00 N perp =   5.6201E+01 x(i) =  -1.9096E+00
+
+ Eikonal approximation fails at phase   3.590
+     X =  -0.017 Z =   0.081 power =    3.10E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta =  15.08
+     crosses the 1 cycl. harm. of sp. 2 at phase    2.88
+     Entry point: X =   0.069 Z =   0.156 power =   5.323E-02
+     N par =   6.607E+00 N perp =   7.474E+01 x(i) =   1.656E+00
+     Exit point: X =  -0.012 Z =   0.138 at phase   3.5039E+00
+     N par =   5.9093E+00 N perp =   4.9805E+01 x(i) =  -2.0456E+00
+
+ Reflection from a vertical plane at phase   3.526
+     X =  -0.016 Z =   0.135 power =   1.555E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta =  21.11
+     crosses the 1 cycl. harm. of sp. 2 at phase    2.74
+     Entry point: X =   0.074 Z =   0.215 power =   5.235E-02
+     N par =   7.062E+00 N perp =   7.453E+01 x(i) =   1.722E+00
+     Exit point: X =  -0.011 Z =   0.190 at phase   3.3990E+00
+     N par =   6.2844E+00 N perp =   4.9654E+01 x(i) =  -1.9695E+00
+
+ Reflection from a vertical plane at phase   3.422
+     X =  -0.014 Z =   0.186 power =   1.462E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta =  27.14
+     crosses the 1 cycl. harm. of sp. 2 at phase    2.60
+     Entry point: X =   0.075 Z =   0.271 power =   5.128E-02
+     N par =   7.211E+00 N perp =   7.369E+01 x(i) =   1.747E+00
+     Exit point: X =  -0.009 Z =   0.238 at phase   3.2619E+00
+     N par =   6.4641E+00 N perp =   5.0320E+01 x(i) =  -1.9178E+00
+
+ Reflection from a vertical plane at phase   3.291
+     X =  -0.013 Z =   0.233 power =   1.619E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta =  33.17
+     crosses the 1 cycl. harm. of sp. 2 at phase    2.48
+     Entry point: X =   0.070 Z =   0.320 power =   4.986E-02
+     N par =   7.141E+00 N perp =   7.208E+01 x(i) =   1.605E+00
+     Exit point: X =  -0.007 Z =   0.281 at phase   3.1025E+00
+     N par =   6.4681E+00 N perp =   5.1561E+01 x(i) =  -1.8773E+00
+
+ Reflection from a vertical plane at phase   3.143
+     X =  -0.011 Z =   0.273 power =   2.040E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta =  39.20
+     crosses the 1 cycl. harm. of sp. 2 at phase    2.32
+     Entry point: X =   0.069 Z =   0.365 power =   4.832E-02
+     N par =   6.861E+00 N perp =   7.070E+01 x(i) =   1.667E+00
+     Exit point: X =  -0.006 Z =   0.318 at phase   2.9505E+00
+     N par =   6.0481E+00 N perp =   5.0383E+01 x(i) =  -2.0245E+00
+
+ Reflection from a vertical plane at phase   2.992
+     X =  -0.008 Z =   0.309 power =   1.826E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta =  45.23
+     crosses the 1 cycl. harm. of sp. 2 at phase    2.19
+     Entry point: X =   0.065 Z =   0.402 power =   4.640E-02
+     N par =   6.451E+00 N perp =   6.894E+01 x(i) =   1.574E+00
+     Exit point: X =   0.005 Z =   0.352 at phase   2.7277E+00
+     N par =   6.2932E+00 N perp =   5.7774E+01 x(i) =  -1.4586E+00
+
+ Reflection from a vertical plane at phase   2.859
+     X =  -0.005 Z =   0.330 power =   3.498E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta =  51.26
+     crosses the 1 cycl. harm. of sp. 2 at phase    2.05
+     Entry point: X =   0.063 Z =   0.433 power =   4.434E-02
+     N par =   5.891E+00 N perp =   6.759E+01 x(i) =   1.662E+00
+     Exit point: X =   0.002 Z =   0.369 at phase   2.6520E+00
+     N par =   5.2594E+00 N perp =   5.4880E+01 x(i) =  -1.9683E+00
+
+ Reflection from a vertical plane at phase   2.732
+     X =  -0.001 Z =   0.354 power =   2.823E-02
+          Two-ion hybrid resonance, minority species:  2
+
+ Nphi =  4 The ray from theta =  57.30
+     crosses the 1 cycl. harm. of sp. 2 at phase    1.95
+     Entry point: X =   0.059 Z =   0.455 power =   4.204E-02
+     N par =   5.198E+00 N perp =   6.640E+01 x(i) =   1.701E+00
+     Exit point: X =   0.007 Z =   0.378 at phase   2.5663E+00
+     N par =   4.5440E+00 N perp =   5.7442E+01 x(i) =  -1.9304E+00
+
+ Reflection from a vertical plane at phase   2.646
+     X =   0.005 Z =   0.364 power =   3.187E-02
+          Two-ion hybrid resonance, minority species:  2
+
+                    POWER DEPOSITION PROFILES
+     PSI      ELECTRONS    IONS:  1         2
+    0.0000    0.00E+00    0.00E+00    0.00E+00
+    0.0200    1.89E-02    2.52E-04    3.58E-03
+    0.0400    3.38E-02    6.28E-03    9.72E-02
+    0.0600    2.16E-02    2.14E-02    2.06E-01
+    0.0800    4.23E-03    2.61E-02    1.54E-01
+    0.1000    6.22E-05    9.82E-03    4.92E-02
+    0.1200    2.69E-03    1.26E-03    9.22E-03
+    0.1400    7.69E-03    4.22E-04    9.61E-03
+    0.1600    6.35E-03    1.71E-02    1.43E-01
+    0.1800    1.65E-03    2.20E-02    1.36E-01
+    0.2000    1.77E-03    5.34E-03    2.52E-02
+    0.2200    4.20E-03    4.41E-04    1.21E-02
+    0.2400    2.73E-03    8.43E-03    7.41E-02
+    0.2600    9.79E-04    2.19E-02    1.44E-01
+    0.2800    6.75E-04    1.23E-02    7.17E-02
+    0.3000    1.89E-03    2.19E-03    1.84E-02
+    0.3200    3.29E-03    6.08E-03    5.59E-02
+    0.3400    1.77E-03    1.55E-02    1.06E-01
+    0.3600    1.64E-03    8.16E-03    5.14E-02
+    0.3800    3.05E-03    2.76E-03    2.80E-02
+    0.4000    1.54E-03    7.16E-03    6.50E-02
+    0.4200    1.53E-03    9.56E-03    6.34E-02
+    0.4400    2.67E-03    4.36E-03    3.68E-02
+    0.4600    2.37E-03    5.13E-03    4.96E-02
+    0.4800    3.67E-03    6.16E-03    4.76E-02
+    0.5000    3.09E-03    4.23E-03    4.04E-02
+    0.5200    1.74E-03    5.90E-03    5.73E-02
+    0.5400    1.39E-03    4.04E-03    3.77E-02
+    0.5600    6.92E-04    2.64E-03    3.09E-02
+    0.5800    3.11E-04    2.99E-03    3.51E-02
+    0.6000    2.34E-04    2.99E-03    2.79E-02
+    0.6200    1.54E-04    1.30E-03    1.10E-02
+    0.6400    1.11E-04    2.07E-04    2.40E-03
+    0.6600    6.47E-05    1.76E-05    9.80E-04
+    0.6800    3.34E-05    3.31E-06    2.84E-04
+    0.7000    1.76E-05    7.63E-10    7.24E-06
+    0.7200    7.21E-06    2.41E-15    1.77E-08
+    0.7400    3.11E-06    1.83E-22    5.14E-12
+    0.7600    8.95E-07    1.03E-31    1.14E-16
+    0.7800    2.56E-07    0.00E+00    1.77E-23
+    0.8000    5.76E-08    0.00E+00    1.59E-37
+    0.8200    0.00E+00    0.00E+00    0.00E+00
+    0.8400    0.00E+00    0.00E+00    0.00E+00
+    0.8600    0.00E+00    0.00E+00    0.00E+00
+    0.8800    0.00E+00    0.00E+00    0.00E+00
+    0.9000    0.00E+00    0.00E+00    0.00E+00
+    0.9200    0.00E+00    0.00E+00    0.00E+00
+    0.9400    0.00E+00    0.00E+00    0.00E+00
+    0.9600    0.00E+00    0.00E+00    0.00E+00
+    0.9800    0.00E+00    0.00E+00    0.00E+00
+    1.0000    0.00E+00    0.00E+00    0.00E+00
+
+                    Integrated profiles
+     PSI      ELECTRONS    IONS:  1         2
+    0.0000    0.00E+00    0.00E+00    0.00E+00
+    0.0200    1.29E-04    1.71E-06    2.44E-05
+    0.0400    5.97E-04    8.87E-05    1.37E-03
+    0.0600    1.05E-03    5.40E-04    5.72E-03
+    0.0800    1.17E-03    1.29E-03    1.01E-02
+    0.1000    1.18E-03    1.64E-03    1.19E-02
+    0.1200    1.29E-03    1.70E-03    1.23E-02
+    0.1400    1.70E-03    1.72E-03    1.28E-02
+    0.1600    2.08E-03    2.76E-03    2.15E-02
+    0.1800    2.20E-03    4.29E-03    3.10E-02
+    0.2000    2.34E-03    4.71E-03    3.30E-02
+    0.2200    2.71E-03    4.75E-03    3.40E-02
+    0.2400    2.97E-03    5.56E-03    4.12E-02
+    0.2600    3.07E-03    7.89E-03    5.65E-02
+    0.2800    3.15E-03    9.31E-03    6.48E-02
+    0.3000    3.39E-03    9.58E-03    6.71E-02
+    0.3200    3.84E-03    1.04E-02    7.48E-02
+    0.3400    4.10E-03    1.27E-02    9.03E-02
+    0.3600    4.36E-03    1.40E-02    9.83E-02
+    0.3800    4.87E-03    1.44E-02    1.03E-01
+    0.4000    5.14E-03    1.57E-02    1.15E-01
+    0.4200    5.44E-03    1.75E-02    1.27E-01
+    0.4400    5.98E-03    1.84E-02    1.34E-01
+    0.4600    6.49E-03    1.95E-02    1.45E-01
+    0.4800    7.32E-03    2.09E-02    1.56E-01
+    0.5000    8.05E-03    2.19E-02    1.65E-01
+    0.5200    8.49E-03    2.34E-02    1.80E-01
+    0.5400    8.86E-03    2.45E-02    1.90E-01
+    0.5600    9.05E-03    2.52E-02    1.98E-01
+    0.5800    9.14E-03    2.61E-02    2.08E-01
+    0.6000    9.21E-03    2.70E-02    2.17E-01
+    0.6200    9.26E-03    2.74E-02    2.20E-01
+    0.6400    9.29E-03    2.75E-02    2.21E-01
+    0.6600    9.32E-03    2.75E-02    2.21E-01
+    0.6800    9.33E-03    2.75E-02    2.22E-01
+    0.7000    9.34E-03    2.75E-02    2.22E-01
+    0.7200    9.34E-03    2.75E-02    2.22E-01
+    0.7400    9.34E-03    2.75E-02    2.22E-01
+    0.7600    9.34E-03    2.75E-02    2.22E-01
+    0.7800    9.34E-03    2.75E-02    2.22E-01
+    0.8000    9.34E-03    2.75E-02    2.22E-01
+    0.8200    9.34E-03    2.75E-02    2.22E-01
+    0.8400    9.34E-03    2.75E-02    2.22E-01
+    0.8600    9.34E-03    2.75E-02    2.22E-01
+    0.8800    9.34E-03    2.75E-02    2.22E-01
+    0.9000    9.34E-03    2.75E-02    2.22E-01
+    0.9200    9.34E-03    2.75E-02    2.22E-01
+    0.9400    9.34E-03    2.75E-02    2.22E-01
+    0.9600    9.34E-03    2.75E-02    2.22E-01
+    0.9800    9.34E-03    2.75E-02    2.22E-01
+    1.0000    9.34E-03    2.75E-02    2.22E-01
+
+                         TOTAL POWER BALANCE
+          Launched power             =   1.0000E+00 MW
+          Absorbed by the plasma     =   2.5841E-01 MW
+          Absorbed near the antenna  =   0.0000E+00 MW
+          Non absorbed               =   7.4159E-01 MW
+
+          Power to the electrons    =   9.3404E-03 MW     (      3.61 %)
+          Power to Bernst. waves    =   6.7257E-03 MW     (*     2.60 %)
+                  to species      1 =    2.748E-02 MW     (     10.64 %)
+                  to species      2 =    2.216E-01 MW     (     85.75 %)
+
+ *: The power to IB waves is also attributed to electrons and ions
+    depending on the local absorption rates.
+
+ RESCB1:  You are in LEVEL=1 already;  NO  reSCALE ######
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+
+ RESCB1:  You are in LEVEL=1 already;  NO  reSCALE ######
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+Warning from PPTEXT:  text or parts of it may be clipped
+ pp_PLOT.pltEND: # of pictures:     3
+ =====================: pltEND: all DONE <<=====

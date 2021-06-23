@@ -1,0 +1,5 @@
+C QDTF [MW]: Fusion power including contribution of fast ions
+C		(Pereverzev 7-APR-03)
+	include	'fml/pdtf'
+	IF(J.EQ.1)	QDTF=0.
+	QDTF=QDTF+PDTF*VR(J)*HRO

@@ -1,0 +1,15 @@
+C PRWOL [MW*m#3] Wolfram radiation power
+C       POST D.E. JENSEN R.V. e.a., Atomic Data and Nuclear Tables,
+C				    Vol.20 (1977) 397.
+C	(PPPL-1352 1977)
+C				(Yushmanov 27-12-89)
+C	Corrected by Pereverzev 29-07-96
+C	Usage:		PE=...-PRWOL*NE*NIZ1
+	T=TE(J)*1000.
+	Z=      LOG10(TE(J))
+        IF(T.LE.333.)                Y=1.3
+        IF(333.LE.T.AND.T.LE.3.E3)   Y=1.6-1.32*Z**2
+	IF(T.GT.3.E3.AND.T.LT.7.E3)  Y=1.3
+	IF(T.GT.7.E3.AND.T.LT.1.5E4) Y=1.3-1.8*(Z-.845)
+	IF(T.GT.1.5E4)               Y=.7
+	PRWOL	=10.**Y

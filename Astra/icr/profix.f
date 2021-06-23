@@ -1,0 +1,78 @@
+      SUBROUTINE PROFIX
+C
+C ************ ************ ************ ************ ************
+C
+C      THIS SUBROUTINE EVALUATES THE LOCAL VALUES OF THE
+C      DENSITY, TEMPERATURE, ROTATIONAL TRANSFORM, ETC.,
+C      REQUIRED FOR INTEGRATION OF THE RAY EQUATIONS,
+C      USING THE SPLINE INTERPOLATION INITIALIZED IN PROFIN.
+C
+C ************ ************ ************ ************ ************
+C
+      include 'COMMON.F'
+C
+C ************ ************ ************ ************ ************
+C
+         LEFT = IFIX(PSI/DPSI) + 1
+         HH = PSI - PPSI(LEFT)
+C
+         ZFACQ = URPLAS*ANTAU/AJ
+         ZFLUXQ = VALSPL(HH,TQR,LEFT,0,NPROF)
+         ZTANQ = ZFACQ*ZFLUXQ
+         ZCOSQ2 = 1./(1.+ZTANQ*ZTANQ)
+         ACOSTQ = SQRT(ZCOSQ2)
+         ASINTQ = ZTANQ*ACOSTQ
+C
+         ZDQ = ZTANQ*ZCOSQ2
+         DQPSI = ZDQ*(VALSPL(HH,TQR,LEFT,1,NPROF)/ZFLUXQ + DNTAUP - DJP)
+         DQTH = ZDQ*(DNTAUT - DJT)
+C
+         DOMPSI = -DXPSI/URHS + ZTANQ*DQPSI
+         DOMTH = -DXTH/URHS + ZTANQ*DQTH
+C
+         BTOR = BZERO*URTOR/URHS
+         BPOL = ZTANQ*BTOR
+         BTOT = BTOR/ACOSTQ
+C
+         ZFUDEN = VALSPL(HH,TNE,LEFT,0,NPROF)
+         DERDEN = VALSPL(HH,TNE,LEFT,1,NPROF)/ZFUDEN
+         ZFUTE = VALSPL(HH,TTE,LEFT,0,NPROF)
+         DERTEM = VALSPL(HH,TTE,LEFT,1,NPROF)/ZFUTE
+         DENS = DENC*ZFUDEN
+         TEMPE = TEMPEC*ZFUTE
+C
+         ZFUNI = VALSPL(HH,TNI(1,1,1),LEFT,0,NPROF)
+         DERDNI(1) = VALSPL(HH,TNI(1,1,1),LEFT,1,NPROF)/ZFUNI
+         DENSI(1) = DENIC(1)*ZFUNI
+         ZFUTIX = VALSPL(HH,TTIX(1,1,1),LEFT,0,NPROF)
+         TEMPIX(1) = TEMPIC(1)*ZFUTIX
+         DERTIX(1) = VALSPL(HH,TTIX(1,1,1),LEFT,1,NPROF)/ZFUTIX
+         ZFUTIZ = VALSPL(HH,TTIZ(1,1,1),LEFT,0,NPROF)
+         TEMPIZ(1) = TEMPIC(1)*ZFUTIZ
+         DERTIZ(1) = VALSPL(HH,TTIZ(1,1,1),LEFT,1,NPROF)/ZFUTIZ
+C
+      IF(NSPEC.EQ.1)  RETURN
+C
+      IF(IPROEQ.EQ.1)   THEN
+         DO 10  I=2,NSPEC
+            DERDNI(I) = DERDNI(1)
+            DENSI(I) = DENIC(I)*ZFUNI
+            TEMPIX(I) = TEMPIC(I)*ZFUTIX
+            DERTIX(I) = DERTIX(1)
+            TEMPIZ(I) = TEMPIC(I)*ZFUTIZ
+   10       DERTIZ(I) = DERTIZ(1)
+      ELSE
+         DO 20  I=2,NSPEC
+            ZFUNI = VALSPL(HH,TNI(1,1,I),LEFT,0,NPROF)
+            DERDNI(I) = VALSPL(HH,TNI(1,1,I),LEFT,1,NPROF)/ZFUNI
+            DENSI(I) = DENIC(I)*ZFUNI
+            ZFUTIX = VALSPL(HH,TTIX(1,1,I),LEFT,0,NPROF)
+            TEMPIX(I) = TEMPIC(I)*ZFUTIX
+            DERTIX(I) = VALSPL(HH,TTIX(1,1,I),LEFT,1,NPROF)/ZFUTIX
+            ZFUTIZ = VALSPL(HH,TTIZ(1,1,I),LEFT,0,NPROF)
+            TEMPIZ(I) = TEMPIC(I)*ZFUTIZ
+   20       DERTIZ(I) = VALSPL(HH,TTIZ(1,1,I),LEFT,1,NPROF)/ZFUTIZ
+      END IF
+C
+      RETURN
+      END

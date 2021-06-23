@@ -1,0 +1,5 @@
+C QBREM [MW]: Bremsstrahlung radiation power
+C	N.A.Uckan//	ITER-TN-PH-8-6	Final Draft , 30 Nov.1988
+C			(Pereverzev & Polevoy 24-JULY-89)
+	IF(J.EQ.1)	QBREM=0.
+	QBREM=QBREM+5.06E-5*ZEF(J)*NE(J)*NE(J)*SQRT(TE(J))*VR(J)*HRO

@@ -1,0 +1,44 @@
+C XCKIM []:	Electrical heat convection Neoclassical Kim
+c		inclusion of finite collision times (all collisionality 
+c		regimes: banana - plateau - Pfirsch-Schlueter)
+C			Phys. Fluids 31,3150 (1988).
+C			(Alexander 04-JAN-95)
+C		DHKIM added 2.11.98 (Pereverzev)
+C	Example:	XC=XCKIM
+	include 'fml/dhkim'
+
+	YYALPHA=(NIZ1(J)*ZIM1(J)**2)/(NI(J)*ZMAIN(J)**2)
+	YYDA=2.23+5.32*YYALPHA+2.4*YYALPHA*YYALPHA
+
+	INCLUDE 'fml/nuis'
+
+	YMUI11B= NUI*(0.53+YYALPHA)
+	YKI12B = NUI*(0.71+YYALPHA)
+	YMUI22B= NUI*(1.386+3.25*YYALPHA)
+
+	YMUI11P= NUI*3.54
+	YKI12P = NUI*10.63
+	YMUI22P= NUI*11.52
+
+	YMUI11PS= NUI*(3.02+4.25*YYALPHA)/YYDA
+	YKI12PS = NUI*(12.43+20.13*YYALPHA)/YYDA
+	YMUI22PS= NUI*(15.38+26.97*YYALPHA)/YYDA
+
+	YMUI11 = YX*YMUI11B/((1.+2.92*NUIS*YMUI11B
+     &           /YMUI11P)*(1.+YMUI11P/(6.*YMUI11PS)*NUIS
+     &           *YE*SQEPS(J)))
+
+	YMUI22 = YX*YMUI22B/((1.+2.92*NUIS*YMUI22B
+     &           /YMUI22P)*(1.+YMUI22P/(6.*YMUI22PS)*NUIS
+     &           *YE*SQEPS(J)))
+
+	YKI12 = YX*YKI12B/((1.+2.92*NUIS*YKI12B
+     &           /YKI12P)*(1.+YKI12P/(6.*YKI12PS)*NUIS
+     &           *YE*SQEPS(J)))
+
+	YMUI12 = -2.5*YMUI11+YKI12
+
+	YLI22  = 1.4142*NUI
+	YALPHA=(YMUI12*YLI22)/(YMUI11*(YLI22+YMUI22-(YMUI12)**2/YMUI11))
+
+	XCKIM=BETPL*DHKIM*((1.+YALPHA)*TI(J)/(TE(J)*ZEF(J)))

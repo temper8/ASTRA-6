@@ -1,0 +1,19 @@
+C DCSA []:		Bootstrap current density	
+C			Jbs = HCSA*ln(Te)'+DCSA*ln(Ne)'+XCSA*ln(Ti)'
+C                       Sauter, Angioni, Lin-Liu
+C			Physics of Plasmas, 6, 2834 (1999)
+C			(Angioni 29-MAY-2002)
+C	Example:	DC=DCSA
+	INCLUDE 'fml/betpl'
+	ZZ=ZEF(J)
+        ZFT=FTLLMR(RHO(J))
+C       INCLUDE 'fml/tpf'
+C       ZFT=TPF
+	include	'fml/nues'
+	ZDF = 1.+(1.-0.1*ZFT)*SQRT(NUES)
+	ZDF = ZDF + 0.5*(1.-ZFT)*NUES/ZZ
+	ZFT = ZFT/ZDF
+       	DCSA = (1+1.4/(ZZ+1))*ZFT-1.9/(ZZ+1)*ZFT*ZFT
+        DCSA = DCSA + (0.3*ZFT*ZFT+0.2*ZFT*ZFT*ZFT)*ZFT/(ZZ+1)
+	DCSA=DCSA*BETPL*(1.+TI(J)/(ZZ*TE(J)))
+	IF(J.EQ.1) DCSA=0.

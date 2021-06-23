@@ -1,0 +1,9 @@
+C ENHH1 []:  Electrical particle convection Neoclassical Hinton-Hazeltine
+C (alias VRHH)
+C			Rev. Mod. Phys. v.48, part 1 (1976) 297.
+C			(Yushmanov 28-APR-87)
+C			(Corrected by Polevoi 12-APR-89)
+C ENHH1=SQRT(eps)*K_13	(Pereverzev 22-NOV-2000)
+C			Usage in a model:   CN=-VP*ENHH1 (Ware pinch)
+	include 'fml/vrhh'
+	ENHH1=VRHH

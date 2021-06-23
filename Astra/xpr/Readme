@@ -1,0 +1,128 @@
+================================================================
+The current directory AWD/xpr include external routines that are 
+supposed to be called from Astra as eXternal PRocesses via IPC 
+interface. 
+The external process compilation is not automized so far.
+Therefore, all executables have to be compiled manually (see below) 
+and placed into default location AWD/.tsk/$ObjectCode/ or elsewhere. 
+In the second case, full path should be given in the Astra model.
+----------------------------------------------------------------
+If the child process is a Fortran function then
+(1) Compile Fortran subroutine
+(2) Link the subroutine with its C interface
+
+cc xpr/neutex.c -c -o xpr/neut.o
+cc xpr/ipc.c -c -o xpr/ipc.o
+mpif95f xpr/neutex.f xpr/ipc.o xpr/neut.o -o xpr/neutex
+mpif95f xpr/neutex.f90 xpr/ipc.o xpr/neut.o -o xpr/neutest
+
+mpif95f xpr/glf23p.f xpr/ipc.o xpr/callglf2d.o xpr/glf2d.o xpr/zgeev.o xpr/blaszgeev.o xpr/r8tomsqz.o xpr/glf23c.o
+
+
+    Use commands:
+
+cd $AWD
+cc xpr/template.c for/ipc_control.c -lm -o xpr/template
+cc xpr/template.c for/ipc_control.c -lm -o xpr/dummy
+cc xpr/template.c for/ipc_control.c -lm -o xpr/empty
+cc xpr/example.c for/ipc_control.c -lm -o xpr/example
+
+ifort -c xpr/neut.f -o xpr/neut.o
+cc xpr/neut.o -lm -L/opt/intel/fc/9.1.039/lib -lifcore xpr/neut.c for/ipc_control.c -o xpr/neut
+
+ifort -c xpr/neutex.f -o xpr/neutex.o
+cc xpr/neutex.o -lm -L/opt/intel/fc/9.1.039/lib -lifcore xpr/neutex.c for/ipc_control.c -o xpr/neutex
+
+    or
+
+mpif95f --sav -I. -O -c xpr/neutex.f -o xpr/neutex.o
+cc xpr/neutex.c xpr/neutex.o for/ipc_control.c -o .tsk/$ObjectCode/neutex \
+   -L/afs/ipp/i386_linux24/soft/fuj_f95-6.2d/lib -lfj9i6 -lfj9f6 -lfj9e6 -lfccx86_6a -lm
+
+    or
+
+g95 IPC/neut.f -c -o .tsk/$ObjectCode/neut.o
+cc  IPC/neut.c .tsk/$ObjectCode/neut.o -o .tsk/$ObjectCode/neut \
+    -lm /opt/g95-install/lib/gcc-lib/i686-pc-linux-gnu/4.0.1/libf95.a
+
+    or
+
+g95 IPC/neut.f -c -o .tsk/$ObjectCode/neut.o
+cc  IPC/neut.c .tsk/$ObjectCode/neut.o -o .tsk/$ObjectCode/neut \
+    -lm -L/opt/g95-install/lib/gcc-lib/i686-pc-linux-gnu/4.0.1/ -lf95
+
+    or (for JET pgf compiler)
+
+pgf77 -O -I. -w -c IPC/neut.f -o neut.o
+cc IPC/neut.c neut.o -o .tsk/neut -lm -lnetcsl7 -lpgftnrtl
+
+    ESC proposes to use the line
+cc IPC/neut.c neut.o -o .tsk/neut \
+   -lm -lppf -lnetcsl7 -lpgftnrtl -lcsl3 -lrh73 -lpgc -lflush
+
+----------------------------------------------------------------
+If the child process is a C function then use the command:
+
+cc IPC/template.c -o .tsk/$ObjectCode/test \
+   -lm -L/opt/intel/fc/9.1.039/lib -lifcore
+
+cc IPC/example.c -o .tsk/$ObjectCode/empty -lc -lm
+cc IPC/example.c -o .tsk/$ObjectCode/dummy -lc -lm
+
+However, with some compilers (as f95f)  this can cause a problem 
+when a C main is linked with F subroutines. 
+In this case, I do not know a reliable algorithm to find all 
+necessary libraries. The issue can be resolved as below 
+-----
+This example makes F main instead of C main and solves the
+problem of libraries
+
+cc IPC/nn.c -c -o nnc.o ; f95f --sav -I. -O IPC/nn.f nnc.o -o .tsk/mpif95f/neut
+
+===================================================================
+How to find missing libraries when linking C main with Fortran object
+
+1) Run verbose F compiler with a dummy main, e.g.
+mpif95f --verbose ttt.f
+   It prints a long report where significant is
+
+    -L/afs/ipp/common/soft/mpich/1.2.7p1/i686/f95f.6.2d/lib
+    -lmpichf90
+    -lmpich
+    -lpthread
+    -lrt
+
+/usr/bin/ld ... \
+-L/afs/ipp/common/soft/mpich/1.2.7p1/i686/f95f.6.2d/lib -lmpichf90 -lmpich -lpthread -lrt \
+-L/afs/ipp/i386_linux24/soft/fuj_f95-6.2d/bin/../lib -lfj9i6 -lfj9f6 -lfj9e6 -lfccx86_6a -lc -lm /usr/lib/crtn.o
+
+2) Then the following command works:
+
+cc IPC/neut.c IPC/neut.o -o ./neut -lm \
+-L/afs/ipp/common/soft/mpich/1.2.7p1/i686/f95f.6.2d/lib -lmpichf90 -lmpich -lpthread -lrt \
+-L/afs/ipp/i386_linux24/soft/fuj_f95-6.2d/lib -lfj9i6 -lfj9f6 -lfj9e6 -lfccx86_6a -lc -lm /usr/lib/crtn.o
+
+3) Finally, one can reduce the line to
+
+cc IPC/neut.c IPC/neut.o -o ./neut -L/afs/ipp/i386_linux24/soft/fuj_f95-6.2d/lib -lfj9i6 -lfj9f6 -lfj9e6 -lfccx86_6a -lm
+
+
+------------------------------------------------------------------
+
+   mpif95f --sav -I. -O -c IPC/neut.f -o IPC/neut.o
+
+   cc IPC/neut.c IPC/neut.o -o .tsk/$ObjectCode/neut -L/afs/ipp/common/soft/mpich/1.2.7p1/i686/f95f.6.2d/lib -lmpichf90 -lmpich -lpthread -lrt -L/afs/ipp/i386_linux24/soft/fuj_f95-6.2d/lib -lfj9i6 -lfj9f6 -lfj9e6 -lfccx86_6a -lc -lm /usr/lib/crtn.o
+
+   cc IPC/example.c -o test -L/afs/ipp/common/soft/mpich/1.2.7p1/i686/f95f.6.2d/lib -lmpichf90 -lmpich -lpthread -lrt -L/afs/ipp/i386_linux24/soft/fuj_f95-6.2d/lib -lfj9i6 -lfj9f6 -lfj9e6 -lfccx86_6a -lc -lm /usr/lib/crtn.o
+
+
+.tsk/mpif95f/dummy 10233 -116353246 3
+
+
+------------------------------------------------------------------
+#-----SunOS (IPP) 2007:     Astra ObjectCode Sun
+Fortran:
+FC =f95 -c
+
+Link options:
+FLIB	=-R/opt/SUNWspro/lib -Y P,/opt/SUNWspro/lib:/opt/SUNWspro/WS6U2/lib:/usr/ccs/lib:/usr/lib -lfui -lfai -lfai2 -lfsumai -lfprodai -lfminlai -lfmaxlai -lfminvai -lfmaxvai -lfsu -lsunmath -lm -lc -lX11

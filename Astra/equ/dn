@@ -1,0 +1,86 @@
+! NEQUIL=0;  ! No equilibrium solver is called (default)
+! NEQUIL=41; ! Equilibrium grid
+
+! Kinetic equation for wall neutrals
+NEUT:.01:::N;
+
+! Electron ensity [evolution] is given by a start file (astra/exp/...) 
+NE:AS;		NE=NEX;
+! Ion density form quasineutrality (Carbon is assumed to be the main impurity)
+ZMJ=1;		ZEF=2;		NI=NE*(6-ZEF)/(6-ZMJ)/ZMJ;
+
+! Ionization flux is calculated (not used below)
+GNXSRC:
+
+	Thermodiffusion with Taroni model
+	Electron temperature
+TE:EQ;		TEB=0.5*TEXB;		HE=CHE1*HATL+HNGSE;
+! Gaussian profile of additional heating ~exp{-[(a-cv1)/(a_b*cf5)]^2}
+PEX=QECR*FJUMP(0.5)*GAUSS(CV1,CF5);
+PET=-PEI;			PE=PJOUL-PET*TI-PENEU-PENLI+PEX;
+
+	Ion temperature
+TI:EQ;		TIB=0.5*TIXB;		XI=CHE2*HATL+HNGSI;
+PIT=PET;	PI=-PET*TE+PINEU		!+PIX;
+
+	Poloidal flux
+CU:EQ;		CC=CNHR;	CU=CC;
+HC=HCHR;	DC=DCHR;	XC=XCHR;
+
+	Fluctuation level
+!   d(eps)/dt = d/dr(D0*d(eps)/dr)
+!		+[cf1*abs(d(n)/dr) - cf2*eps - cf3*(d(Er)/dr)**2]*eps
+! with  eps being the fluctuation level variable
+!      n is the density
+!      Er is the radial electric field (dp/dr the pressure gradient is used)
+!      a1, a2, a3 and D0 being constants
+!                                         
+F1:EQ;				
+CAR1=TE*NE+TI*NI;		CAR2=grad(CAR1)**2;
+!R.h.s. in the form	SF1(explicit)+SFF1*F1(implicit)
+SFF1=CF1*abs(grad(NE))-CF2*F1-CF3*CAR2;
+DF1=CF4;					!Diffusion
+! Pinch term can be prescribed as VF1=...
+! Initial condition
+F1=1.
+! or as taken from a data file:		F1=F1X
+! Boundary conditions are prescribed as either	
+F1B=.0;			! given function
+! or	QF1B=...;	! flux given explicitly = QF1B
+! or	QFF1B=...;	! flux given implicitly = QFF1B*F1B
+
+		Radial output
+	Energy and fluctuations
+fluc\F1;	S+\-CF1*grad(NE);	source\vint(SF1TOT)\-4;	D\DF1;
+ne\NE;		Te\TE;			Qesr\QETOT\-2;		He\HE;
+SF1\SF1TOT;	S-\CF2*F1+CF3*CAR2;	flux\QF1\-4;		VF1\; Empty box
+ni\NI;		Ti\TI;			Qefl\QE\-2;		Hi\XI;
+	Electron, ion and neutral densities and more
+ne\NE;		N\NN;		Qisr\QITOT\-3;	S(S)\VINT(SNTOT)\-1;	
+ni\NI;		Pec\PEX;	Srce\SNTOT;	GN\GN*G11\-1;	
+Tex\TEX;	TN\TN;		Qifl\QI\-3;	QN\QN\-1;	
+Zeff\ZEF;	POH\PJOUL;	beta\BETAJ;	GNX\GNX*G11\-1;
+	Current & Metric
+j\CU;		Vor\UPL;	V\VOLUM;	G22\G22;
+mu\MU\1; 	FP\FP;		IPOL\IPOL\1;	shif\SHIF;
+jbs\CUBS;	V||\ULON;	CC\CC;		G2R2\G11;
+q\1./MU;	psi\FP-FPC;	<r2>\G33\1;	elon\ELON;
+tria\TRIA;	dVdr\VR;	dVn\VR/(GP2*GP2*RHO*RTOR);	li\LINT;
+
+	Time output
+<Te>_TEAVB;	V(a)_UPLB;	taux_WTOTB/(QJOULB)_.1;	Wblk_WTOTB_-2;
+taui_TAUEIB;	We_WEB_-2;	tauE_TAUEB_.1;		Wi_WIB_-2;
+
+Te0_TEC;	Pnbi_QBEAM;	Tex0_TEXC_-1;	Pic_QICR;
+Ti0_TIC;	Plh_QLH;	Tix0_TIXC_-1;	Pec_QECR;
+
+betj_BETAJB;	IT89_TITER_.1;	Poh_QJOULB;	li_LINTB;
+Uext_UPLB;	q(0)_1./MUC;	<ne>_NEAVB;	Ibs_IBSB;	
+
+albe_ALBPL;	ne_NECHC;	I*Up_IPL*UPLB;	Prad_QRADB;
+Vlp_ULONB;	Vol_VOLUMB;	Ipl_IPL;	FPB_FPB;
+
+Poh_QOHB_1;	PECH_QEXB_1;	Pei_QEICLB_1;	Pj_QJOULB_1;
+PeHe_QEB_1;	P_QEB+QEICLB_1;
+
+NA1_NA1;	QDTB_QDTB;	!VPDT_VINT(PDTB)

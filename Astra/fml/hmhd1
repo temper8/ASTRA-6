@@ -1,0 +1,4 @@
+C HMHD1 [m#2/s]: Heat conductivity anomalous due to sawtooth oscillations (q<1)
+C			(G.Pereverzev 26-OCT-90)
+	IF (J.EQ.NA1)	call MIX('HE')
+	HMHD1	=0.
