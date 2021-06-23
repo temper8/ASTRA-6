@@ -63,6 +63,7 @@ case "Intel_64":
    setenv AFL	"ifort -O3 -w -I. -o"
    setenv AFC	"ifort -O3 -w -I. -c"
    breaksw
+   
 case "Intel-oneAPI":
 #   source ./.exe/ifortvars.csh
    setenv AFL	"ifort -w -I. -o"
@@ -70,6 +71,14 @@ case "Intel-oneAPI":
    setenv ACC	"icc -O -c"
    setenv ACL	"icc -O -o"      
    breaksw
+
+case "Intel-oneAPI-C":
+#   source ./.exe/ifortvars.csh
+   setenv AFL	"ifort -C -w -I. -o"
+   setenv AFC	"ifort -C -w -I. -c"
+   setenv ACC	"icc -O -c"
+   setenv ACL	"icc -O -o"      
+   breaksw  
 
 case "Icheck":
    source ./.exe/ifortvars.csh
