@@ -1,8 +1,6 @@
-## ASTRA (Automated System for TRansport Analysis)
+# ASTRA v. 6.2.1 
 
-
-
-### Installation guide for Ubuntu
+#### Installation guide for Ubuntu
 
 1. Install [Intel® Fortran Compiler(Beta)](https://software.intel.com/content/www/us/en/develop/articles/oneapi-standalone-components.html#fortran) and  [Intel® C++ Compiler Classic](https://software.intel.com/content/www/us/en/develop/articles/oneapi-standalone-components.html#inpage-nav-5-undefined)
 
