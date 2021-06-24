@@ -264,7 +264,7 @@ c-------power nj=2*mm definition
 C     FAST FOURIER TRANSFORM IN ONE DIMENSION.
 C     ==================================================================
       IMPLICIT REAL*8(A-H,O-Z)
-      DIMENSION X(300), Y(300)
+      DIMENSION X(257), Y(257)
       COMMON /FDATA/F,RTTWO, N, N2, M, NC, NS, ND, NR
       COMMON /FWORK/ W(2048)
 C     ==================================================================
