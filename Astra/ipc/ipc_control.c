@@ -427,7 +427,7 @@ int wait4all()
            Overflow occurs when the number of successive calls exceeds 32767
   */
   //  if (semop(A_SemID, &buf0, 1))
-  if (j=semtimedop(A_SemID, &buf0, 1, &timeout))
+  if (j=semop(A_SemID, &buf0, 1))
     {                   /*  WhatSem();  printf("j = %d  %d\n",j,errno); */
     switch( errno )
     { case EAGAIN:			/* Timed out */
@@ -860,7 +860,7 @@ int checkeach_()
       }
   }
   /* Go on if [Sem0value+buf0.sem_op==0], goto Minorloop after timeout */
-  if (semtimedop(A_SemID, &buf0, 1, &timeout))
+  if (semop(A_SemID, &buf0, 1))
   {  switch( errno )
     { case EAGAIN:			/* Timed out */
 	/* printf("Timed out\n"); */
