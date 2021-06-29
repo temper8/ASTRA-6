@@ -495,7 +495,7 @@ C          call APPTMP(TMPBUF(NBEG(LCU)),NCH)
 	endif
 	write(NCH,'(A)')'      enddo'
 
-	do	j2=0,9
+	do	j2=1,9
 	   write(CJ,'(I1)')j2
 	   write(NCH,'(A)')'      do	J=1,NA1'
 	   if (NBEG(LF(j2)) .eq. 0)	then
