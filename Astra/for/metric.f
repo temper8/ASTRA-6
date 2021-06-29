@@ -1152,6 +1152,7 @@ C30-11	      CU(j) = 2.*(YAJ-YCJ)/(HRO+HROA)
 	   CU(j) = CU(j)/(j-0.5)
  1	continue
 C	CU(NA1) = ARRNA1(CU(NA),HROA/HRO)
+	print *, "m1", MU(NA-3:NA)
 	MU(NA1) = ARRNA1(MU(NA),HROA/HRO)		! See DEFARR
 C	MU(NA1) = MU(NA)*NA/(NA-0.5+HROA/HRO)
 	YCJ = 1.25/(GP*GP*RTOR)
