@@ -49,7 +49,7 @@ C----------------------------------------------------------------------|
 	integer     jj,jy,jt,j,j0,j1,j2,j3,JINC,IERR,JRUNN,jrad,jexar,NY
 	integer	    KAB,KABC,KAWALL,KRTOR,KELONM,KTRICH,iarg,XSC0,XSC,NX
 	logical     EXI,EXILOG,TCONTG,IFREE,EXIRAD,EXITIM,XFILE
-	character   RUNAST*79,STRI*132,STRJ*132,STRAD*32,STRAD2*32,CH*1
+	character   RUNAST*79,STRI*132,STRJ*132,STRAD*132,STRAD2*32,CH*1
 	character*6 VNAM,VNAMO,VNAMU,VNAMX,VTIM,VDAT,VERR,VARNAM,COMNAM
 	character*6 NAMECL(7),ARRNAM,KEYWRD,IDEV*4,FILENA*40,STR40*40
 	double precision CHORDN,LINEAV
