@@ -58,3 +58,28 @@ And you will see:
 1. Install [Cygwin](https://www.cygwin.com/)
 
 2. Install packages: tcsh, make, gcc-g++, gcc-fortran, xinit, xlaunch, xorg-server
+3. sdfsd
+4. 5. Clone ASTRA Rep
+
+   ```
+   git clone git@github.com:temper8/ASTRA_6.git -b cygwin
+   ```
+
+   
+
+6. Compile Astra kernel
+
+   ```
+   ./MAKER Astra  Cygwin
+   ```
+
+7. Create user profile
+   ```
+   ./MAUSER , a4 Cygwin
+   ```
+
+8. Run Astra
+
+   ```
+   ./a4/.exe/astra readme showdata
+   ```
