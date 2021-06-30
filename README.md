@@ -53,3 +53,7 @@ And you will see:
 
 ![astra-scr](astra-scr.png)
 
+#### Installation guide for Windows
+
+1. Install [Cygwin](https://www.cygwin.com/)
+
