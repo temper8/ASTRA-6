@@ -57,3 +57,4 @@ And you will see:
 
 1. Install [Cygwin](https://www.cygwin.com/)
 
+2. Install packages: tcsh, make, gcc-g++, gcc-fortran, xinit, xlaunch, xorg-server
