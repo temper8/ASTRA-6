@@ -128,13 +128,16 @@ if ( !(-e ${AUSER}/.tsk) )	mkdir ${AUSER}/.tsk
 echo -n \ .tsk
 if ( !(-e ${AUSER}/dat) )	mkdir ${AUSER}/dat
 echo -n \ dat
-#if ( !(-e ${AUSER}/equ) )	mkdir ${AUSER}/equ
-#if ( !(-e ${AUSER}/equ/log) )	mkdir ${AUSER}/equ/log
-#if ( !(-e ${AUSER}/equ/txt) )	mkdir ${AUSER}/equ/txt
-if ( !(-e ${AUSER}/equ/equ.tar.gz) ) then
-   cp ${AROOT}/equ/equ.tar.gz ${AUSER}/
-   tar -xzof equ.tar.gz && rm equ.tar.gz
-endif
+if ( !(-e ${AUSER}/equ) )	mkdir ${AUSER}/equ
+if ( !(-e ${AUSER}/equ/log) )	mkdir ${AUSER}/equ/log
+if ( !(-e ${AUSER}/equ/txt) )	mkdir ${AUSER}/equ/txt
+#echo \ 
+#echo  "Copy files from ${AROOT}/equ/"
+cp ${AROOT}/equ/*  ${AUSER}/equ/ >& /dev/null
+#if ( !(-e ${AUSER}/equ/equ.tar.gz) ) then
+#   cp ${AROOT}/equ/equ.tar.gz ${AUSER}/
+#   tar -xzof equ.tar.gz && rm equ.tar.gz
+#endif
 echo -n \ equ
 #if ( !(-e ${AUSER}/exp) )	mkdir ${AUSER}/exp
 #if ( !(-e ${AUSER}/exp/bnd) )	mkdir ${AUSER}/exp/bnd
