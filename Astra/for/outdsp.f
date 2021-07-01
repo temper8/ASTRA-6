@@ -150,7 +150,7 @@ C Draw a bar for an extended axis:
 	      JDSP  = 10*(DYM*YROUT+IYMN+128*(1-JUP))
 	      IY(jxout) = JY-min(max(JDSP,10*IYMN),10*IYMX)
  11	      continue
-	      if (YA.le.YR .and. YX.gt.YR)	then ! right edge interpolation
+	      if (YX.le.YL .and. YX.gt.YR)	then ! right edge interpolation
 		 jxout = jxout+1
 		 IX(jxout) = JX+160
 		 YA=ROUT(J,jj)+(ROUT(J-1,jj)-ROUT(J,jj))*(YR-YX)/(YA-YX)
