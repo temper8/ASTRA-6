@@ -1895,7 +1895,7 @@ C 103	format('      YR=RHO(j)')
 	call LINSUM(LINTXT,LINE(NB1),LENS)
 	call LINSUM(LINTXT,'(r)',3)
 	call LINSUM(LINFOR,LINE(NB1),LENS)
-	call LINSUM(LINFOR,'R(RHO(j))',9)
+	call LINSUM(LINFOR,'R(RHO(1))',9)
 				go to 25
 C If NAME - one of TMP
  50	continue
