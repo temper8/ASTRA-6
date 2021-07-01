@@ -139,17 +139,19 @@ cp ${AROOT}/equ/*  ${AUSER}/equ/ >& /dev/null
 #   tar -xzof equ.tar.gz && rm equ.tar.gz
 #endif
 echo -n \ equ
-#if ( !(-e ${AUSER}/exp) )	mkdir ${AUSER}/exp
+if ( !(-e ${AUSER}/exp) )	mkdir ${AUSER}/exp
+#echo  "Copy files from ${AROOT}/exp/"
+cp ${AROOT}/exp/*  ${AUSER}/exp/ >& /dev/null
 #if ( !(-e ${AUSER}/exp/bnd) )	mkdir ${AUSER}/exp/bnd
 #if ( !(-e ${AUSER}/exp/cnf) )	mkdir ${AUSER}/exp/cnf
 #if ( !(-e ${AUSER}/exp/ecr) )	mkdir ${AUSER}/exp/ecr
 #if ( !(-e ${AUSER}/exp/equ) )	mkdir ${AUSER}/exp/equ
 #if ( !(-e ${AUSER}/exp/mse) )	mkdir ${AUSER}/exp/mse
 #if ( !(-e ${AUSER}/exp/nbi) )	mkdir ${AUSER}/exp/nbi
-if ( !(-e ${AUSER}/exp/exp.tar.gz) ) then
-   cp ${AROOT}/exp/exp.tar.gz ${AUSER}/
-   tar -xzof exp.tar.gz && rm exp.tar.gz
-endif
+#if ( !(-e ${AUSER}/exp/exp.tar.gz) ) then
+#   cp ${AROOT}/exp/exp.tar.gz ${AUSER}/
+#   tar -xzof exp.tar.gz && rm exp.tar.gz
+#endif
 echo -n \ exp
 if ( !(-e ${AUSER}/fml) )	mkdir ${AUSER}/fml
 if ( !(-e ${AUSER}/fnc) )	mkdir ${AUSER}/fnc
