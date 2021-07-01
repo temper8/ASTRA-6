@@ -1185,7 +1185,7 @@ C	   write(*,*)'jlb =',jlb,NB,NPR,NPR-NB
 	   ICON = ICON-1
 	   LSTR = LSTR-1
 	   LOCSBR(NSBR) = LOCSBR(NSBR)-1
-	   if (jrb .gt. jlb)	jrb = jrb-1
+C	   if (jrb .gt. jlb)	jrb = jrb-1
 	endif
 	jrb = NPOS(LSTR,STRI(NB),'>')-1
 	if (jrb.lt.ICON .and. jst.lt.ICON)	write(*,*)
