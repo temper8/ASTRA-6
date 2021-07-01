@@ -33,9 +33,9 @@ case "Alpha.dbl":
    setenv AFC	"f77 -real_size 64 -O -fpe1 -I. -w -c"
    breaksw
 case "Cygwin":
-   setenv AFL	"g77 -I. -O -o"
-   setenv AFC	"g77 -I. -O -w -c"
-   setenv XLBR	/usr/X11R6/lib/libX11.dll.a
+   setenv AFL	"gfortran -I. -O -o"
+   setenv AFC	"gfortran  -fallow-argument-mismatch -I. -O -w -c"
+ 
    setenv ACC	"cc -O -DAFENV -c"
 # changes in for/serv.c :
 # rename #include <fenv.h> to #include <mingw/fenv.h>

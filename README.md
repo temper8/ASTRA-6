@@ -24,10 +24,10 @@
    icc version 2021.2.0 (gcc version 9.3.0 compatibility)
    ```
    
-5. Clone ASTRA Rep
+5. Clone ASTRA repo
 
    ```
-   git clone git@github.com:temper8/ASTRA_6.git
+   git clone git@github.com:temper8/ASTRA-6.git
    ```
 
    
@@ -53,3 +53,32 @@ And you will see:
 
 ![astra-scr](astra-scr.png)
 
+#### Installation guide for Windows
+
+1. Install [Cygwin](https://www.cygwin.com/)
+
+2. Install packages: tcsh, make, gcc-g++, gcc-fortran, xinit, xlaunch, xorg-server, libX11-devel
+
+3. Clone ASTRA-6 repo branch cygwin
+
+   ```
+   git clone git@github.com:temper8/ASTRA-6.git -b cygwin
+   ```
+4. Run Cygwin Termial
+
+5. Compile Astra kernel
+
+   ```
+   ./MAKER Astra  Cygwin
+   ```
+
+6. Create user profile
+   ```
+   ./MAUSER , a4 Cygwin
+   ```
+
+7. Run Astra
+
+   ```
+   ./a4/.exe/astra readme showdata
+   ```

@@ -444,7 +444,7 @@ int SemTimedCheck()		/*!!!!!!!!!!!! To be checked */
 {  static struct timespec timeout = {0,1000};   /* timeout = 1 mksec */
 MinorLoop:
   (void) AstraEvent();
-  if (semtimedop(SemID, &bufP, 1, &timeout))
+  if (semop(SemID, &bufP, 1))
   {  switch( errno )
     { case EAGAIN:			/* printf("Timed out\n"); */
 	  goto  MinorLoop;
