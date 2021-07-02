@@ -27,7 +27,7 @@
 5. Clone ASTRA Rep
 
    ```
-   git clone git@github.com:temper8/ASTRA_6.git
+   git clone git@github.com:temper8/ASTRA-6.git
    ```
 
    
