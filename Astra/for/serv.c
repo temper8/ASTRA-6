@@ -557,8 +557,8 @@ void float_error(int);
 void sigint_handler(int sig); /* prototype */
 void fenvex_(void)
 {
-  feenableexcept( FE_INVALID | FE_OVERFLOW | FE_DIVBYZERO );		  /*
-  feenableexcept( FE_INVALID | FE_OVERFLOW | FE_DIVBYZERO | FE_UNDERFLOW); */
+//  feenableexcept( FE_INVALID | FE_OVERFLOW | FE_DIVBYZERO );		  /*
+//  feenableexcept( FE_INVALID | FE_OVERFLOW | FE_DIVBYZERO | FE_UNDERFLOW); */
   /* @ Linux FE_INVALID=1,  FE_OVERFLOW=8,  FE_DIVBYZERO=4,  FE_UNDERFLOW=16
   printf("%d %d %d %d\n",FE_INVALID,FE_OVERFLOW,FE_DIVBYZERO,FE_UNDERFLOW);
   */
@@ -571,13 +571,15 @@ void fenvex(void)
 
 void fenvdx_(void)
 {
-  fedisableexcept( FE_INVALID | FE_OVERFLOW | FE_DIVBYZERO );		  /*
-  fedisableexcept( FE_INVALID | FE_OVERFLOW | FE_DIVBYZERO | FE_UNDERFLOW); */
-  signal(SIGFPE, float_error);
+ // fedisableexcept( FE_INVALID | FE_OVERFLOW | FE_DIVBYZERO );		  /*
+//  fedisableexcept( FE_INVALID | FE_OVERFLOW | FE_DIVBYZERO | FE_UNDERFLOW); */
+ // signal(SIGFPE, float_error);
   return;
 }
 void fenvdx(void)
-{ void fenvdx_(); }
+{ 
+  //void fenvdx_();
+   }
 
 void sigint_handler(int sig)			/* this is the handler */
 {
