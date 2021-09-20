@@ -64,20 +64,27 @@ And you will see:
    ```
    git clone git@github.com:temper8/ASTRA-6.git -b cygwin
    ```
+   
 4. Run Cygwin Termial
 
-5. Compile Astra kernel
+5. To permit cygwin create Windows-style symbolic links:
+   
+   ```
+   export CYGWIN="winsymlinks:nativestrict"
+   ```
+   
+6. Compile Astra kernel
 
    ```
    ./MAKER Astra  Cygwin
    ```
 
-6. Create user profile
+7. Create user profile
    ```
    ./MAUSER , a4 Cygwin
    ```
 
-7. Run Astra
+8. Run Astra
 
    ```
    ./a4/.exe/astra readme showdata
