@@ -133,6 +133,8 @@ if ( -e ${ATASK} ) then
    if ( "$MODIF" != '' ) rm ${ATSK}*.exe
 endif
 
+set IF_NEW = ''
+
 if ( !(-e ${ATASK}) ) goto Buildmodel
 
    if ( !(${?HOST}) )	goto  Checkmodel	# $HOST unknown
