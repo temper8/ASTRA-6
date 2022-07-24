@@ -133,10 +133,10 @@ if ( -e ${ATASK} ) then
    if ( "$MODIF" != '' ) rm ${ATSK}*.exe
 endif
 
-set IF_NEW = ''
+
 
 if ( !(-e ${ATASK}) ) goto Buildmodel
-
+   set IF_NEW = `find -L ./equ/$MODNAME -newer ${ATASK} -print`
    if ( !(${?HOST}) )	goto  Checkmodel	# $HOST unknown
    if ( ${HOST} == lapgrp )  then		# Follow_symbolic_links
       set IF_NEW = `find -L ./equ/$MODNAME -newer ${ATASK} -print`
