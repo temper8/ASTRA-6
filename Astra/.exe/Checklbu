@@ -3,7 +3,7 @@ set LISTF = `find ./fnc -newer ${ULBR} \! -type l -print | grep "\.f"$`
 set LISTC = `find ./sbr -newer ${ULBR} \! -type l -print | grep "\.c"$`
 set LISTS = `find ./sbr -newer ${ULBR} \! -type l -print | grep -i "\.f"$`
 set LISTS90 = \
-            `find ./sbr -newer ${ULBR} \! -type l -print | grep -i "\.f90"$`
+            `find ./sbr -newer ${ULBR} \! -type l -print | sort | grep -i "\.f90"$`
 
 if ( "${LISTC}" == '' )	goto	EndC
 echo \ 
