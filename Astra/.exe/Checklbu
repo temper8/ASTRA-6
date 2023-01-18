@@ -24,7 +24,7 @@ EndC:
 
 foreach SUBD ( sbr fnc )
    if ( $SUBD == fnc ) set LIST = "${LISTF}"
-   if ( $SUBD == sbr ) set LIST = "${LISTS} ${LISTS90}"
+   if ( $SUBD == sbr ) set LIST = "${LISTS90} ${LISTS}"
    if ( "${LIST}" == '' || "${LIST}" == ' ' )   goto  EndSUBD
 #   if ( $SUBD != sbr || "${LISTC}" == '' )	then
       echo \ 
