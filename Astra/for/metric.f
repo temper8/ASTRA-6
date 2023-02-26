@@ -1302,7 +1302,7 @@ C	   CAR5(J) = A(J)
 C	   CAR6(J) = B(J)
 	enddo
 	do	J=1,NEQL
-	   XEQ(J) = (j-1.)/(NEQL-1.)
+		XEQ(J) = (j-1.d0)/(NEQL-1.d0)
 	enddo
 C From transport grid in "a" to equidistant grid in "a"
 	ALFA	=.001
