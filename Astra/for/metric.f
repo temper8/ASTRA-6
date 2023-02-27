@@ -141,7 +141,7 @@ C       write(*,*)NA1,NB1,VOLUME
 	ROC	= ABC
 	ROWALL = ABC*1.1d0
 	HRO	= ABC/(NA1-0.5d0)
-C       HRO	= 1.1*ROWALL/(NB1-0.5)
+C       HRO	= 1.1d0*ROWALL/(NB1-0.5)
 	HROA = HRO
 	do	j=1,NB1
 	   RHO(J) = (J-0.5d0)*HRO
@@ -232,7 +232,7 @@ C Define AMETR,SHIF,ELON,TRIA,SHIV
 C Input: 	ROC, HRO, NB1, NA1, NA=NA1-1, AB, ABC,  AMETR(NA1)
 	call	NEWGRD
 C Output:	NA1, NA=NA1-1, NAB, RHO(NA1)=ROC, HROA, AMETR(j>NA1)
-	if (abs(YIPL-IPL) .lt. .2*IPL)	then
+	if (abs(YIPL-IPL) .lt. .2d0*IPL)	then
 	   call	EDCELL(JNA1O,YIPL)
 	endif
 C If NA1 does not change then EDCELL corrects FP(NA1) only.
@@ -626,13 +626,13 @@ C	      ZgY(j) = ZJpar(j)
 	if (ICALL .le. 4)	then
 C	   Y1 = exp(-3.d0+ICALL)
 	   do j=1,Nesc
-	      Zpres(j) = 0.1*Zpres(j)
+	      Zpres(j) = 0.1d0*Zpres(j)
 	   enddo
 	endif
 	if (ICALL .le. 4)	then
 C	   Y1 = exp(-3.d0+ICALL)
 	   do j=1,Nesc
-	      Zpres(j) = 0.1*Zpres(j)
+	      Zpres(j) = 0.1d0*Zpres(j)
 	   enddo
 	endif
 	Y1 = TIME
@@ -1043,7 +1043,7 @@ C Preparing input for the 3M equilibrium solver:
 	do	J=2,NA
 	   if (j.eq.NA) YCB = YCB*HRO/HROA
 C	   EQFF(J) = -YCB/(MU(J))*(
-C     +		.5*(PBLON(J+1)-PBLON(J)+PBPER(J+1)-PBPER(J))/(J+1)
+C     +		.5d0*(PBLON(J+1)-PBLON(J)+PBPER(J+1)-PBPER(J))/(J+1)
 C     +	        +( (NE(J+1)*TE(J+1)-NE(J)*TE(J))+
 C     +		   (NI(J+1)*TI(J+1)-NI(J)*TI(J)) )/J )
 	   EQFF(J) = ( (NE(J+1)*TE(J+1)-NE(J)*TE(J))+
@@ -1082,9 +1082,9 @@ C	write(*,100)(YCB/(MU(J)*J)*(NE(j+1)*TE(j+1)-NE(j)*TE(j)),j=NA1-5,NA1)
 C	write(*,*)"dPi/dPsi"
 C	write(*,100)(YCB/(MU(J)*J)*(NI(j+1)*TI(j+1)-NI(j)*TI(j)),j=NA1-5,NA1)
 C	write(*,*)"dPlong/dPsi"
-C	write(*,100)(0.5*YCB/(MU(J)*(J+0.5))*(PBLON(j+1)-PBLON(j)),j=1,6)
+C	write(*,100)(0.5d0*YCB/(MU(J)*(J+0.5))*(PBLON(j+1)-PBLON(j)),j=1,6)
 C	write(*,*)"dPperp/dPsi"
-C	write(*,100)(0.5*YCB/(MU(J)*(J+0.5))*(PBPER(j+1)-PBPER(j)),j=1,6)
+C	write(*,100)(0.5d0*YCB/(MU(J)*(J+0.5))*(PBPER(j+1)-PBPER(j)),j=1,6)
 C	write(*,*)"CU"
 C	write(*,100)(CU(j),j=NA1-5,NA1)
 C	write(*,*)"MU"
@@ -1464,7 +1464,7 @@ C 	    on the main transport grid:
 	do	J = 1,NA1
 	   XTR(J) = RHO(J)/ROC	
 	enddo
-C	XTR(NA) = (HRO*(NA-1)+0.5*HROA)/ROC
+C	XTR(NA) = (HRO*(NA-1)+0.5d0*HROA)/ROC
 C -> VR = dV/d(rho), \Delta, \lambda, G33, IPOL, <|\na\rho|>
 	call	TRANSF(NEQL,C,XEQ,NA1,VR,XTR)
 	call	SMOOTH(ALFA,NEQL,GBD,XEQ,NA1,SHIF, XTR)
@@ -1560,9 +1560,9 @@ C input: 	ROC, HRO, NB1, NA1, NA=NA1-1, AB, ABC,  AMETR(NA1)
 C Output:	NA1, NA=NA1-1, NAB, RHO(NA1)=ROC, HROA, AMETR(j>NA1)
 C----------------------------------------------------------------------|
 C Define size of the edge cell to be:   .6 <= HROA/HRO < 1.8
-C	with a hysteresis of 0.2*HRO, so that
-C	   if (HROA<=0.6*HRO)  jumps to  HROA<=1.6*HRO ! remove one cell
-C	   if (HROA>=1.8*HRO)  jumps to  HROA>=0.8*HRO !   add  one cell
+C	with a hysteresis of 0.2d0*HRO, so that
+C	   if (HROA<=0.6d0*HRO)  jumps to  HROA<=1.6d0*HRO ! remove one cell
+C	   if (HROA>=1.8d0*HRO)  jumps to  HROA>=0.8d0*HRO !   add  one cell
 C	write(*,*)NA1,TIME,RHO(NA1)," -> ",ROC
 C----------------------------------------------------------------------|
 	implicit none
@@ -1583,7 +1583,7 @@ C rho_edge gets out of the grid
 	   write(*,*)'If this does not help inspect equilibrium input'
 	   NA = NB1-1
 	elseif (ROC .le. HRO*(NA+0.1d0))	then	! 0.1 <=> 0.6-0.5
-!	    if (HROA < 0.6*HRO) then   reduce NA
+!	    if (HROA < 0.6d0*HRO) then   reduce NA
 C	   write(*,*)" <- ",ROC,HRO*NA,RHO(NA1),HRO*NA1,NA1
 	   do	j=NA-1,1,-1
 		NA = j
@@ -1591,7 +1591,7 @@ C	   	write(*,*)j,NA*HRO,ROC,(NA+1)*HRO,ROC/HRO-(NA-0.5)
 		if (ROC .gt. HRO*(j+0.1d0))	goto	10
 	   enddo
 	elseif (ROC .gt. HRO*(NA1+0.3))	then	! 0.3 <=> 1.8-1.5
-!	    if (HROA > 1.8*HRO) then   increase NA
+!	    if (HROA > 1.8d0*HRO) then   increase NA
 C	   write(*,*)" -> ",ROC,HRO*NA,RHO(NA1),HRO*NA1,NA1
 	   do	j=NA1,NB1
 		NA = j
@@ -1784,9 +1784,9 @@ C	YIPL = (FP(NA1)-FP(NA)-(FV(NA1)-FV(NA)))/HROA
 C Define FP(NA) from sigma*E=j_OH at j=NA
 C	   j = NA-1
 C	   YD = VR(j)*CD(j)+GP2*RHO(j)*CC(j)*(FP(j)-FPO(j))/TAU
-C	   YD = 0.2*HRO*HRO*YD/IPOL(j)**2
+C	   YD = 0.2d0*HRO*HRO*YD/IPOL(j)**2
 C	   FP(NA) = FP(j)+(G22(j)*(FP(j)-FP(j-1))+YD)/G22(NA)
-C	   FP(NA1) = FP(NA)+.4*GP*RTOR*IPLOLD*HROA/(G22(NA1)*IPOL(NA1))
+C	   FP(NA1) = FP(NA)+.4d0*GP*RTOR*IPLOLD*HROA/(G22(NA1)*IPOL(NA1))
 	   CU(NA1) = 0.d0
 	   YD = RTOR*IPL/IPOL(JNAO)/G22(JNAO)
 	   MU(NA1) = YD/(5.d0*BTOR*HRO*(JNAO))
@@ -2239,7 +2239,7 @@ C metric tensor components
           endif
  10   continue
 CMR
-	YLIN=YLIN*WBBS0*WBBS0*A*2./(.4*cgp*PLCUR)**2/BR00
+	YLIN=YLIN*WBBS0*WBBS0*A*2./(.4d0*cgp*PLCUR)**2/BR00
 C	open(33,file='dat/lin3')
 C	write(33,*) YLIN
 !,yvol*A
@@ -2821,13 +2821,13 @@ C	double precision WSA(1),WSP(1),WSJP(1),WBA(1),WBB(1),WDBA(1),WDBB(1)
 
 	subroutine EQPPAB(NA)
 C----------------------------------------------------------------------|
-C	gm0 = 0.4*cgp
+C	gm0 = 0.4d0*cgp
 C	WSA(I) = a[m], WSAA(I) = a**2
 C	WBR00 = (RTOR+SHIFT) = R[m]
 C	WBR0 = R0[m]
-C	WBJ0 = 0.2*I[MA]
+C	WBJ0 = 0.2d0*I[MA]
 C	WBBS0 = Bs[T],
-C	WBF(I)=0.2*F/R0[MA/m], WBFF(I) = WBF(I)**2
+C	WBF(I)=0.2d0*F/R0[MA/m], WBFF(I) = WBF(I)**2
 C	WSJ(I)=gm0*<j>[MA/m**2], WSJP(I) = <jB>/B
 C	WSJSL(I) = j(r,gt=cgp), WSJSR(I) = j(r,gt=0)
 C	WSP(I) = gm0*p[MJ/m**3]
