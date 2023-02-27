@@ -63,7 +63,7 @@ C======================================================================|
 		if (1.05*YMAX.LE.YS(J)) GO TO 4
  2	continue
 	do 3 J	=1,6
-		YS(J)	=10.*YS(J)
+		YS(J)	=10.d0*YS(J)
  3	continue
 	go to 1
  4	SCALA	=YS(J)
