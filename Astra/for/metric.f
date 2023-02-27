@@ -558,7 +558,7 @@ Control via "j" is disabled! Environment variable XESC is used
 C Equilibrium calculation start:
 C Note: j_{||Z}=j_{||A}*mu0*RTOR/(RTOR+SHIF(1))/IPOL(j)/G33(j)
 	CJ = mu0*RTOR/(RTOR+SHIF(1))
-	CP = 1.6d-3*mu0
+	CP = 1.6d-3d0*mu0
 	do	10	J=1,NA1
 	   ZP(J) = CP*
      & (PFAST(J)+NE(J)*TE(J)+NI(J)*TI(J)+
@@ -1039,7 +1039,7 @@ C-----------------------------------------------------------------------
 	integer	j
 	double precision	YCB,YG,YTH2
 C Preparing input for the 3M equilibrium solver:
-	YCB = 1.6E-3*RTOR/(BTOR*HRO*HRO)
+	YCB = 1.6E-3d0*RTOR/(BTOR*HRO*HRO)
 	do	J=2,NA
 	   if (j.eq.NA) YCB = YCB*HRO/HROA
 C	   EQFF(J) = -YCB/(MU(J))*(
@@ -1147,7 +1147,7 @@ C	write(*,100)(CU(j),j=NA1-5,NA1)
 	      YAJ = (FP(j+1)-FP(j))/HRO/HROA
 	      MU(j) = YAJ/j
 	      YAJ = G22(j)*YAJ
-C30-11	      CU(j) = 2.*(YAJ-YCJ)/(HRO+HROA)
+C30-11	      CU(j) = 2.d0*(YAJ-YCJ)/(HRO+HROA)
 	      CU(j) = (YAJ-YCJ)/HRO
 	   endif
 	   CU(j) = CU(j)/(j-0.5d0)
@@ -1327,7 +1327,7 @@ C	write(*,'(3(2F10.5,2X))')(EQPF(j),j=NA1-5,NA1)
 C	write(*,'(3(2F10.5,2X))')(EQFF(j),j=NA1-5,NA1)
 C	write(*,'(3(2F10.5,2X))')(CU(j)/IPOL(j),j=NA1-5,NA1)
 C	write(*,'(3(2F10.5,2X))')(CUTOR(j),j=NA1-5,NA1)
-C	write(*,'(3(2F10.5,2X))')(2.*(CU(j)/IPOL(j)-CUTOR(j))
+C	write(*,'(3(2F10.5,2X))')(2.d0*(CU(j)/IPOL(j)-CUTOR(j))
 C     >	/(CU(j)/IPOL(j)+CUTOR(j)),j=1,NA1)
 C	write(*,'(3(2F10.5,2X))')((EQPF(j)-CUTOR(j))
 C     >			*RHO(j)*G22(J)*(MU(J)/RTOR)**2,j=NA1-5,NA1)
@@ -1440,7 +1440,7 @@ C	VRS(NA1) = ARRNA1(VRS(NA),(ROC-NA*HRO)/HRO)
 C	write(*,*)(NA-1)*HRO,NA*HRO,ROC
 C	write(*,*)VRS(NA-1),VRS(NA),VRS(NA1)
 C      write(*,*)(VRS(NA)-VRS(NA-1))/HRO,(VRS(NA1)-VRS(NA))/(ROC-NA*HRO)
-C	write(*,*)2.*VRS(NA-1)-VRS(NA-2)-VRS(NA)
+C	write(*,*)2.d0*VRS(NA-1)-VRS(NA-2)-VRS(NA)
 C     >		,VRS(NA-1)-VRS(NA)+HRO/(ROC-j*HRO)*(VRS(NA1)-VRS(NA))
 C	G11(NA1) = G11(NA)+(A(NEQL)-A(NEQL-1))*YRO
 C	G22(NA1) = G22(NA)+(B(NEQL)-B(NEQL-1))*YRO
@@ -1495,16 +1495,16 @@ C	   VOLUM(J) = GP*GP2*ELON(J)*AMETR(J)**2
 C     *		    * (RTOR+SHIF(J)-0.25*TRIA(J)*AMETR(J))
 	   SHIF(J) = SHIFT+SHIF(J)
 	   if     (j .eq. 1)	then
-	      SHEAR(J) = (FP(2)-FP(1))/(2.*MU(1)+0.333*(MU(1)-MU(2)))
+	      SHEAR(J) = (FP(2)-FP(1))/(2.d0*MU(1)+0.333d0*(MU(1)-MU(2)))
 	   elseif (j .lt. NA)	then
-	      SHEAR(J) = (FP(j+1)-2.*FP(j)+FP(j-1))/(MU(j+1)+MU(j))
+	      SHEAR(J) = (FP(j+1)-2.d0*FP(j)+FP(j-1))/(MU(j+1)+MU(j))
 	   elseif (j .eq. NA)	then
 	      SHEAR(J) = HRO*(FP(j+1)-FP(j))/HROA-FP(j)+FP(j-1)
 	      SHEAR(J) = SHEAR(J)/(MU(j+1)+MU(j))
 C	   else
 C	      SHEAR(J) = HRO*(FP(NA1)-FP(NA))/HROA-FP(NA)+FP(NA-1)
-C	      SHEAR(J) = 2.*SHEAR(J)*(2.*HROA-HRO)
-C	      SHEAR(J) = SHEAR(J)/(2.*HROA*MU(NA1)-HRO*MU(NA))
+C	      SHEAR(J) = 2.d0*SHEAR(J)*(2.d0*HROA-HRO)
+C	      SHEAR(J) = SHEAR(J)/(2.d0*HROA*MU(NA1)-HRO*MU(NA))
 	   endif
 	   SHEAR(J) = 1.d0 -SHEAR(J)/(GP*BTOR*HRO**2)
 	enddo
@@ -1664,7 +1664,7 @@ C "rho" is given, "a" calculated
 C	NAB = NA1
 C	Y1 = sqrt((RTOR+SHIFT)**2-AB**2)
 C	Y2 = sqrt((RTOR+SHIFT)**2-ABC**2)
-C	ROB = sqrt(ROC**2+2.*ELONG*RTOR*(AB**2-ABC**2)/(Y1+Y2))
+C	ROB = sqrt(ROC**2+2.d0*ELONG*RTOR*(AB**2-ABC**2)/(Y1+Y2))
 C	if (NA1 .lt. NB1)	then
 C	   Y1 = 1./(ELONG*RTOR)
 C	   do	j=NA1+1,NB1
@@ -2158,7 +2158,7 @@ C                                        ( Y=B^2 )
 C R,Z derivatives
             DRDA=-WDSD1(I)*A+C-WDSD3(I)*A*SS
             DZDA=S*WGL(I)*(AA*WDGL(I)+1)
-            DRDT=-A*S-2.*AA*WSD3(I)*C*S	
+            DRDT=-A*S-2.d0*AA*WSD3(I)*C*S	
             DZDT=WGL(I)*A*C
 C metric tensor components
             DMETR=DRDA*DZDT-DRDT*DZDA
@@ -2188,14 +2188,14 @@ C metric tensor components
 C R,Z derivatives
             DRDA=-WDSD1(I)*A+C-WDSD3(I)*A*SS
             DZDA=S*WGL(I)*(AA*WDGL(I)+1)
-            DRDT=-A*S-2.*AA*WSD3(I)*C*S
+            DRDT=-A*S-2.d0*AA*WSD3(I)*C*S
             DZDT=WGL(I)*A*C
 c G22/A**2
-            G22A2=SS+4.*A*WSD3(I)*SS*C+(2.*A*WSD3(I)*S*C)**2+
+            G22A2=SS+4.*A*WSD3(I)*SS*C+(2.d0*A*WSD3(I)*S*C)**2+
      +            (WGL(I)*C)**2
 C D**2/A**2
             DA2=(C-A*(WDSD1(I)+WDSD3(I)*SS))*WGL(I)*C+
-     +             WGL(I)*SS*(WDGL(I)*AA+1.d0)*(1.d0+2.*A*C*WSD3(I))
+     +             WGL(I)*SS*(WDGL(I)*AA+1.d0)*(1.d0+2.d0*A*C*WSD3(I))
             DA2=DA2*DA2
 C metric tensor components
             DMETR =DRDA*DZDT-DRDT*DZDA
@@ -2365,16 +2365,16 @@ C	write(*,*)S,WGL(1),WGL(NA1),WDGL(NA1),EXP(-WDGL(NA1)),WDSD1(1)
  2	CONTINUE
 C  SD3,SDD3
      	FU3J=	1.d0+WDGL(NA1)*WSAA(NA1)
-	WDSD3(NA1)=WBS3(NA1)+2.*WSD3(NA1)*FU3J
+	WDSD3(NA1)=WBS3(NA1)+2.d0*WSD3(NA1)*FU3J
       DO 3 I1=1,NA
 	J=	NA1-I1
 	I=	J+1
 	AA=	WSAA(J)
 	FU3I=	FU3J
      	FU3J=	1.d0+WDGL(J)*AA
-	WSD3(J)=(WSD3(I)*(WSAA(I)-2.*WSCI1(J)*FU3I)-(WBS3(I)+
-     ,		WBS3(J))*WSCJ1(J))/(AA+2.*WSCJ1(J)*FU3J)
-	WDSD3(J)=WBS3(J)+2.*WSD3(J)*FU3J
+	WSD3(J)=(WSD3(I)*(WSAA(I)-2.d0*WSCI1(J)*FU3I)-(WBS3(I)+
+     ,		WBS3(J))*WSCJ1(J))/(AA+2.d0*WSCJ1(J)*FU3J)
+	WDSD3(J)=WBS3(J)+2.d0*WSD3(J)*FU3J
  3	CONTINUE
 	WSAC1=	WSA(NA1)*ABS(WDSD1(NA1)-WSAC1)
 	WSAC2=	WSAA(NA1)*ABS(WDGL(NA1)-WSAC2)
@@ -2470,7 +2470,7 @@ C	double precision	WSCJ1(1),WSCJ3(1),WSCJ5(1),WSCJ7(1)
 	WBR0=BR00
         DA=SA0/NA
         D3=GD30/SA0**2
-	D32=2.*D3
+	D32=2.d0*D3
         NA1=NA+1
       DO 1 I=1,NA1
 	J=I-1
@@ -2486,8 +2486,8 @@ C---C(J,N),C(I,N)
 	H=(AAI-AAJ)*0.5d0
 	WSCJ1(J)=H*0.5d0
 	WSCI1(J)=WSCJ1(J)
-	CJ=AAI+2.*AAJ
-	CI=AAJ+2.*AAI
+	CJ=AAI+2.d0*AAJ
+	CI=AAJ+2.d0*AAI
 	C0=H/6.
 	WSCJ3(J)=C0*CJ
 	WSCI3(J)=C0*CI
@@ -2576,11 +2576,11 @@ C--------------------------------------
 	SX=	C+A*SX1
 	SXX=	SX*SX
 	SR=	WBR0+A*SX
-	SY1=	2.*C*WSD3(I)
+	SY1=	2.d0*C*WSD3(I)
 C---BN0=N0*DT
 	BN0=	(EE*CC+SS)*SDT
 C---BN1=N1*DT
-	BN1=	2.*SY1*SS*SDT
+	BN1=	2.d0*SY1*SS*SDT
 C---BN2=N2*DT
 	BN2=	SS*SY1*SY1*SDT
 	BN12=	BN1+A*BN2
@@ -2594,7 +2594,7 @@ C  EVEN EQUATIONS
 	SK0=	(BN2-BN1*(BM1+A*BM2))*BMI+BN0*BM1*BM1*DEN
 	SK2=	-BN0*SS*DEN*BMI
 	SF20=	CC-SZZ+SC1
-	SF21=	2.*C*SX1
+	SF21=	2.d0*C*SX1
 	SF2=	SF20+A*SF21+AA*SXX1
 	WBK02(I)=WBK02(I)+SK0+WBS2(I)*SK2
 	WBK20(I)=WBK20(I)+BN0*SXX1+SK01*SF21+SK0*SF2
@@ -2627,14 +2627,14 @@ C  ODD EQUATIONS
 C HERE ZAKHAROV'S AUTHOR RIGHTS ARE CANCELED WITHOUT ANY CEREMONY
 c	DRDA=-WDSD1(I)*A+C-WDSD3(I)*A*SS
 c	DZDA=S*WGL(I)*(AA*WDGL(I)+1.d0)
-c	DRDT=-A*S-2.*AA*WSD3(I)*C*S	
+c	DRDT=-A*S-2.d0*AA*WSD3(I)*C*S	
 c	DZDT=WGL(I)*A*C
 C METRIC (SUBSRIPT) TENSOR COMPONENTS
 c	G11=DRDA**2+DZDA**2
 c	G22=DRDT**2+DZDT**2
 c	G12=DRDA*DRDT+DZDA*DZDT
 c G22/A**2
-        G22A2=SS+4.*A*WSD3(I)*SS*C+(2.*A*WSD3(I)*S*C)**2+(WGL(I)*C)**2
+        G22A2=SS+4.*A*WSD3(I)*SS*C+(2.d0*A*WSD3(I)*S*C)**2+(WGL(I)*C)**2
 C D/A
         DA1=WGL(I)*(CC-A*(WDSD1(I)+WDSD3(I)*SS)*C+
      +       SS*(WDGL(I)*AA+1.d0)*(1.d0+2.d0*A*C*WSD3(I)))
@@ -2717,8 +2717,8 @@ C-------------------------------
 	UY4=	CR2*UX2*UX2
 	UY0=	UX0*UX0+UY4
 	Y0=	CR2+UY0*AA
-	UY1=	2.*UX0+UX2
-	UY2=	2.*UX0*UX2
+	UY1=	2.d0*UX0+UX2
+	UY2=	2.d0*UX0*UX2
 	Y2=	CR2+UY2*AA
 	UY3=	UX2
 	Y4=	UY4*AA
@@ -2730,11 +2730,11 @@ C-------------------------------
 	UT4=	UX0*Y4+CR2*(UY3+UX2*Y2)
 	T5=	CR2*(Y4+AA*UX2*UY3)
 	UT6=	CR2*UX2*Y4
-	UZ1=	UY1*(2.*Y0+Y2)+UY3*(Y2+Y4)
-	UZ3=	UY3*2.*Y0+UY1*(Y4+Y2)
+	UZ1=	UY1*(2.d0*Y0+Y2)+UY3*(Y2+Y4)
+	UZ3=	UY3*2.d0*Y0+UY1*(Y4+Y2)
 	X5X1=	T1*Y0+AA*UT0*UY1+CR2*(Y2*(T1+T3)+
      ,		Y4*(T3+T5)+AA*(UT2*UY1+UY3*(UT2+UT4)))
-	X6X1=	T1*(2.*UT0+UT2)+T3*(UT2+UT4)+T5*(UT4+UT6)
+	X6X1=	T1*(2.d0*UT0+UT2)+T3*(UT2+UT4)+T5*(UT4+UT6)
       S=	EE*CR8
 	X20=	CR4*UY1
 	X22=	S*(UY1-UY3)*CR2
@@ -2752,7 +2752,7 @@ C-------------------------------
 	WSL2(I)=	WSL0(I)*S1+AA*WSL22(I)
 	WSL1(I)=	E*X20
 	WSL3(I)=	E*(X40-3.*X22)
-	S=	2.*E*RBR0
+	S=	2.d0*E*RBR0
 	S1=	CR2*RBR0
 	S2=	AA*S1
         WSV0(I)=	S*(X20+S1*X30)
@@ -2764,9 +2764,9 @@ C-------------------------------
         UX12=	WSU1(I)
 	S=	EE*RBR0
 	S2=	AA*RBR0
-        WSU1(I)=	S*(CR2+S2*(UX30*RBR0-2.*X20))
+        WSU1(I)=	S*(CR2+S2*(UX30*RBR0-2.d0*X20))
         WSU0(I)=	-RBR0*WSU1(I)
-        WSU2(I)=	S*(2.*X20+RBR0*(UX12-UX30))
+        WSU2(I)=	S*(2.d0*X20+RBR0*(UX12-UX30))
         WSU3(I)=	S*(UX30-3.*UX12)
  1	CONTINUE
 	RETURN
@@ -2793,10 +2793,10 @@ C	double precision WSA(1),WSP(1),WSJP(1),WBA(1),WBB(1),WDBA(1),WDBB(1)
 	integer	NA,NA1,I
 	double precision	H, S, RS, SS
 	NA1=NA+1
-	WDBA(1)=2.*(WSJP(2)-WSJP(1))/WSA(2)**2
+	WDBA(1)=2.d0*(WSJP(2)-WSJP(1))/WSA(2)**2
 	WBA(1)=WSJP(1)
 	WBB(1)=WSP(1)
-	WDBB(1)=2.*(WSP(2)-WSP(1))/WSA(2)**2
+	WDBB(1)=2.d0*(WSP(2)-WSP(1))/WSA(2)**2
 	H=.5d0/WSA(2)
 	do 1 I=2,NA
 	WBA(I)=WSJP(I)
@@ -2974,11 +2974,11 @@ C --- GP,SJ,DSJ,BJ,SJL,SJR
 	GBDI=(WBA(I)-WBB(I))*WGMC(I)*WSU0(I)
 	GBD=GBD+GBDJ*WSCJ3(J)+GBDI*WSCI3(J)
 3	CONTINUE
-	WGPINT=-2.*CGP*WBR0*WGP(NA1)
+	WGPINT=-2.d0*CGP*WBR0*WGP(NA1)
 c
 c inernal iductance
 c
-	WSLI=2.*WBR0/(WBR00*WBJ0**2)*(WSLI-WGP(NA1)*WBJ0)
+	WSLI=2.d0*WBR0/(WBR00*WBJ0**2)*(WSLI-WGP(NA1)*WBJ0)
 	WGPRES=CGP*WBR00*WSLI*WBJ0
 c
 c betta j
@@ -2988,36 +2988,36 @@ c
 c
 c betta
 c
-	WGB=2.*GB/(WBBS0**2*S)
+	WGB=2.d0*GB/(WBBS0**2*S)
 c
 c betta*
 c
-	WGBST=2.*SQRT(2.*(GBS-WSP(NA1)*GB)/S)/WBBS0**2
-	WGBD=2.*GB/(WBR0**2*(2.*GBD-FF0*WSU0(NA1)*WSAA(NA1)/WGL(NA1)))
+	WGBST=2.d0*SQRT(2.d0*(GBS-WSP(NA1)*GB)/S)/WBBS0**2
+	WGBD=2.d0*GB/(WBR0**2*(2.d0*GBD-FF0*WSU0(NA1)*WSAA(NA1)/WGL(NA1)))
 	WGMJ=4.*GBD*(WBR0/WBJ0)**2
 	WSP(1)=-WSP(NA1)
 	FF0=(WBBS0*WBR00/WBR0)**2
-	WBFF(1)=FF0+2.*WBFF(NA1)
+	WBFF(1)=FF0+2.d0*WBFF(NA1)
 	WBF(1)=SQRT(WBFF(1))
-	WGB0=2.*WSP(1)/WBBS0**2
+	WGB0=2.d0*WSP(1)/WBBS0**2
 	WSQC=WBBS0*WSAA(NA1)*(WGL(NA1)**2+1.d0)*0.5d0/(WBJ0*WBR00)
 
 C --- SJP,SDJP,SP,BFF,DGMC,SQ,SDQ,GMJ,GMJEX
-	DV0=2.*(WBB(1)*WSV0(1)+WSW0(1)-WGMC(1)*WBK02(1))
+	DV0=2.d0*(WBB(1)*WSV0(1)+WSW0(1)-WGMC(1)*WBK02(1))
 	V0I=0.
-	DL0I=(WDGL(1)-2.*WBD02(1))*WGL(1)
+	DL0I=(WDGL(1)-2.d0*WBD02(1))*WGL(1)
 	DL0=0.
 	WDGMC(1)=(WDBA(1)*WSL0(1)+WBA(1)*(WGL(1)*WBD02(1)+.25*DL0I)-
      ,	WGMC(1)*WDBK00(1)+DV0)/WBK0(1)
 
 	FFI=(WBA(1)-WBB(1))*WGMC(1)*WGL(1)
 	WSQ(1)=WBF(1)/(WBR0*WGMC(1))
-	DG33=2.*WBG332(1)*WSQ(1)
+	DG33=2.d0*WBG332(1)*WSQ(1)
 	G33I=0.
 	WDSQ(1)=WSQ(1)*(-FFI/WBFF(1)-WDGMC(1)/WGMC(1))+DG33
 	WDSQRQ(1)=0.
 
-	DD12=2.*((WBA(1)-WBB(1))*WBG22(1)/(WBR0*WSQ(1))**2+
+	DD12=2.d0*((WBA(1)-WBB(1))*WBG22(1)/(WBR0*WSQ(1))**2+
      ,	WBB(1)*WBD12(1))
 	D12I=0.
 	WSJP(1)=WBA(1)
@@ -3035,11 +3035,11 @@ C --- DERIVATIVES
 	S=1.d0/WSCJ1(J)
 	GPI=WGMC(I)*WGL(I)
 
-	WBFF(I)=WBFF(1)-2.*WBFF(I)
+	WBFF(I)=WBFF(1)-2.d0*WBFF(I)
 	WBF(I)=SQRT(WBFF(I))
 
 	DL0J=DL0I
-	DL0I=(WDGL(I)-2.*WBD02(I))*WGL(I)
+	DL0I=(WDGL(I)-2.d0*WBD02(I))*WGL(I)
 	DL0=DL0+DL0J*WSCJ3(J)+DL0I*WSCI3(J)
 	V0J=V0I
 	V0I=(WBB(I)*WSV0(I)+WSW0(I)-WGMC(I)*WBK02(I))*WSAA(I)
