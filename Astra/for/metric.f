@@ -2074,6 +2074,7 @@ C 		Set initial conditions / zero iteration
       G3DOLD=GD30
       NAOLD=NA
       WBR00=BR00
+	  print *, 'WBR00=BR00'
  4    continue
       do  I=1,NA1
          WSJP(I)=BA(I)
@@ -2093,7 +2094,9 @@ C 		Set initial conditions / zero iteration
 	 return
       endif
       call add2loc("Calling EQPPAB"//char(0))
-      call EQPPAB(NA)
+	  call EQPPAB(NA)
+	  print *, 'WBR00', WBR00	  
+	  print *, 'wbr0', wbr0	  
       D0=WSD1(NA1)*WSAA(NA1)
       GR(1)=0.d0
       Vol(1)=0.d0
@@ -2129,7 +2132,8 @@ C 		Set initial conditions / zero iteration
             dgrda(i)=sqrt(fi)
          endif
       enddo
-	  print *, 'GR', GR(1),GR(2),GR(3), wbr0
+	  print *, 'GR', GR(1),GR(2),GR(3)
+	  print *, 'wbr0', wbr0
 CMR extra quantities
       GR2AUX(1)=0.d0
       GP=3.1415926d0
