@@ -766,7 +766,7 @@ C----------------------------------------------------------------------|
 	   if (abs(YJ) .ge. 1.d-5) then
 	      P1 = YB/(1.d0-exp(-YJ))	   ! Use (A/h)*f(\xi) = B/(1-exp{-\xi})
 	   else
-	      P1 = YA/H1*(1.+0.5d0*YJ)   	   ! Use (A/h)*f(\xi) = A/h/(1-\xi/2)
+	      P1 = YA/H1*(1.d0+0.5d0*YJ)   	   ! Use (A/h)*f(\xi) = A/h/(1-\xi/2)
 	   endif
  1	   continue
 	   Q1 = P1-YB			   ! (A/h)*g(\xi) = (A/h)*f(\xi)-B
@@ -1004,7 +1004,7 @@ C Exponential scheme: (7 lines)
 	   if (abs(YJ) .ge. 1.d-5) then
 	      P1 = YB/(1.d0-exp(-YJ))	   ! Use (A/h)*f(\xi) = B/(1-exp{-\xi})
 	   else
-	      P1 = YA/H1*(1.+0.5d0*YJ)   	   ! Use (A/h)*f(\xi) = A/h/(1-\xi/2)
+	      P1 = YA/H1*(1.d0+0.5d0*YJ)   	   ! Use (A/h)*f(\xi) = A/h/(1-\xi/2)
 	   endif
 C Power-law scheme: (6 lines)
 C	   YJ = abs(H1*YB/YA)			! |\xi|
@@ -1316,7 +1316,7 @@ C		   C(j) = C(N-1)
 		endif
 		C(j) = C(j)/(j-0.5d0)
  3	continue
-	B(N+1) = B(N)*N/(N-0.5+HB/H)
+	B(N+1) = B(N)*N/(N-0.5d0+HB/H)
 C j_NA and j_NA1 are redifined in equftn
 C	C(N+1) = C(N)+YDN+((C(N)+YDN)-(C(N-1)+YDN1))/H*HB
  4	continue
