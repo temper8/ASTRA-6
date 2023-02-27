@@ -2281,6 +2281,8 @@ C ACC   - relative tolerance parameter
 	WSAC1=	WDSD1(NA1)
 	WSAC2=	WDGL(NA1)
 	WSAC3=	WDSD3(NA1)
+	print *, 'EQAB3 NA1=', NA1
+	print *, WBR00, WSD1(NA1), WSAA(NA1)
 	WBR0=	WBR00+WSD1(NA1)*WSAA(NA1)
       call add2loc("Calling EQK3"//char(0))
       CALL EQK3(NA,NT)
