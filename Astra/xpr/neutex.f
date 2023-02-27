@@ -62,7 +62,7 @@ C	Input:	ABC,AMJ,NA1,NAB,NB1,NNCX
 C		AMETR(j),AMAIN(j),TE(j),TI(j),NE(j),NI(j)
 C		ENCL,ENWM or wall neutral distribution
 C		NNCL,NNWM
-C	Warning:	ENCL > 0.5;	ENWM =/= 0 if NNWM =/= 0
+C	Warning:	ENCL > 0.5d0;	ENWM =/= 0 if NNWM =/= 0
 C	Output:	NN,	TN,    ALBPL
 C---------------------------------------------CHANGED BY POLEVOY-------|
 	implicit none
@@ -134,7 +134,7 @@ C	Input:	ABC,AMJ,NA1,NAB,NB1,NNCX
 C		AMETR(j),AMAIN(j),TE(j),TI(j),NE(j),NI(j)
 C		ENCL,ENWM or wall neutral distribution
 C		NNCL,NNWM
-C	Warning:	ENCL > 0.5;	ENWM =/= 0 if NNWM =/= 0
+C	Warning:	ENCL > 0.5d0;	ENWM =/= 0 if NNWM =/= 0
 C	Output:	NN,	TN,    ALBPL
 C---------------------------------------------CHANGED BY POLEVOY-------|
 	implicit none
@@ -188,7 +188,7 @@ C	Input:	ABC, NA1, NB1, NNCX
 C		AMETR(j), AMAIN(j), TE(j), TI(j), NE(j), NI(j), SNNBM(j)
 C		ENCL, ENWM or wall neutral distribution
 C		NNCL, NNWM
-C	Warning:	ENCL > 0.5;	ENWM =/= 0 if NNWM =/= 0
+C	Warning:	ENCL > 0.5d0;	ENWM =/= 0 if NNWM =/= 0
 C	Output:	  NN,	TN,   ALBPL
 C----------------------------------------------------------------------|
 	implicit none
@@ -232,9 +232,9 @@ C-------------------------------       Set the internal grid
 C	JNN = NRD
 	JNN = NB1
 	YAB = AMETR(JNA)		! ABC(NEUTEX) or AB(NEUTAB)
-	YHA = YAB/(JNN-1.)
+	YHA = YAB/(JNN-1.d0)
 	do	j=1,JNN
-	   YA(j) = (j-1.)/(JNN-1.)
+	   YA(j) = (j-1.d0)/(JNN-1.d0)
 	enddo
 	do	j=1,JNA
 	   YR(j) = AMETR(j)/AMETR(JNA)
@@ -267,7 +267,7 @@ C-------------------------------	Atomic reaction rates:
 	   YX(j) = YN(j)+SVIE*NE(j)+SVII*NI(j)		! YX=s(a)
 	enddo
 	call	SMOOTH(1.d-3,JNA,YX,YR,JNN,YS,YA)	! YS=s(x)
-	YZ1 = 0.5*YHA
+	YZ1 = 0.5d0*YHA
 	YX(1) = 0.
 	do	j=1,JNN-1
 	   YX(j+1) = YX(j)+(YS(j)+YS(j+1))*YZ1		! YX(j)=X(j)
@@ -336,8 +336,8 @@ C---------------------------------	Zero guess N_0(x)+R(x)
 	call	SMOOTH(1.d-3,JNA,YN,YR,JNN,YF,YA)	! YF=svcx*n_i
 	call	SMOOTH(1.d-3,JNA,YC,YR,JNN,YS,YA)	! YS =svrec*n_e*n_i
  	do	j=1,JNN
-	   YF(j) = 0.5*YF(j)/YV(j)			! F(j) factor in kernel
-	   YS(j) = 0.5*YS(j)/YV(j)			! Factor in R(j)
+	   YF(j) = 0.5d0*YF(j)/YV(j)			! F(j) factor in kernel
+	   YS(j) = 0.5d0*YS(j)/YV(j)			! Factor in R(j)
 	enddo
 	do	j=1,JNN					! x_j
 	   YZ1 = (YX(JNN)+YX(j))/YV1
@@ -371,7 +371,7 @@ C---------------------------------	Finalize the kernel \tilde{K} = F*K
 	      YK(jj,j) = YF(j)*YK(jj,j)		! \tilde{K} = F*K
 	   enddo
 	   YS(j)  = NN(j)			! YS=NN_(0)
-C	   YS(j)  = 1.				! Check convergence
+C	   YS(j)  = 1.d0				! Check convergence
 	enddo
 C---------------------------------	Kernel is ready
 C---------------------------------	Iterations:
@@ -508,13 +508,13 @@ C----------------------------------------------------------------------|
 	   endif
 	   P(j)	=ALFA/YP/XO(NO)**2
  1	continue
-	P(1)	=0.
-	FN(1)	=0.
+	P(1)	=0.d0
+	FN(1)	=0.d0
 	I	=1
 	YF	=(FO(2)-FO(1))/(XO(2)-XO(1))
-	YX	=2./(XN(2)+XN(1))
-	YP	=0.
-	YQ	=0.
+	YX	=2.d0/(XN(2)+XN(1))
+	YP	=0.d0
+	YQ	=0.d0
 	do	5	j=1,N-1
 		if(XO(I) .gt. XN(j))	GO TO 4
  3		I	=I+1
@@ -522,12 +522,12 @@ C----------------------------------------------------------------------|
 		if(I .ne. NO .and. XO(I) .lt. XN(j))	GOTO	3
 		YF	=(FO(I)-FO(I-1))/(XO(I)-XO(I-1))
  4		FJ	=FO(I)+YF*(XN(j)-XO(I))
-		YD=1.+YX*(YP+P(j+1))
+		YD=1.d0+YX*(YP+P(j+1))
 		P(j)	=YX*P(j+1)/YD
 		FN(j)	=(FJ+YX*YQ)/YD
 		if (j .eq. N-1)	goto	5
-		YX	=2./(XN(j+2)-XN(j))
-		YP	=(1.-P(j))*P(j+1)
+		YX	=2.d0/(XN(j+2)-XN(j))
+		YP	=(1.d0-P(j))*P(j+1)
 		YQ	=FN(j)*P(j+1)
  5	continue
 	FN(N)	=FO(NO)
