@@ -2230,7 +2230,7 @@ C	elseif	(STRING(1:11) .eq. 'RHOTOROIDAL')	then
      >	   '    radial grid is expected to be given in "m"'
 	endif
 
-C	if (XBDRY .lt. (ABC+AB)/2.)	INTYPE = 11
+C	if (XBDRY .lt. (ABC+AB)/2.d0)	INTYPE = 11
 
 	if (INTYPE .eq. 10 .and. abs(XBDRY-AB) .gt. 0.3*AB/jrad)  then
 C	   write(*,*)'>>> Inconsistency in the input data,  ',
@@ -2384,7 +2384,7 @@ C	   return
 	   return
 	endif
 
-	factor = 1.
+	factor = 1.d0
 	JN = len(string)
 	JS = index(string(JU+1:),':')
 	if (JS .ne. 0)	then
@@ -2493,7 +2493,7 @@ C----------------------------------------------------------------------|
 	FN(1)	=0.
 	I	=1
 	YF	=(FO(2)-FO(1))/(XO(2)-XO(1))
-	YX	=2./(XN(2)+XN(1))
+	YX	=2.d0/(XN(2)+XN(1))
 	YP	=0.
 	YQ	=0.
 	do	5	j=1,N-1
@@ -2503,12 +2503,12 @@ C----------------------------------------------------------------------|
 		if(I .ne. NO .and. XO(I) .lt. XN(j))	GOTO	3
 		YF	=(FO(I)-FO(I-1))/(XO(I)-XO(I-1))
  4		FJ	=FO(I)+YF*(XN(j)-XO(I))
-		YD=1.+YX*(YP+P(j+1))
+		YD=1.d0+YX*(YP+P(j+1))
 		P(j)	=YX*P(j+1)/YD
 		FN(j)	=(FJ+YX*YQ)/YD
 		if (j .eq. N-1)	goto	5
-		YX	=2./(XN(j+2)-XN(j))
-		YP	=(1.-P(j))*P(j+1)
+		YX	=2.d0/(XN(j+2)-XN(j))
+		YP	=(1.d0-P(j))*P(j+1)
 		YQ	=FN(j)*P(j+1)
  5	continue
 	FN(N)	=FO(NO)
@@ -2559,7 +2559,7 @@ C----------------------------------------------------------------------|
 	FN(1)	=0.
 	I	=1
 	YF	=(FO(2)-FO(1))/(XO(2)-XO(1))
-	YX	=2./(XN(2)+XN(1))
+	YX	=2.d0/(XN(2)+XN(1))
 	YP	=0.
 	YQ	=0.
 	do	5	j=1,N-1
@@ -2569,15 +2569,15 @@ C----------------------------------------------------------------------|
 		if(I .ne. NO .and. XO(I) .lt. XN(j))	GOTO	3
 		YF	=(FO(I)-FO(I-1))/(XO(I)-XO(I-1))
  4		FJ	=FO(I)+YF*(XN(j)-XO(I))
-		YD=1.+YX*(YP+P(j+1))
+		YD=1.d0+YX*(YP+P(j+1))
 		P(j)	=YX*P(j+1)/YD
 		FN(j)	=(FJ+YX*YQ)/YD
 		if (j .eq. N-1)	goto	5
-		YX	=2./(XN(j+2)-XN(j))
-		YP	=(1.-P(j))*P(j+1)
+		YX	=2.d0/(XN(j+2)-XN(j))
+		YP	=(1.d0-P(j))*P(j+1)
 		YQ	=FN(j)*P(j+1)
  5	continue
-	FN(N) = ((2.-P(N-2))*FN(N-1)-FN(N-2))/(1.-(2.-P(N-2))*P(N-1))
+	FN(N) = ((2.d0-P(N-2))*FN(N-1)-FN(N-2))/(1.d0-(2.d0-P(N-2))*P(N-1))
 	do	6	j=N-1,1,-1
 		FN(j)	=P(j)*FN(j+1)+FN(j)
  6	continue
@@ -2628,7 +2628,7 @@ C	if (XN(j).lt.X1 .or. XN(j).gt.X2)	P(j) = P(j)*YX
 	FN(1)	=0.
 	I	=1
 	YF	=(FO(2)-FO(1))/(XO(2)-XO(1))
-	YX	=2./(XN(2)+XN(1))
+	YX	=2.d0/(XN(2)+XN(1))
 	YP	=0.
 	YQ	=0.
 	do	5	j=1,N-1
@@ -2638,12 +2638,12 @@ C	if (XN(j).lt.X1 .or. XN(j).gt.X2)	P(j) = P(j)*YX
 		if(I .ne. NO .and. XO(I) .lt. XN(j))	GOTO	3
 		YF	=(FO(I)-FO(I-1))/(XO(I)-XO(I-1))
  4		FJ	=FO(I)+YF*(XN(j)-XO(I))
-		YD=1.+YX*(YP+P(j+1))
+		YD=1.d0+YX*(YP+P(j+1))
 		P(j)	=YX*P(j+1)/YD
 		FN(j)	=(FJ+YX*YQ)/YD
 		if (j .eq. N-1)	goto	5
-		YX	=2./(XN(j+2)-XN(j))
-		YP	=(1.-P(j))*P(j+1)
+		YX	=2.d0/(XN(j+2)-XN(j))
+		YP	=(1.d0-P(j))*P(j+1)
 		YQ	=FN(j)*P(j+1)
  5	continue
 	FN(N)	=FO(NO)
@@ -2662,14 +2662,14 @@ C===========================================================Polevoi
 	implicit none
 	double precision    RTOR,YR,YA,YS,YE,YT,YF,YF1,YT2,YSIN2
 		YF	=(YR-RTOR-YS)/YA
-		YF1	=2.*YF*YT
-		YT2	=(1.+YF1)
-	if(YF.ge.1..or.YF.lt.-1..OR.YT2.LE.0.) 	goto 99
-		YF1	=2.*YF*YT
-		YSIN2	=(1.-YF)*(1.+YF)/YT2
-	if(YSIN2.gt..001.and.YT.gt..01)	then
-		YT2	=2.*YT*YT
-		YSIN2	=(SQRT(1.+2.*(YF1+YT2))-(1.+YF1))/YT2
+		YF1	=2.d0*YF*YT
+		YT2	=(1.d0+YF1)
+	if(YF.ge.1.d0.or.YF.lt.-1.d0.OR.YT2.LE.0.) 	goto 99
+		YF1	=2.d0*YF*YT
+		YSIN2	=(1.d0-YF)*(1.d0+YF)/YT2
+	if(YSIN2.gt..001 .and. YT.gt..01)	then
+		YT2	=2.d0*YT*YT
+		YSIN2	=(SQRT(1.d0+2.d0*(YF1+YT2))-(1.d0+YF1))/YT2
 			endif
 		RA2Z	=YA*YE*SQRT(YSIN2)
 	RETURN
