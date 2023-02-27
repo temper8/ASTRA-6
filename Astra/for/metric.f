@@ -2111,7 +2111,7 @@ C 		Set initial conditions / zero iteration
 	 	NA1 = 0
 	 	return
 	    endif
-            GR(I)=SQRT(GR2*2.)
+            GR(I)=SQRT(GR2*2.d0)
             dgrda(i)=fi*WSA(i)/gr(i)
          else
             dgrda(i)=sqrt(fi)
