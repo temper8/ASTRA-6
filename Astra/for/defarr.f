@@ -122,7 +122,7 @@ C----------------------------------------------------------------------|
 C Compute edge value of the array ARR(NA1) assuming that d^3(ARR)/dr^3=0
 C----------------------------------------------------------------------|
 	double precision ARR(*),H
-	ARRNA1 = ARR(1)+H*(2.*ARR(1)+ARR(-2)-3.*ARR(-1))
+	ARRNA1 = ARR(1)+H*(2.d0*ARR(1)+ARR(-2)-3.*ARR(-1))
 	end
 C======================================================================|
 	integer	function	IFSTEP(IFCONV)
@@ -244,7 +244,7 @@ C-----------------------------------------------------------------------
 		if(2.d0*XN(j).le.XO(I+1)+XO(I+2))	go to	4
  3		I = I+1
 		if(I.gt.NO-2)	I=NO-2
-	if(2.*XN(j).gt.XO(I+1)+XO(I+2).and.I.lt.NO-2)	go to	3
+	if(2.d0*XN(j).gt.XO(I+1)+XO(I+2).and.I.lt.NO-2)	go to	3
 		YF1 = FO(I)/((XO(I)-XO(I+1))*(XO(I)-XO(I+2)))
 		YF2 = FO(I+1)/((XO(I+1)-XO(I))*(XO(I+1)-XO(I+2)))
 		YF3 = FO(I+2)/((XO(I+2)-XO(I))*(XO(I+2)-XO(I+1)))
@@ -281,12 +281,12 @@ C-----------------------------------------------------------------------
 C The following two lines require that at the boundary
 C     the fit concides with the original function
 	YD = COS(0.5d0*PIOVN)
-	YA = (2.*YA-YB*(1.d0-YD))/(1.d0+YD)
+	YA = (2.d0*YA-YB*(1.d0-YD))/(1.d0+YD)
 
       BMA=0.5d0*(YB-YA)
       BPA=0.5d0*(YB+YA)
       do 11 K=1,NCHCF
-        YC(K) = BPA+BMA*COS(PIOVN*(K-0.5))
+        YC(K) = BPA+BMA*COS(PIOVN*(K-0.5d0))
  11   continue
 	call	TRANSF(NIN,FIN,XIN,NCHCF,YF,YC)
 
@@ -294,7 +294,7 @@ C     the fit concides with the original function
       do 13 J=1,NCHCF
         SUM=0.
         do 12 K=1,NCHCF
-          SUM=SUM+YF(K)*COS(PIOVN*(K-0.5)*(J-1.d0))
+          SUM=SUM+YF(K)*COS(PIOVN*(K-0.5d0)*(J-1.d0))
  12     continue
         YC(J)=FAC*SUM
  13   continue
@@ -333,7 +333,7 @@ C-----------------------------------------------------------------------
       do 13 J=N-1,2,-1
         do 12 K=N-J+1,2,-1
           SV=D(K)
-          D(K)=2.*D(K-1)-F(K)
+          D(K)=2.d0*D(K-1)-F(K)
           F(K)=SV
 12      continue
         SV=D(1)
@@ -630,7 +630,7 @@ C	   P1 = YJ+P1
 	   AJ = G1*P1
 	   BJ = G1*Q1+G0*P0+HJ*VN(J)*(NN(J)-Y625*C(J))
 	   CJ = G0*Q0
-	   YJ = (VO(J)/VN(J))**0.666667
+	   YJ = (VO(J)/VN(J))**0.666667d0
 	   DJ = HJ*(Y625*P(J)*VN(J)+NO(J)*TO(J)*VO(J)*YJ)
 	   if(J .ne. 1)	then
 	      BJ = BJ-CJ*G(J-1)
@@ -792,7 +792,7 @@ C	   BJ = G1*Q1+G0*P0
 C	   CJ = G0*Q0
 	   CJ = G0*(Q0+Y0)
 	   BJ = BJ+HJ*VN(J)*(NN(J)-Y625*(W(j,10)+C(J)))
-	   YJ = (VO(J)/VN(J))**0.666667
+	   YJ = (VO(J)/VN(J))**0.666667d0
 	   DJ = HJ*(Y625*D(J)*VN(J)+NO(J)*TO(J)*VO(J)*YJ)
 	   YJ = YS
 	   YS = G1*Y1*(TO(j+1)-TO(j))
@@ -1030,7 +1030,7 @@ C	      B(j) = Q1
 	   AJ = G1*P1
 	   BJ = G1*Q1+G0*P0+HJ*VN(J)*(NN(J)-Y625*(W(j,10)+C(J)))
 	   CJ = G0*Q0
-	   YJ = (VO(J)/VN(J))**0.666667
+	   YJ = (VO(J)/VN(J))**0.666667d0
 	   DJ = HJ*(Y625*D(J)*VN(J)+NO(J)*TO(J)*VO(J)*YJ)
 	   W(j,1+icall) = AJ			! A_e or A_i | P_k
 	   W(j,3+icall) = BJ			! B_e or B_i | Q_k+P_{k-1}+C_k
@@ -1139,8 +1139,8 @@ C----------------------------------------------------------------------|
 	HH = H*H
 	H05 = 0.5d0*H
 	do	1	J=1,N
-		VO = VOL(J)**1.666667
-		VN = VNE(J)**0.666667
+		VO = VOL(J)**1.666667d0
+		VN = VNE(J)**0.666667d0
 		RA0 = RA
 		RB0 = RB
 		YG11 = G11(J)*GT23
@@ -1311,10 +1311,10 @@ C----------------------------------------------------------------------|
 C		   B(j) = AJ/(j-0.5+YHB)
 		   B(j) = AJ/j
 		   AJ = AK(j)*AJ
-		   C(j) = 2.*(AJ-CJ)/(H+HB)
+		   C(j) = 2.d0*(AJ-CJ)/(H+HB)
 C		   C(j) = C(N-1)
 		endif
-		C(j) = C(j)/(j-0.5)
+		C(j) = C(j)/(j-0.5d0)
  3	continue
 	B(N+1) = B(N)*N/(N-0.5+HB/H)
 C j_NA and j_NA1 are redifined in equftn
