@@ -573,6 +573,8 @@ C Note: j_{||Z}=j_{||A}*mu0*RTOR/(RTOR+SHIF(1))/IPOL(j)/G33(j)
 	   do	J=1,Nesc
 	      XEQ(J) = (J-1.d0)/(Nesc-1.d0)
 	   enddo
+	   print *, 'A2ESC 576'
+	   print *, XEQ(1),XEQ(2),XEQ(3)
 	   do	J = 1,NA1
 	      XTR(J) = RHO(J)/ROC
 	   enddo
@@ -1305,6 +1307,8 @@ C	   CAR6(J) = B(J)
 	do	J=1,NEQL
 		XEQ(J) = (j-1.d0)/(NEQL-1.d0)
 	enddo
+	print *, 'EQUIL3 1310'
+	print *, XEQ(1),XEQ(2),XEQ(3)
 C From transport grid in "a" to equidistant grid in "a"
 	ALFA	=.001d0
 	call	SMOOTH(ALFA,NA1,A,XTR,NEQL,BA,XEQ)
@@ -1415,6 +1419,9 @@ C 			    BD -> <|nabla(rho)|>
 	   BD(J) = BD(J)*BC(J)
 	   XEQ(J) = GR(J)/GR(NEQL)
 	enddo
+	print *, 'EQUIL3 1422 XEQ(J) = GR(J)/GR(NEQL)', NEQL
+	print *, GR(1), GR(2), GR(3)	
+	print *, XEQ(1), XEQ(2), XEQ(3)	
 C Define auxiliary (shifted) grid:
 	do	J=1,NA
 	   XTR(J) = J*HRO/ROC
@@ -2122,6 +2129,7 @@ C 		Set initial conditions / zero iteration
             dgrda(i)=sqrt(fi)
          endif
       enddo
+	  print *, 'GR', GR(1),GR(2),GR(3)
 CMR extra quantities
       GR2AUX(1)=0.d0
       GP=3.1415926d0
