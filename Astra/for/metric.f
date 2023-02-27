@@ -84,7 +84,7 @@ C	   write(*,*)"Calling SETEXM"
 	   call	add2loc("Calling SETGEO"//char(0))
 	   call	SETGEO(0)
 	   call	add2loc("Calling SETEXM"//char(0))
-	   call	SETEXM			! Main grid: (j-0.5)*h
+	   call	SETEXM			! Main grid: (j-00.5d0)*h
 	   call	add2loc("Calling RHSEQ"//char(0))
 	   call	RHSEQ
 	   goto	9
@@ -139,34 +139,34 @@ C	write(*,*)"Entry EQCYL ",ROC,RHO(NA1),AMETR(NA1),ABC
 	VOLUME = GP2*GP*RTOR*ABC*ABC
 C       write(*,*)NA1,NB1,VOLUME
 	ROC	= ABC
-	ROWALL = ABC*1.1
-	HRO	= ABC/(NA1-0.5)
+	ROWALL = ABC*1.1d0
+	HRO	= ABC/(NA1-0.5d0)
 C       HRO	= 1.1*ROWALL/(NB1-0.5)
 	HROA = HRO
 	do	j=1,NB1
-	   RHO(J) = (J-0.5)*HRO
+	   RHO(J) = (J-0.5d0)*HRO
 C          if (RHO(j) .lt. ROC)	NA = j
 	   if (RHO(j) .le. ROWALL)	NA = j
 	   G22(J) = J*HRO
 	   VR(J)  = GP2*GP2*RTOR*RHO(J)
 	   VRS(j) = GP2*GP2*RTOR*G22(J)
 	   AMETR(J) = RHO(J)
-	   SHIF(J) = 0.
-	   SHIV(J) = 0.
-	   ELON(J) = 1.
-	   TRIA(J) = 0.
-	   IPOL(J) = 1.
-	   G33(J) = 1.
+	   SHIF(J) = 0.d0
+	   SHIV(J) = 0.d0
+	   ELON(J) = 1.d0
+	   TRIA(J) = 0.d0
+	   IPOL(J) = 1.d0
+	   G33(J) = 1.d0
 	   G11(J) = VRS(j) 
 	   SLAT(J) = VRS(j)
-	   BDB02(j) = 1.+(RHO(j)*MU(j)/RTOR)**2
-	   B0DB2(j) = 1./BDB02(j)
+	   BDB02(j) = 1.d0+(RHO(j)*MU(j)/RTOR)**2
+	   B0DB2(j) = 1.d0/BDB02(j)
 	   BDB0(j) = sqrt(BDB02(j))
-	   FOFB(j) = 1.
+	   FOFB(j) = 1.d0
 	   BMAXT(j) = BTOR*BDB0(j)
 	   BMINT(j) = BMAXT(j)
-	   DRODA(j) = 1.
-	   GRADRO(j) = 1.
+	   DRODA(j) = 1.d0
+	   GRADRO(j) = 1.d0
 	enddo
 	if (NA .lt. NB1)	NB1 = NA
 	NA = NA1-1
@@ -174,7 +174,7 @@ C          if (RHO(j) .lt. ROC)	NA = j
 	do	J=2,NB1
 	   VOLUM(J) = VOLUM(J-1)+HRO*VR(J)
 	enddo
-	VOLUM(NA1) = VOLUM(NA)+(HROA-0.5*HRO)*VR(NA)
+	VOLUM(NA1) = VOLUM(NA)+(HROA-0.5d0*HRO)*VR(NA)
 	VOLUME = VOLUM(NA1)
  100	format(3(2F10.5,2X))
 	end
@@ -203,25 +203,25 @@ C----------------------------------------------------------------------|
 	ROC = ROC3A(RTOR,SHIFT,ABC,ELONG,TRIAN)
 	NA = NA1-1
 	do	J=1,NB1
-	   RHO(J) = (J-0.5)*HRO
+	   RHO(J) = (J-0.5d0)*HRO
 	enddo
 C Define AMETR,SHIF,ELON,TRIA,SHIV
 	call	SETGEO(0)
-	YDV = 0.
+	YDV = 0.d0
 	do J=1,NB1
 	   if(j.lt.nb1) then
 	      j1=j+1
 	   else
 	      j1=j
 	   endif
-	   YA =0.5*(AMETR(J)+AMETR(J1))
-	   YES=0.5*(ELON(J)+ELON(J1))
-	   YDS=0.5*(TRIA(J)+TRIA(J1))
-	   YAS=0.5*(SHIF(J)+SHIF(J1))
-	   VOLUM(J)=GP*GP2*YA**2*YES*(RTOR+YAS-0.25*YA*YDS)
+	   YA =0.5d0*(AMETR(J)+AMETR(J1))
+	   YES=0.5d0*(ELON(J)+ELON(J1))
+	   YDS=0.5d0*(TRIA(J)+TRIA(J1))
+	   YAS=0.5d0*(SHIF(J)+SHIF(J1))
+	   VOLUM(J)=GP*GP2*YA**2*YES*(RTOR+YAS-0.25d0*YA*YDS)
 	   VR(J) = (VOLUM(J)-YDV)/HRO
 	   YDV = VOLUM(J)
-	   YR1 = min(AMETR(j)/2.,1.d-2)
+	   YR1 = min(AMETR(j)/2.d0,1.d-2)
 	   YAS = ROC3A(RTOR,SHIF(j),AMETR(j),    ELON(j),TRIA(j))
 	   YDS = ROC3A(RTOR,SHIF(j),AMETR(j)-YR1,ELON(j),TRIA(j))
 	   DRODA(J-1) = (YAS-YDS)/YR1
@@ -246,10 +246,10 @@ C If NA1 does not change then EDCELL corrects FP(NA1) only.
 ! G22=VR*R*<(gradRHO/R)**2>/(GP2)**2/IPOL;	C22=G11/R/(GP2)**2/IPOL
 ! SLAT=VR*DRODA*<|gradA|>;			SLAT=VR*sqrt(G1)
 	do	J=1,NB1
-	   IPOL(J) = 1.
+	   IPOL(J) = 1.d0
 	   G33(J) = (RTOR/(RTOR+SHIF(J)))**2
 	   GRADRO(J)=DRODA(J)
-	   if (j .lt. NB1)	VRS(j)=0.5*(VR(J+1)+VR(j))
+	   if (j .lt. NB1)	VRS(j)=0.5d0*(VR(J+1)+VR(j))
 	   G11(J) = VRS(J)*DRODA(J)**2
 	   G22(J) = G11(J)/GP2**2/(RTOR+SHIF(J))
 	   SLAT(J) = VRS(J)*DRODA(J)		
@@ -267,24 +267,24 @@ C   SHEAR -  d[ln(q)]/d[ln(rho)]	(to replace fml/shear)
 C Alternative definition for BDB02 (G.Pereverzev 10.02.99)
 	do	J=1,NA1
 	   if     (j .eq. 1)	then
-	      SHEAR(J) = (FP(2)-FP(1))/(2.*MU(1)+0.333*(MU(1)-MU(2)))
+	      SHEAR(J) = (FP(2)-FP(1))/(2.d0*MU(1)+0.333d0*(MU(1)-MU(2)))
 	   elseif (j .lt. NA)	then
-	      SHEAR(J) = (FP(j+1)-2.*FP(j)+FP(j-1))/(MU(j+1)+MU(j))
+	      SHEAR(J) = (FP(j+1)-2.d0*FP(j)+FP(j-1))/(MU(j+1)+MU(j))
 	   else
 	      SHEAR(J) = HRO*(FP(NA1)-FP(NA))/HROA-FP(NA)+FP(NA-1)
-	      SHEAR(J) = 2.*SHEAR(J)*(2.*HROA-HRO)
-	      SHEAR(J) = SHEAR(J)/(2.*HROA*MU(NA1)-HRO*MU(NA))
+	      SHEAR(J) = 2.d0*SHEAR(J)*(2.d0*HROA-HRO)
+	      SHEAR(J) = SHEAR(J)/(2.d0*HROA*MU(NA1)-HRO*MU(NA))
 	   endif
-	   SHEAR(J) = 1. -SHEAR(J)/(GP*BTOR*HRO**2)
+	   SHEAR(J) = 1.d0 -SHEAR(J)/(GP*BTOR*HRO**2)
 	   YR1      = RHO(j)*G22(j)*(MU(j)/RTOR)**2
-	   BDB02(j) = (1.+YR1)*G33(J)*IPOL(J)**2
-	   B0DB2(j) = ((RTOR+SHIF(J))/RTOR)**2+.75*(AMETR(j)/RTOR)**2
+	   BDB02(j) = (1.d0+YR1)*G33(J)*IPOL(J)**2
+	   B0DB2(j) = ((RTOR+SHIF(J))/RTOR)**2+.75d0*(AMETR(j)/RTOR)**2
 	   BMAXT(j) = BTOR*RTOR/(RTOR+SHIF(j)-AMETR(j))
 	   BMINT(j) = BTOR*RTOR/(RTOR+SHIF(j)+AMETR(j))
 	   BDB0(j)  = (RTOR/(RTOR+SHIF(j)))
 C  - <(BTOR/B)**2*(1.-SQRT(1-B/Bmax)*(1+.5B/Bmax))>
 	   YR1     = (RTOR+SHIF(j)-AMETR(j))/(RTOR+SHIF(j))
-	   FOFB(j) = 1.-sqrt(YR1)*(1.+0.5*YR1)
+	   FOFB(j) = 1.d0-sqrt(YR1)*(1.d0+0.5d0*YR1)
 	enddo
 	do	J=NA1,NAB
 	   SHEAR(j) = SHEAR(NA1)
@@ -300,7 +300,7 @@ C Volume (on the shifted grid) is calculated using VR:
 	do	J=2,NA
 	   VOLUM(J) = VOLUM(J-1)+HRO*VR(J)
 	enddo
-	VOLUM(NA1) = VOLUM(NA)+(HROA-0.5*HRO)*VR(NA)
+	VOLUM(NA1) = VOLUM(NA)+(HROA-0.5d0*HRO)*VR(NA)
 	VOLUME = VOLUM(NA1)
  100	format(3(2F10.5,2X))
 	end
@@ -367,7 +367,7 @@ C	      TRIA(J) = TRIAN*TRX(j)*RHO(j)**2
 	   if (IFDFAX(63) .gt. 0)	then
 	      IPOL(J) = IPOLX(j)
 	   else
-	      IPOL(J) = 1.
+	      IPOL(J) = 1.d0
 	   endif
 	   if (IFDFAX(55) .gt. 0)	then
 	      VR(J) = VRX(j)
@@ -380,7 +380,7 @@ C          AMETR(J) = AMX(J)	! AMX not defined
 
 C Flux grid: j*h
 	do	J=1,NA
-	   VRS(j)= 0.5*(VR(J+1)+VR(j))
+	   VRS(j)= 0.5d0*(VR(J+1)+VR(j))
 	   if (IFDFAX(67) .gt. 0)	then
 	      SLAT(J) = SLATX(j)
 	   else
@@ -401,15 +401,15 @@ C?	      G22(J) = RTOR*VRS(j)/(GP2*(RTOR+SHIFT))**2
 	   if (IFDFAX(62) .gt. 0)	then
 	      DRODA(J) = DRODAX(j)
 	   else
-	      DRODA(J) = 1.
+	      DRODA(J) = 1.d0
 	   endif
 	enddo
-	SLAT(NA1)= 1.5*SLAT(NA)-0.5*SLAT(NA-1)
-	VRS(NA1)= 1.5*VRS(NA)-0.5*VRS(NA-1)
-	G11(NA1)= 1.5*G11(NA)-0.5*G11(NA-1)
-	G22(NA1)= 1.5*G22(NA)-0.5*G22(NA-1)
-	DRODA(NA1)= 1.5*DRODA(NA)-0.5*DRODA(NA-1)
-	G11(NA1)= 1.5*G11(NA)-0.5*G11(NA-1)
+	SLAT(NA1)= 1.5d0*SLAT(NA)-0.5d0*SLAT(NA-1)
+	VRS(NA1)= 1.5d0*VRS(NA)-0.5d0*VRS(NA-1)
+	G11(NA1)= 1.5d0*G11(NA)-0.5d0*G11(NA-1)
+	G22(NA1)= 1.5d0*G22(NA)-0.5d0*G22(NA-1)
+	DRODA(NA1)= 1.5d0*DRODA(NA)-0.5d0*DRODA(NA-1)
+	G11(NA1)= 1.5d0*G11(NA)-0.5d0*G11(NA-1)
 
 C   BDB02 - <B**2/B0**2> can be expressed in terms of others, see Eq.(39)
 C   B0DB2 - <B0**2/B**2> ~ <(R/R0)^2>
@@ -420,39 +420,39 @@ C   FOFB  - <(BTOR/B)**2*(1.-SQRT(1-B/Bmax)*(1+.5B/Bmax))>
 C Alternative definition for BDB02 (G.Pereverzev 10.02.99)
 	do	J=1,NA1
 	   if     (j .eq. 1)	then
-	      SHEAR(J) = (FP(2)-FP(1))/(2.*MU(1)+0.333*(MU(1)-MU(2)))
+	      SHEAR(J) = (FP(2)-FP(1))/(2.d0*MU(1)+0.333d0*(MU(1)-MU(2)))
 	   elseif (j .lt. NA)	then
-	      SHEAR(J) = (FP(j+1)-2.*FP(j)+FP(j-1))/(MU(j+1)+MU(j))
+	      SHEAR(J) = (FP(j+1)-2.d0*FP(j)+FP(j-1))/(MU(j+1)+MU(j))
 	   else
 	      SHEAR(J) = HRO*(FP(NA1)-FP(NA))/HROA-FP(NA)+FP(NA-1)
-	      SHEAR(J) = 2.*SHEAR(J)*(2.*HROA-HRO)
-	      SHEAR(J) = SHEAR(J)/(2.*HROA*MU(NA1)-HRO*MU(NA))
+	      SHEAR(J) = 2.d0*SHEAR(J)*(2.d0*HROA-HRO)
+	      SHEAR(J) = SHEAR(J)/(2.d0*HROA*MU(NA1)-HRO*MU(NA))
 	   endif
-	   SHEAR(J) = 1. -SHEAR(J)/(GP*BTOR*HRO**2)
+	   SHEAR(J) = 1.d0 -SHEAR(J)/(GP*BTOR*HRO**2)
 	   GRADRO(j) = DRODA(J)
 	   YR1	= RHO(j)*G22(j)*(MU(j)/RTOR)**2
-	   BDB02(j) = (1.+YR1)*G33(J)*IPOL(J)**2
-	   B0DB2(j) = ((RTOR+SHIF(J))/RTOR)**2+0.75*(AMETR(j)/RTOR)**2
+	   BDB02(j) = (1.d0+YR1)*G33(J)*IPOL(J)**2
+	   B0DB2(j) = ((RTOR+SHIF(J))/RTOR)**2+0.75d0*(AMETR(j)/RTOR)**2
 	   BMAXT(j) = BTOR*RTOR/(RTOR+SHIF(j)-AMETR(j))
 	   BMINT(j) = BTOR*RTOR/(RTOR+SHIF(j)+AMETR(j))
 C  - <(BTOR/B)**2*(1.-SQRT(1-B/Bmax)*(1+.5B/Bmax))>
 	   BDB0(j) = (RTOR/(RTOR+SHIF(j)))
 	   YR1     = (RTOR+SHIF(j)-AMETR(j))/(RTOR+SHIF(j))
-	   FOFB(j) = 1.-sqrt(YR1)*(1.+0.5*YR1)
+	   FOFB(j) = 1.d0-sqrt(YR1)*(1.d0+0.5d0*YR1)
 	enddo
 	if (NA1 .ge. NAB)	return
 	do	J=NA1+1,NAB
 	   SHIF(J) = SHIFT
-	   ELON(J) = 1.
-	   TRIA(J) = 0.
+	   ELON(J) = 1.d0
+	   TRIA(J) = 0.d0
 	   G33(J) = (RTOR/(RTOR+SHIFT))**2
-	   IPOL(J) = 1.
+	   IPOL(J) = 1.d0
 	   VR(J) = YNF*RHO(j)/(IPOL(j)*G33(j))
 	   AMETR(J) = RHO(J)
-	   VRS(j)= 0.5*(VR(J+1)+VR(j))
+	   VRS(j)= 0.5d0*(VR(J+1)+VR(j))
 	   G11(J) = VRS(j)
 	   G22(J) = RTOR*VRS(j)/(RTOR+SHIFT)**2
-	   DRODA(J) = 1.
+	   DRODA(J) = 1.d0
 	   SLAT(J) = VRS(J)*DRODA(J)
 	   SHEAR(j) = SHEAR(NA1)
 	   BDB02(j) = BDB02(NA1)
@@ -467,7 +467,7 @@ C Volume (on the shifted grid) is calculated using VR:
 	do	J=2,NA
 	   VOLUM(J) = VOLUM(J-1)+HRO*VR(J)
 	enddo
-	VOLUM(NA1) = VOLUM(NA)+(HROA-0.5*HRO)*VR(NA)
+	VOLUM(NA1) = VOLUM(NA)+(HROA-0.5d0*HRO)*VR(NA)
 	VOLUME = VOLUM(NA1)
 	return
  99	continue
@@ -489,34 +489,34 @@ C	 ROC3A - Dimensional toroidal "rho" [m]
 C----------------------------------------------------------------------|
 	implicit none
 	double precision YR,YD,YA,YE,YT,YD1,YT2,YGE,Y1,Y2,Y3,Y4,Y5,Y6
-	YT2 = 2.*YT
+	YT2 = 2.d0*YT
 	YGE = YA/(YR+YD)
 	if (abs(YGE) .gt. 1.d0)	goto	8
 	if (YGE) 9,5,1
  1	continue
-	YD1 = 1.+YT2*(YT2-2./YGE)
+	YD1 = 1.d0+YT2*(YT2-2./YGE)
 	if (YD1) 3,2,2
  2	continue
 	YD1 = sqrt(YD1)
-	Y1 = (2.-YT2*YGE)*YD1/(1.+YD1)
+	Y1 = (2.d0-YT2*YGE)*YD1/(1.d0+YD1)
 	Y2 = YGE-YT2
-	Y3 = sqrt(1.-YT2*YGE+YGE*YD1)
-	Y4 = sqrt(1.-YT2*YGE-YGE*YD1)
-	Y5 = sqrt(1.+YGE)
-	Y6 = sqrt(1.-YGE)
-	Y1 = (Y1+Y2)/(Y3+(1.-YT2)*Y5)-(Y1-Y2)/(Y4+(1.+YT2)*Y6)
-	Y1 = Y1/sqrt(2.*(1.-YT2*YGE+Y5*Y6))
+	Y3 = sqrt(1.d0-YT2*YGE+YGE*YD1)
+	Y4 = sqrt(1.d0-YT2*YGE-YGE*YD1)
+	Y5 = sqrt(1.d0+YGE)
+	Y6 = sqrt(1.d0-YGE)
+	Y1 = (Y1+Y2)/(Y3+(1.d0-YT2)*Y5)-(Y1-Y2)/(Y4+(1.d0+YT2)*Y6)
+	Y1 = Y1/sqrt(2.d0*(1.d0-YT2*YGE+Y5*Y6))
 	goto	4
  3	continue
-	Y5 = sqrt(1.+YGE)
-	Y6 = sqrt(1.-YGE)
-	Y1 = (1.-YT2)*Y5+(1.+YT2)*Y6
-	Y1 = (1.-Y1/sqrt(2.*(1.-YT2*YGE+Y5*Y6)))/YT2
+	Y5 = sqrt(1.d0+YGE)
+	Y6 = sqrt(1.d0-YGE)
+	Y1 = (1.d0-YT2)*Y5+(1.d0+YT2)*Y6
+	Y1 = (1.d0-Y1/sqrt(2.d0*(1.d0-YT2*YGE+Y5*Y6)))/YT2
  4	continue
-	ROC3A = 2.*sqrt(YR*YA*YE*Y1)
+	ROC3A = 2.d0*sqrt(YR*YA*YE*Y1)
 	return
  5	continue
-	ROC3A = 0.
+	ROC3A = 0.d0
 	return
  8	write(*,*)" >>> Error >>> ROC3A >>> Illegal input: R+Delta < a"
 	write(*,'(1P,16X,2(A,E10.3))')"R+Delta =",YR+YD,",    a =",YA
@@ -561,7 +561,8 @@ C Note: j_{||Z}=j_{||A}*mu0*RTOR/(RTOR+SHIF(1))/IPOL(j)/G33(j)
 	CP = 1.6d-3*mu0
 	do	10	J=1,NA1
 	   ZP(J) = CP*
-     . (PFAST(J)+NE(J)*TE(J)+NI(J)*TI(J)+0.5*NB2EQL*(PBLON(J)+PBPER(J)))
+     & (PFAST(J)+NE(J)*TE(J)+NI(J)*TI(J)+
+     & 0.5d0*NB2EQL*(PBLON(J)+PBPER(J)))
 	   if (j .eq. NA1)	goto	10
 	   ZJ(J) = CJ*CU(j)/(IPOL(j)*G33(j))
  10	continue
@@ -570,12 +571,12 @@ C Note: j_{||Z}=j_{||A}*mu0*RTOR/(RTOR+SHIF(1))/IPOL(j)/G33(j)
 	if (NA1 .gt. Nescmx-2)	then
 	   Nesc = Nescmx-2
 	   do	J=1,Nesc
-	      XEQ(J) = (J-1.)/(Nesc-1.)
+	      XEQ(J) = (J-1.d0)/(Nesc-1.d0)
 	   enddo
 	   do	J = 1,NA1
 	      XTR(J) = RHO(J)/ROC
 	   enddo
-	   ALFA = 0.001
+	   ALFA = 0.001d0
 	   call	SMOOTH(ALFA,NA1,ZP,XTR,Nesc,ZA,XEQ)
 	   call	SMOOTH(ALFA,NA1,ZJ,XTR,Nesc,ZB,XEQ)
 	   call	SMOOTH(ALFA,NA1,CC,XTR,Nesc,ZC,XEQ)
@@ -810,16 +811,16 @@ C Define main transport (half-integer) grid:
 
 C Define auxiliary shifted (integer) grid:
 	Y4 = HRO/ROC
-	Zrho = 0.
+	Zrho = 0.d0
 	call	add2loc("Calling ESCaout"//char(0))
 	do  j = 1,NA1
 	   Zrho = Zrho+Y4
-	   if (Zrho .gt. 1.)	then
-	      Zrho = 1.
+	   if (Zrho .gt. 1.d0)	then
+	      Zrho = 1.d0
 	      if (j .le. NA)	write(*,*)"Out of grid"
 	   endif
 	   if (j .eq. NA1)	then
-	      Zrho = 1.
+	      Zrho = 1.d0
 	      DRODA(j) = HROA/(AMETR(NA1)-AMETR(NA))	! d\rho/da
 	   elseif  (j .eq. 1)	then
 	      DRODA(j) = HRO/(AMETR(2)-AMETR(1))	! d\rho/da
@@ -841,7 +842,7 @@ C Volume (on the shifted grid) is calculated using VR:
 	do	J=2,NA
 	   VOLUM(J) = VOLUM(J-1)+HRO*VR(J)
 	enddo
-	VOLUM(NA1) = VOLUM(NA)+(HROA-0.5*HRO)*VR(NA)
+	VOLUM(NA1) = VOLUM(NA)+(HROA-0.5d0*HRO)*VR(NA)
 	VOLUME = VOLUM(NA1)
 
 	do	J=NA1,NAB
@@ -885,8 +886,8 @@ C----------------------------------------------------------------------|
 	if (NBNT .gt. 1)	goto	2
 	if (NBNT .eq. 0)	then	! No boundary points given
 	   NBND = 8
-	   yd1 = .75			! sin^2(pi/3)
-	   yd2 = .5			! cos(pi/3)	
+	   yd1 = .75d0			! sin^2(pi/3)
+	   yd2 = .5d0		! cos(pi/3)	
 	   ydt = sqrt(yd1)		! sin(pi/3)
 	   BNDARR(1) = RTOR+SHIFT-ABC*TRIAN
 	   BNDARR(2) = UPDWN+ABC*ELONG
@@ -938,7 +939,7 @@ C	z_2(t_1)	z_2(t_2)	z_2(t_3)
 	if (NBND .gt. 12)	return
 C The order is essential
 C  Top(1), bottom(2), inward(3), outward(4), ...
-	YDT = -1.
+	YDT = -1.d0
 	do	j=1,NBND
 	   if (ZPB(j) .gt. YDT)	then
 	      YDT = ZPB(j)
@@ -952,7 +953,7 @@ C  Top(1), bottom(2), inward(3), outward(4), ...
 	RPB(j1) = YD1
 	ZPB(j1) = YD2
 C Bottom(2)
-	YDT = 1.
+	YDT = 1.d0
 	do	j=2,NBND
 	   if (ZPB(j) .lt. YDT)	then
 	      YDT = ZPB(j)
@@ -966,7 +967,7 @@ C Bottom(2)
 	RPB(j1) = YD1
 	ZPB(j1) = YD2
 C Inward(3)
-	YDT = 1000.
+	YDT = 1000.d0
 	do	j=3,NBND
 	   if (RPB(j) .lt. YDT)	then
 	      YDT = RPB(j)
@@ -980,7 +981,7 @@ C Inward(3)
 	RPB(j1) = YD1
 	ZPB(j1) = YD2
 C Outward(4)
-	YDT = -1.
+	YDT = -1.d0
 	do	j=4,NBND
 	   if (RPB(j) .gt. YDT)	then
 	      YDT = RPB(j)
@@ -1047,7 +1048,7 @@ C     +	        +( (NE(J+1)*TE(J+1)-NE(J)*TE(J))+
 C     +		   (NI(J+1)*TI(J+1)-NI(J)*TI(J)) )/J )
 	   EQFF(J) = ( (NE(J+1)*TE(J+1)-NE(J)*TE(J))+
      +		       (NI(J+1)*TI(J+1)-NI(J)*TI(J)) )/J
-	   EQFF(J) = EQFF(J)+0.5*NB2EQL*
+	   EQFF(J) = EQFF(J)+0.5d0*NB2EQL*
      +			(PBLON(J+1)-PBLON(J)+PBPER(J+1)-PBPER(J))/J
 	   EQFF(J) = EQFF(J)+(PFAST(J+1)-PFAST(J))/J
 	   EQFF(J) = -YCB*EQFF(J)/(MU(J))
@@ -1059,10 +1060,10 @@ C     +		   (NI(J+1)*TI(J+1)-NI(J)*TI(J)) )/J )
 	do	J=1,NA1
 	   EQPF(j) = EQFF(j)
 	   YTH2	= RHO(j)*G22(J)*(MU(J)/RTOR)**2
-	   YG	= (1.+YTH2)*G33(J)
+	   YG	= (1.d0+YTH2)*G33(J)
 	   EQFF(J) = (CU(J)/IPOL(J)-EQPF(J))/YG
 C	   if (J.eq.NA1) EQFF(J) = -EQPF(J) /YG
-	   CUTOR(J) = (CU(J)/IPOL(J)+YTH2*EQPF(J))/(1.+YTH2)
+	   CUTOR(J) = (CU(J)/IPOL(J)+YTH2*EQPF(J))/(1.d0+YTH2)
 	enddo
 	return
 C	if(TIME.gt.0.3)	then
@@ -1132,7 +1133,7 @@ C----------------------------------------------------------------------|
 	integer	j
 	double precision	HH,YAJ,YCJ,ARRNA1
 	HH = HRO*HRO
-	YAJ = 0.
+	YAJ = 0.d0
 C	write(*,*)"CU"
 C	write(*,100)(CU(j),j=NA1-5,NA1)
 	do	1	J=1,NA
@@ -1149,13 +1150,13 @@ C	write(*,100)(CU(j),j=NA1-5,NA1)
 C30-11	      CU(j) = 2.*(YAJ-YCJ)/(HRO+HROA)
 	      CU(j) = (YAJ-YCJ)/HRO
 	   endif
-	   CU(j) = CU(j)/(j-0.5)
+	   CU(j) = CU(j)/(j-0.5d0)
  1	continue
 C	CU(NA1) = ARRNA1(CU(NA),HROA/HRO)
 	MU(NA1) = ARRNA1(MU(NA),HROA/HRO)		! See DEFARR
 C	MU(NA1) = MU(NA)*NA/(NA-0.5+HROA/HRO)
-	YCJ = 1.25/(GP*GP*RTOR)
-	YAJ = 0.5/(GP*BTOR)
+	YCJ = 1.25d0/(GP*GP*RTOR)
+	YAJ = 0.5d0/(GP*BTOR)
 	do	2	J=1,NA1
 	   CU(j) = YCJ*CU(j)*G33(J)*IPOL(J)**3
            MU(J) = YAJ*MU(j)
@@ -1191,10 +1192,10 @@ C----------------------------------------------------------------------|
 	include	'for/status.inc'
 	integer	j
 	double precision YH,YM,YM1,YM2,YC,YF
-	YC = .2*GP2*RTOR/BTOR
+	YC = .2d0*GP2*RTOR/BTOR
 	YH = RHO(2)-RHO(1)
 	YF = GP2*YH*YH*BTOR
-	YM = 0.
+	YM = 0.d0
 	do	J=1,NA1
 	   YM1 = MU(j)*j
 	   YM2 = YM1*G22(j)
@@ -1305,7 +1306,7 @@ C	   CAR6(J) = B(J)
 		XEQ(J) = (j-1.d0)/(NEQL-1.d0)
 	enddo
 C From transport grid in "a" to equidistant grid in "a"
-	ALFA	=.001
+	ALFA	=.001d0
 	call	SMOOTH(ALFA,NA1,A,XTR,NEQL,BA,XEQ)
 	call	SMOOTH(ALFA,NA1,B,XTR,NEQL,BB,XEQ)
 
@@ -1418,7 +1419,7 @@ C Define auxiliary (shifted) grid:
 	do	J=1,NA
 	   XTR(J) = J*HRO/ROC
 	enddo
-	XTR(NA1) = 1.
+	XTR(NA1) = 1.d0
 
 C -> dV/d(rho);  BA -> G33;  BB -> IPOL;  BC -> DRODA  (to auxiliary grid)
 C Lateral surface: GRADRO*VRS=V'*<|grad(rho)|>:
@@ -1475,9 +1476,9 @@ C	call	SMOOTH(ALFA,NEQL,D,XEQ,NA1,VOLUM, XTR)
 
 C GL -> a
 C GSD -> \delta^{ASTRA} (dimensionless)
-	YDA = ABC/(NEQL-1.)
+	YDA = ABC/(NEQL-1.d0)
 	do	j =1,NEQL
-	   A(j) = YDA*(J-1.)
+	   A(j) = YDA*(J-1.d0)
 	   if (j.ne.1) B(J) = GSD(J)/A(J)
 	enddo
 	B(1)=0.
@@ -1505,7 +1506,7 @@ C	      SHEAR(J) = HRO*(FP(NA1)-FP(NA))/HROA-FP(NA)+FP(NA-1)
 C	      SHEAR(J) = 2.*SHEAR(J)*(2.*HROA-HRO)
 C	      SHEAR(J) = SHEAR(J)/(2.*HROA*MU(NA1)-HRO*MU(NA))
 	   endif
-	   SHEAR(J) = 1. -SHEAR(J)/(GP*BTOR*HRO**2)
+	   SHEAR(J) = 1.d0 -SHEAR(J)/(GP*BTOR*HRO**2)
 	enddo
 	SHEAR(NA1) = SHEAR(NA)
 C	write(*,'(4f9.3,3X,4f9.3)')
@@ -1549,7 +1550,7 @@ C Volume (on the shifted grid) is calculated using VR:
 	do	J=2,NA
 	   VOLUM(J) = VOLUM(J-1)+HRO*VR(J)
 	enddo
-	VOLUM(NA1) = VOLUM(NA)+(HROA-0.5*HRO)*VR(NA)
+	VOLUM(NA1) = VOLUM(NA)+(HROA-0.5d0*HRO)*VR(NA)
 	VOLUME = VOLUM(NA1)
 	end
 C======================================================================|
@@ -1573,21 +1574,21 @@ C----------------------------------------------------------------------|
 C	write(*,*)NA1,ROC,HRO*(NA+0.1),HRO*(NA1+0.3),HRO*(NB1-0.49)
 C	write(*,'(1P,6E13.5)')(RHO(j),j=NA-2,NA1+1)
 C	write(*,'(1P,6E13.5)')(AMETR(j),j=NA-2,NA1+1)
-	if (ROC .gt. HRO*(NB1-0.49))	then
+	if (ROC .gt. HRO*(NB1-0.49d0))	then
 C rho_edge gets out of the grid
 	   write(*,*)'>>> WARNING: the allocated grid is too small'
 	   write(*,*)'Time =',TIME,'   Rho_b =',ROC,
-     >		'   Rho_max = ',HRO*(NB1-0.5)
+     >		'   Rho_max = ',HRO*(NB1-0.5d0)
 	   write(*,*)'Try to increase AWALL'
 	   write(*,*)'If this does not help inspect equilibrium input'
 	   NA = NB1-1
-	elseif (ROC .le. HRO*(NA+0.1))	then	! 0.1 <=> 0.6-0.5
+	elseif (ROC .le. HRO*(NA+0.1d0))	then	! 0.1 <=> 0.6-0.5
 !	    if (HROA < 0.6*HRO) then   reduce NA
 C	   write(*,*)" <- ",ROC,HRO*NA,RHO(NA1),HRO*NA1,NA1
 	   do	j=NA-1,1,-1
 		NA = j
 C	   	write(*,*)j,NA*HRO,ROC,(NA+1)*HRO,ROC/HRO-(NA-0.5)
-		if (ROC .gt. HRO*(j+0.1))	goto	10
+		if (ROC .gt. HRO*(j+0.1d0))	goto	10
 	   enddo
 	elseif (ROC .gt. HRO*(NA1+0.3))	then	! 0.3 <=> 1.8-1.5
 !	    if (HROA > 1.8*HRO) then   increase NA
@@ -1595,7 +1596,7 @@ C	   write(*,*)" -> ",ROC,HRO*NA,RHO(NA1),HRO*NA1,NA1
 	   do	j=NA1,NB1
 		NA = j
 C	   	write(*,*)j,NA*HRO,ROC,(NA+1)*HRO
-		if (ROC .le. HRO*(j+1.3))	goto	10
+		if (ROC .le. HRO*(j+1.3d0))	goto	10
 	   enddo
 	endif
  10	continue
@@ -1611,17 +1612,17 @@ C	write(*,*)NA+1,NA+1-NA1,HRO*(NA+0.6),ROC,HRO*(NA+1.8)
      >	  ">>> Warning: Spatial grid < 10 points. Increase NB1.",char(7)
 	NA1 = NA+1
 	do	J=1,NB1
-	   RHO(J)=(J-0.5)*HRO
+	   RHO(J)=(J-0.5d0)*HRO
 	enddo
 	HROA = ROC-RHO(NA)
 	RHO(NA1) = ROC
 	AMETR(NA1) = ABC
 
-	if (HROA/HRO .lt. 0.59)	write(*,*)	! Should never happen?
+	if (HROA/HRO .lt. 0.59d0)	write(*,*)	! Should never happen?
      >	'Warning: edge cell is too small  ',HROA/HRO,ROC/HRO-(NA-0.5)
  	NAB = NA1
 	ROB = RHO(NAB)
-	if ( 2.*abs(AB-ABC) .lt. AMETR(NA1)-AMETR(NA) )	return
+	if ( 2.d0*abs(AB-ABC) .lt. AMETR(NA1)-AMETR(NA) )	return
 	NAB = NA1/ABC*AB
 	ROB = RHO(NAB)
 C	write(*,'(A,2I5,4f7.4)')"NAB->",NA1,NAB,ROC,ROB,ABC,AB
@@ -1698,16 +1699,16 @@ C----------------------------------------------------------------------|
 	    YR2		= min(1.d0,(RHO(J)/ROC)**2)
 	    SHIF(J)	= SHIFT
 	    SHIV(J)	= UPDWN
-	    ELON(J)	= 0.5*(1.+ELONG+(ELONG-1.)*YR2)
+	    ELON(J)	= 0.5d0*(1.d0+ELONG+(ELONG-1.d0)*YR2)
 C	    ELON(J)	= (0.75+0.25*YR2)*ELONG
 	    TRIA(J)	= TRIAN*YR2
 	enddo
-	YDA = .1*AB/NB1
+	YDA = .1d0*AB/NB1
 
-	YR1 = .0
+	YR1 = .0d0
 	if (jst .eq. 0)	then
-	   YA = 0.
-	   YR2 = 0.
+	   YA = 0.d0
+	   YR2 = 0.d0
 	else
 	   YA = AMETR(jst+1)
 	   YR2 = RHO(jst+1)
@@ -1786,7 +1787,7 @@ C	   YD = VR(j)*CD(j)+GP2*RHO(j)*CC(j)*(FP(j)-FPO(j))/TAU
 C	   YD = 0.2*HRO*HRO*YD/IPOL(j)**2
 C	   FP(NA) = FP(j)+(G22(j)*(FP(j)-FP(j-1))+YD)/G22(NA)
 C	   FP(NA1) = FP(NA)+.4*GP*RTOR*IPLOLD*HROA/(G22(NA1)*IPOL(NA1))
-	   CU(NA1) = 0.
+	   CU(NA1) = 0.d0
 	   YD = RTOR*IPL/IPOL(JNAO)/G22(JNAO)
 	   MU(NA1) = YD/(5.*BTOR*HRO*(JNAO))
 	elseif (NA1 .lt. JNA1O)	then		! NA1 decreases
@@ -1830,9 +1831,9 @@ C======================================================================|
 	double precision	ALFA,YN,YT,YM,YM1,YCM,YCU,CMU,BTOLD,YA
 	integer	NFN,NF11,J
 	save	NFN,BTOLD
-	data	BTOLD/-1./
+	data	BTOLD/-1.d0/
 	call	markloc("ADCMP"//char(0))
-	if (BTOLD .lt. 0.)	BTOLD = BTOR
+	if (BTOLD .lt. 0.d0)	BTOLD = BTOR
 	YA = (BTOR-BTOLD)/(TAU*(BTOR+BTOLD))		! 1/2 d[ln(B)]/dt
 	do	j=1,NA1
 	   VPFP(j) = YA*RHO(j)
@@ -1843,7 +1844,7 @@ C======================================================================|
 	BTOLD = BTOR
 	ALFA	=1.d-4
 	do	1	J=1,NA1
-	   XST(J) = (J-0.5)/(NA1-0.5)
+	   XST(J) = (J-0.5d0)/(NA1-0.5d0)
 	   XFN(J) = XST(J)/FACTOR
 1	continue
 	do	2	J=1,NA1
@@ -1860,9 +1861,9 @@ C			Decompression (FACTOR < 1) :
 C			Compression (FACTOR > 1) :
 	NFN	=NA1+1
 3	continue
-	XFN(NFN)=1.
+	XFN(NFN)=1.d0
 	YN	=FACTOR*FACTOR
-	YT	=FACTOR**1.333
+	YT	=FACTOR**1.333d0
 	do	4	J=1,NA1-1
 	   if(J.ge.NFN)	goto	41
 	   NE(J) = NE(J)*YN
@@ -1888,10 +1889,10 @@ C			Compression (FACTOR > 1) :
 C	call	TRANSF(NFN,A,XFN,NA1,TI,XST)
 	do	71	J=1,NA
 		A(J)	=MU(J)
-		XST(J)	=J/(NA1-0.5)
+		XST(J)	=J/(NA1-0.5d0)
 		XFN(J)	=XST(J)/FACTOR
 71	continue
-	if(FACTOR.lt.1.)	then
+	if(FACTOR.lt.1.d0)	then
 	   NFN	=NA
 	   NF11	=NA-1
 	   call	TRANSF(NA,A,XFN,NF11,MU,XST)
@@ -1908,14 +1909,14 @@ C	CMU	=MU(NFN)*(NFN)*G22(NFN)
 C		MU(J)	=CMU/(J*G22(J))
 		MU(J)	=CMU/(J*J)
 9	continue
-	YM=0.
+	YM=0.d0
 	YCM	=GP2*BTOR*HRO**2
-	YCU=2.5*BTOR/(GP*RTOR*HRO)
+	YCU=2.5d0*BTOR/(GP*RTOR*HRO)
 	do	91	J=1,NA
 		FP(J+1)	=FP(J)+YCM*J*MU(J)
 		YM1=YM
 		YM=J*G22(J)*MU(J)
-		CU(J)=YCU*G33(J)*IPOL(J)**3*(YM-YM1)/(J-0.5)
+		CU(J)=YCU*G33(J)*IPOL(J)**3*(YM-YM1)/(J-0.5d0)
 91	continue
 	FP(NA1)	= FP(NA)+GP2*BTOR*HRO*NA*MU(NA)*HROA
 	CU(NA1) = CU(NA)+(CU(NA)-CU(NA-1))/HRO*HROA
@@ -2045,7 +2046,7 @@ C	endif
 **************************************************
 
       WBBS0=B0T
-      WBJ0=0.2*PLCUR
+      WBJ0=0.2d0*PLCUR
       NA=NA1-1
       NT=12*MAX(1,NA1/8)
 C 		Set initial conditions / zero iteration
@@ -2082,11 +2083,11 @@ C 		Set initial conditions / zero iteration
       call add2loc("Calling EQPPAB"//char(0))
       call EQPPAB(NA)
       D0=WSD1(NA1)*WSAA(NA1)
-      GR(1)=0.
-      Vol(1)=0.
-      GR2=0.
-      fi=0.
-      s=4.*cgp*cgp
+      GR(1)=0.d0
+      Vol(1)=0.d0
+      GR2=0.d0
+      fi=0.d0
+      s=4.d0*cgp*cgp
       do I=1,NA1
          Vol(i)=s*WSAA(i)*(WBR0*wsl0(i)+WSAA(i)*wsl1(i))
          j=i-1
@@ -2117,11 +2118,11 @@ C 		Set initial conditions / zero iteration
          endif
       enddo
 CMR extra quantities
-      GR2AUX(1)=0.
-      GP=3.1415926
-      GP2=2.*GP
+      GR2AUX(1)=0.d0
+      GP=3.1415926d0
+      GP2=2.d0*GP
       NT1=NT+1
-      SDT0=1./NT
+      SDT0=1.d0/NT
 	YLIN=0.
 	YVOL=0.
       do 10 I=1,NA1
@@ -2146,11 +2147,11 @@ C                                        ( Y=B^2 )
          DO 50 K=1,NT1
             T=SDT0*GP*(K-1)
             SDT=SDT0
-            IF(K.EQ.1.OR.K.EQ.NT1) SDT=SDT0*0.5
+            IF(K.EQ.1.OR.K.EQ.NT1) SDT=SDT0*0.5d0
             C=COS(T)
             S=SIN(T)
             SS=S*S
-            CC=1.-SS
+            CC=1.d0-SS
             SX1=-WSD1(I)-WSD3(I)*SS
             SX=C+A*SX1
             SR=WBR0+A*SX
@@ -2176,11 +2177,11 @@ C metric tensor components
          DO 40 K=1,NT1
             T=SDT0*GP*(K-1)
             SDT=SDT0
-            IF(K.EQ.1.OR.K.EQ.NT1) SDT=SDT0*0.5
+            IF(K.EQ.1.OR.K.EQ.NT1) SDT=SDT0*0.5d0
             C=COS(T)
             S=SIN(T)
             SS=S*S
-            CC=1.-SS
+            CC=1.d0-SS
             SX1=-WSD1(I)-WSD3(I)*SS
             SX=C+A*SX1
             SR=WBR0+A*SX
@@ -2194,7 +2195,7 @@ c G22/A**2
      +            (WGL(I)*C)**2
 C D**2/A**2
             DA2=(C-A*(WDSD1(I)+WDSD3(I)*SS))*WGL(I)*C+
-     +             WGL(I)*SS*(WDGL(I)*AA+1.)*(1.+2.*A*C*WSD3(I))
+     +             WGL(I)*SS*(WDGL(I)*AA+1.d0)*(1.d0+2.*A*C*WSD3(I))
             DA2=DA2*DA2
 C metric tensor components
             DMETR =DRDA*DZDT-DRDT*DZDA
@@ -2208,8 +2209,8 @@ C metric tensor components
                BMODEQ(I)=BMODEQ(I)+ SQRT(Y)*DMETR*SR*SDT
                IF (Y.GT.YMAX) YMAX=Y
 	       Y1 = SQRT(Y/YMAX)
-               FOFBEQ(I)=FOFBEQ(I)+1./Y*(1.-SQRT(abs(1.-Y1))
-     +          *(1.+.5*Y1))*DMETR*SR*SDT
+               FOFBEQ(I)=FOFBEQ(I)+1.d0/Y*(1.d0-SQRT(abs(1.d0-Y1))
+     +          *(1.d0+.5d0*Y1))*DMETR*SR*SDT
                GRDAEQ(I)=GRDAEQ(I)+ SQRT(G22A2/DA2)*DMETR*SR*SDT
 	       YLIN	=YLIN+(DRDT**2+DZDT**2)*
      *	          ((GR2AUX(I)-GR2AUX(I1))/(WSA(I)-WSA(I1))/
@@ -2281,7 +2282,7 @@ C  GMC,SW0,SDD1,GDL
       W2=	0.
 	FU2I=	WGMC(1)*WSU2(1)-WDBA(1)*WSL2(1)
 	FV2I=	WDBB(1)*WSV2(1)
-	SC2=	0.25*(WGL(1)**2-1.)
+	SC2=	0.25*(WGL(1)**2-1.d0)
 	WBS2(1)=((WBA(1)*WSL22(1)+WBB(1)*(WSV2(1)+SC2*WSV0(1))+
      ,		FU2I/6.+SC2*WSW0(1))/WGMC(1)-WBK20(1))/WBK22(1)
 	WDGL(1)=0.
@@ -2295,14 +2296,14 @@ C  GMC,SW0,SDD1,GDL
 	FV3I=	WDBA(1)*WSL3(1)+WDBB(1)*WSV3(1)
 	BP3=	(WBA(1)*WSL3(1)+WBB(1)*WSV3(1)+
      *	 	FU3I/6.)/WGMC(1)-WBK30(1)
-	S=	1./(WBK11(1)*WBK33(1)-WBK13(1)*WBK31(1))
+	S=	1.d0/(WBK11(1)*WBK33(1)-WBK13(1)*WBK31(1))
 	WBS1(1)=(BP1*WBK33(1)-BP3*WBK13(1))*S
 	WBS3(1)=(BP3*WBK11(1)-BP1*WBK31(1))*S
 	WDSD1(1)=WBS1(1)
       DO 1 I=2,NA1
 	J=	I-1
 	AA=	WSAA(I)
-	AAI=	1./AA
+	AAI=	1.d0/AA
 	A4AI=	AAI*AAI
 	A6AI=	A4AI*AAI
       FU0J=	FU0I
@@ -2323,7 +2324,7 @@ C  GMC,SW0,SDD1,GDL
 	FV2I=	WDBB(I)*WSV2(I)
 	W2=	W2+FU2J*WSCJ5(J)+FU2I*WSCI5(J)-
      *		FV2J*WSCJ7(J)-FV2I*WSCI7(J)
-	SC2=	0.25*(WGL(I)**2-1.)
+	SC2=	0.25*(WGL(I)**2-1.d0)
 	WBS2(I)=((WBA(I)*WSL22(I)+WBB(I)*(WSV2(I)+SC2*WSV0(I))+
      ,		W2*A6AI+SC2*WSW0(I))/WGMC(I)-WBK20(I))/WBK22(I)
         WDGL(I)=WDGL(J)+(WBS2(J)+WBS2(I))*WSCJ1(J)
@@ -2343,14 +2344,14 @@ C  GMC,SW0,SDD1,GDL
      *		FV3J*WSCJ7(J)-FV3I*WSCI7(J)
 	BP3=	(WBA(I)*WSL3(I)+WBB(I)*WSV3(I)+
      *	 	W3*A6AI)/WGMC(I)-WBK30(I)
-	S=	1./(WBK11(I)*WBK33(I)-WBK13(I)*WBK31(I))
+	S=	1.d0/(WBK11(I)*WBK33(I)-WBK13(I)*WBK31(I))
 	WBS1(I)=(BP1*WBK33(I)-BP3*WBK13(I))*S
 	WBS3(I)=(BP3*WBK11(I)-BP1*WBK31(I))*S
 	WDSD1(I)=WBS1(I)
  1	CONTINUE
 C  SD1,GL
 	W1=	0.
-	WSD1(1)=0.5*WDSD1(1)
+	WSD1(1)=0.5d0*WDSD1(1)
 	S=	WGL(NA1)*EXP(-WDGL(NA1))
 C	write(*,*)S,WGL(1),WGL(NA1),WDGL(NA1),EXP(-WDGL(NA1)),WDSD1(1)
 	WGL(1)=	S
@@ -2363,14 +2364,14 @@ C	write(*,*)S,WGL(1),WGL(NA1),WDGL(NA1),EXP(-WDGL(NA1)),WDSD1(1)
 	WSD1(I)=W1/WSAA(I)
  2	CONTINUE
 C  SD3,SDD3
-     	FU3J=	1.+WDGL(NA1)*WSAA(NA1)
+     	FU3J=	1.d0+WDGL(NA1)*WSAA(NA1)
 	WDSD3(NA1)=WBS3(NA1)+2.*WSD3(NA1)*FU3J
       DO 3 I1=1,NA
 	J=	NA1-I1
 	I=	J+1
 	AA=	WSAA(J)
 	FU3I=	FU3J
-     	FU3J=	1.+WDGL(J)*AA
+     	FU3J=	1.d0+WDGL(J)*AA
 	WSD3(J)=(WSD3(I)*(WSAA(I)-2.*WSCI1(J)*FU3I)-(WBS3(I)+
      ,		WBS3(J))*WSCJ1(J))/(AA+2.*WSCJ1(J)*FU3J)
 	WDSD3(J)=WBS3(J)+2.*WSD3(J)*FU3J
@@ -2414,7 +2415,7 @@ C  SD2D1,GD2L,SD2D3
 	FU1I=	AA*(WDSD1(I)-WSD1(I))
 	WD2SD1(I)=(FU1I-FU1J)/WSCI1(J)-WD2SD1(J)
 	FU2J=	FU2I
-	FU2I=	WGL(I)*(AA*WDGL(I)-1.)
+	FU2I=	WGL(I)*(AA*WDGL(I)-1.d0)
 	WD2GL(I)=(FU2I-FU2J)/WSCI1(J)-WD2GL(J)
 	FU3J=	FU3I
 	FU3I=	AA*(WDSD3(I)-WSD3(I))
@@ -2482,8 +2483,8 @@ C---C(J,N),C(I,N)
       IF(J.EQ.0) GO TO 1
 	AAI=WSAA(I)
 	AAJ=WSAA(J)
-	H=(AAI-AAJ)*0.5
-	WSCJ1(J)=H*0.5
+	H=(AAI-AAJ)*0.5d0
+	WSCJ1(J)=H*0.5d0
 	WSCI1(J)=WSCJ1(J)
 	CJ=AAI+2.*AAJ
 	CI=AAJ+2.*AAI
@@ -2496,7 +2497,7 @@ C---CII=AI**2N
 	CII=AAI*AAI
 	CJ=AAI*CJ+3.*CJJ
 	CI=AAJ*CI+3.*CII
-	C0=C0*0.5
+	C0=C0*0.5d0
 	WSCJ5(J)=C0*CJ
 	WSCI5(J)=C0*CI
 	C0=H*0.05
@@ -2531,15 +2532,15 @@ C----------------------------------------------------------------------|
       data CGP/3.14159265359d0/
 	NA1=	NA+1
 	NT1=	NT+1
-	SDT0=	1./NT
-	RI=	1./WBR0
+	SDT0=	1.d0/NT
+	RI=	1.d0/WBR0
       DO 1 I=1,NA1
 	A=	WSA(I)
 	AA=	A*A
 	ASPA=	AA*RI
 	EE=	WGL(I)**2
-	SC1=	0.25*(EE-1.)
-	SC2=	0.5*(EE+1.)
+	SC1=	0.25d0*(EE-1.d0)
+	SC2=	0.5d0*(EE+1.d0)
 	WBK02(I)=0.
 	WBG332(I)=0.
 	WBG222(I)=0.
@@ -2563,7 +2564,7 @@ C------------------------------------------
       DO 2 K=1,NT1
 	T=	SDT0*CGP*(K-1)
 	SDT=	SDT0
-	IF(K.EQ.1.OR.K.EQ.NT1) SDT=SDT0*0.5
+	IF(K.EQ.1.OR.K.EQ.NT1) SDT=SDT0*0.5d0
 C--------------------------------------
 	C=	COS(T)
 	S=      SIN(T)
@@ -2586,9 +2587,9 @@ C---BN2=N2*DT
 	BN=	BN0+A*BN12
 	BM1=	-(WBS1(I)+WBS3(I)*SS)*C
 	BM2=	WBS2(I)*SS
-	BMI=	1./(1.+A*BM1+AA*BM2)
+	BMI=	1.d0/(1.d0+A*BM1+AA*BM2)
 C  EVEN EQUATIONS
-	DEN=	1./(1.+A*BM1)
+	DEN=	1.d0/(1.d0+A*BM1)
 	SK01=	BN1-BN0*BM1
 	SK0=	(BN2-BN1*(BM1+A*BM2))*BMI+BN0*BM1*BM1*DEN
 	SK2=	-BN0*SS*DEN*BMI
@@ -2599,7 +2600,7 @@ C  EVEN EQUATIONS
 	WBK20(I)=WBK20(I)+BN0*SXX1+SK01*SF21+SK0*SF2
 	WBK22(I)=WBK22(I)+SK2*SF2
 C  ODD EQUATIONS
-	DEN=	1./(1.+AA*BM2)
+	DEN=	1.d0/(1.d0+AA*BM2)
 	SK0=	BN0*DEN
 	SK10=	BN12*BMI
 	SK11=	SK0*C*BMI
@@ -2625,7 +2626,7 @@ C  ODD EQUATIONS
 	WSU2(I)=WSU2(I)+R0RD*SXX
 C HERE ZAKHAROV'S AUTHOR RIGHTS ARE CANCELED WITHOUT ANY CEREMONY
 c	DRDA=-WDSD1(I)*A+C-WDSD3(I)*A*SS
-c	DZDA=S*WGL(I)*(AA*WDGL(I)+1.)
+c	DZDA=S*WGL(I)*(AA*WDGL(I)+1.d0)
 c	DRDT=-A*S-2.*AA*WSD3(I)*C*S	
 c	DZDT=WGL(I)*A*C
 C METRIC (SUBSRIPT) TENSOR COMPONENTS
@@ -2636,28 +2637,28 @@ c G22/A**2
         G22A2=SS+4.*A*WSD3(I)*SS*C+(2.*A*WSD3(I)*S*C)**2+(WGL(I)*C)**2
 C D/A
         DA1=WGL(I)*(CC-A*(WDSD1(I)+WDSD3(I)*SS)*C+
-     +       SS*(WDGL(I)*AA+1.)*(1.+2.*A*C*WSD3(I)))
+     +       SS*(WDGL(I)*AA+1.d0)*(1.d0+2.d0*A*C*WSD3(I)))
 C---- ASTRA METRIC COMBINATIONS -------
         SKGA(I)=SKGA(I)+G22A2*SR*SDT/DA1
         SQG22R(I)=SQG22R(I)+sqrt(G22A2)*SR*SDT
 C D**2/A**2
         DA2=(C-A*(WDSD1(I)+WDSD3(I)*SS))*WGL(I)*C+
-     +  WGL(I)*SS*(WDGL(I)*AA+1.)*(1.+2.*A*C*WSD3(I))
+     +  WGL(I)*SS*(WDGL(I)*AA+1.d0)*(1.d0+2.d0*A*C*WSD3(I))
         SKDR(I)=SKDR(I)+SDT*DA2/SR      
  2    CONTINUE
-      WBG332(I)=WBG332(I)+(WSD1(I)+0.5*WSD3(I))*RI
+      WBG332(I)=WBG332(I)+(WSD1(I)+0.5d0*WSD3(I))*RI
 	WBG222(I)=WBG222(I)+WBK02(I)-(WBK10(I)+
      *	WBS1(I)*WBK11(I)+WBS3(I)*WBK13(I))*RI
-	WBD02(I)= 0.5*WBS2(I)
-	RA=	  1.-WSD1(I)*AA*RI
-	WBG02(I)=0.5*WBS2(I)*(RA-0.75*WSD3(I)*ASPA)-
-     *	(WSD1(I)+0.5*(WSD3(I)+WBS1(I)+0.25*WBS3(I)))*RI
+	WBD02(I)= 0.5d0*WBS2(I)
+	RA=	  1.d0-WSD1(I)*AA*RI
+	WBG02(I)=0.5d0*WBS2(I)*(RA-0.75d0*WSD3(I)*ASPA)-
+     *	(WSD1(I)+0.5d0*(WSD3(I)+WBS1(I)+0.25d0*WBS3(I)))*RI
 	WBD12(I)= WBG02(I)-WBG332(I)
 	WBK0(I)=  SC2+AA*WBK02(I)
 	WDBK00(I)=EE*WDGL(I)
-	WBD0(I)=  1.+AA*WBD02(I)
-	WBG0(I)=  1.+AA*WBG02(I)
-	WBG33(I)= 1.+AA*WBG332(I)
+	WBD0(I)=  1.d0+AA*WBD02(I)
+	WBG0(I)=  1.d0+AA*WBG02(I)
+	WBG33(I)= 1.d0+AA*WBG332(I)
 	WBG22(I)= SC2+AA*WBG222(I)
  1	CONTINUE
 	END
@@ -2705,7 +2706,7 @@ C	double precision	WSU0(1),WSU1(1),WSU2(1),WSU3(1)
 	data CR2 /5.d-1/,CR3/3.33333333d-1/,CR6/1.66666666d-1/,
      ,		CR4/2.5d-1/,CR8/1.25d-1/
 	NA1=	NA+1
-	RBR0=1./WBR0
+	RBR0=1.d0/WBR0
       do 1 I=1,NA1
         AA=	WSAA(I)
         E=	WGL(I)
@@ -2745,7 +2746,7 @@ C-------------------------------
 	X50=	X5X1*0.1
 	X60=	CR2*X6X1*CR6
 C-------------------------------
-	S1=(1.-EE)*CR4
+	S1=(1.d0-EE)*CR4
         WSL0(I)=	E*CR2
 	WSL22(I)=	E*UX30
 	WSL2(I)=	WSL0(I)*S1+AA*WSL22(I)
@@ -2796,7 +2797,7 @@ C	double precision WSA(1),WSP(1),WSJP(1),WBA(1),WBB(1),WDBA(1),WDBB(1)
 	WBA(1)=WSJP(1)
 	WBB(1)=WSP(1)
 	WDBB(1)=2.*(WSP(2)-WSP(1))/WSA(2)**2
-	H=.5/WSA(2)
+	H=.5d0/WSA(2)
 	do 1 I=2,NA
 	WBA(I)=WSJP(I)
 	WBB(I)=WSP(I)
@@ -2807,7 +2808,7 @@ C	double precision WSA(1),WSP(1),WSJP(1),WBA(1),WBB(1),WDBA(1),WDBB(1)
 	WBB(NA1)=WSP(NA1)
 	WDBB(NA1)=(WSP(NA1)-WSP(NA))/WSA(2)/WSA(NA1)
 	S=WBR0/WBR00
-	RS=1./S
+	RS=1.d0/S
 	SS=S-RS
 	do 2 I=1,NA1
 	WBA(I)=WBA(I)*RS+WBB(I)*SS
@@ -2889,12 +2890,12 @@ C	double precision WSJSL(1),WSJSR(1)
 	NA1=NA+1
 C --- GP,SJ,DSJ,BJ,SJL,SJR
 
-	G33I=0.
-	DG33=2.*(WBA(1)*(WBG332(1)-WBD02(1))+WBB(1)*WBD12(1))
+	G33I=0.d0
+	DG33=2.d0*(WBA(1)*(WBG332(1)-WBD02(1))+WBB(1)*WBD12(1))
 	WSJ(1)=WBA(1)
 	WDSJ(1)=WDBA(1)+DG33
 	BJI=WSJ(1)*WGL(1)
-	BJ=0.
+	BJ=0.d0
 
 	DO 1 I=2,NA1
 	J=I-1
@@ -2924,8 +2925,8 @@ C --- GP,SJ,DSJ,BJ,SJL,SJR
 	RR=WBR0-WSD1(I)*WSAA(I)
 	RL=WBR0/(RR-WSA(I))
 	RR=WBR0/(RR+WSA(I))
-	WSJSL(I)=WBA(I)*RL+WBB(I)*(1./RL-RL)
-	WSJSR(I)=WBA(I)*RR+WBB(I)*(1./RR-RR)
+	WSJSL(I)=WBA(I)*RL+WBB(I)*(1.d0/RL-RL)
+	WSJSR(I)=WBA(I)*RR+WBB(I)*(1.d0/RR-RR)
 
 	WDSP(I)=-WBB(I)*WGMC(I)*WGL(I)
 2	CONTINUE
@@ -2999,7 +3000,7 @@ c
 	WBFF(1)=FF0+2.*WBFF(NA1)
 	WBF(1)=SQRT(WBFF(1))
 	WGB0=2.*WSP(1)/WBBS0**2
-	WSQC=WBBS0*WSAA(NA1)*(WGL(NA1)**2+1.)*.5/(WBJ0*WBR00)
+	WSQC=WBBS0*WSAA(NA1)*(WGL(NA1)**2+1.d0)*0.5d0/(WBJ0*WBR00)
 
 C --- SJP,SDJP,SP,BFF,DGMC,SQ,SDQ,GMJ,GMJEX
 	DV0=2.*(WBB(1)*WSV0(1)+WSW0(1)-WGMC(1)*WBK02(1))
@@ -3024,14 +3025,14 @@ C --- SJP,SDJP,SP,BFF,DGMC,SQ,SDQ,GMJ,GMJEX
 
 	BJI=WGL(1)
 	BJ=0.
-	GMJI=FFI/WBF(1)*BJI*.5
+	GMJI=FFI/WBF(1)*BJI*0.5d0
 	WGMJEX=0.
 
 	DO 4 I=2,NA1
 	J=I-1
 	WSP(I)=WSP(I)-WSP(NA1)
 C --- DERIVATIVES
-	S=1./WSCJ1(J)
+	S=1.d0/WSCJ1(J)
 	GPI=WGMC(I)*WGL(I)
 
 	WBFF(I)=WBFF(1)-2.*WBFF(I)
@@ -3044,7 +3045,7 @@ C --- DERIVATIVES
 	V0I=(WBB(I)*WSV0(I)+WSW0(I)-WGMC(I)*WBK02(I))*WSAA(I)
 	DV0=(V0I-V0J)*S-DV0
 	WDGMC(I)=(WBA(I)*(WGL(I)*WBD02(I)+DL0/WSAA(I)**2)+
-     ,	WDBA(I)*WSL0(I)-WGMC(I)*WDBK00(I)+DV0)/(WGL(I)**2+1.)*2.
+     ,	WDBA(I)*WSL0(I)-WGMC(I)*WDBK00(I)+DV0)/(WGL(I)**2+1.d0)*2.
 
 	FFI=(WBA(I)-WBB(I))*WGL(I)*WGMC(I)
 	G33J=G33I
