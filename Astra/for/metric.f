@@ -558,7 +558,7 @@ Control via "j" is disabled! Environment variable XESC is used
 C Equilibrium calculation start:
 C Note: j_{||Z}=j_{||A}*mu0*RTOR/(RTOR+SHIF(1))/IPOL(j)/G33(j)
 	CJ = mu0*RTOR/(RTOR+SHIF(1))
-	CP = 1.6d-3d0*mu0
+	CP = 1.6d-3*mu0
 	do	10	J=1,NA1
 	   ZP(J) = CP*
      & (PFAST(J)+NE(J)*TE(J)+NI(J)*TI(J)+
@@ -1039,7 +1039,7 @@ C-----------------------------------------------------------------------
 	integer	j
 	double precision	YCB,YG,YTH2
 C Preparing input for the 3M equilibrium solver:
-	YCB = 1.6E-3d0*RTOR/(BTOR*HRO*HRO)
+	YCB = 1.6E-3*RTOR/(BTOR*HRO*HRO)
 	do	J=2,NA
 	   if (j.eq.NA) YCB = YCB*HRO/HROA
 C	   EQFF(J) = -YCB/(MU(J))*(
@@ -2191,7 +2191,7 @@ C R,Z derivatives
             DRDT=-A*S-2.d0*AA*WSD3(I)*C*S
             DZDT=WGL(I)*A*C
 c G22/A**2
-            G22A2=SS+4.*A*WSD3(I)*SS*C+(2.d0*A*WSD3(I)*S*C)**2+
+            G22A2=SS+4.d0*A*WSD3(I)*SS*C+(2.d0*A*WSD3(I)*S*C)**2+
      +            (WGL(I)*C)**2
 C D**2/A**2
             DA2=(C-A*(WDSD1(I)+WDSD3(I)*SS))*WGL(I)*C+
@@ -2495,14 +2495,14 @@ C---CJJ=AJ**2N
 	CJJ=AAJ*AAJ
 C---CII=AI**2N
 	CII=AAI*AAI
-	CJ=AAI*CJ+3.*CJJ
-	CI=AAJ*CI+3.*CII
+	CJ=AAI*CJ+3.d0*CJJ
+	CI=AAJ*CI+3.d0*CII
 	C0=C0*0.5d0
 	WSCJ5(J)=C0*CJ
 	WSCI5(J)=C0*CI
-	C0=H*0.05
-	WSCJ7(J)=C0*(AAI*CJ+4.*CJJ*AAJ)
-	WSCI7(J)=C0*(AAJ*CI+4.*CII*AAI)
+	C0=H*0.05d0
+	WSCJ7(J)=C0*(AAI*CJ+4.d0*CJJ*AAJ)
+	WSCI7(J)=C0*(AAJ*CI+4.d0*CII*AAI)
  1	CONTINUE
 	RETURN
 	END
@@ -2605,7 +2605,7 @@ C  ODD EQUATIONS
 	SK10=	BN12*BMI
 	SK11=	SK0*C*BMI
 	SK13=	SK11*SS
-	SF3=	CC-3.*SZZ
+	SF3=	CC-3.d0*SZZ
 	SF30=	C*SF3
 	SF31=	SX1*(SXX+C*SX+SF3)
 	SF3=	SF30+A*SF31
@@ -2634,7 +2634,8 @@ c	G11=DRDA**2+DZDA**2
 c	G22=DRDT**2+DZDT**2
 c	G12=DRDA*DRDT+DZDA*DZDT
 c G22/A**2
-        G22A2=SS+4.*A*WSD3(I)*SS*C+(2.d0*A*WSD3(I)*S*C)**2+(WGL(I)*C)**2
+        G22A2=SS+4.d0*A*WSD3(I)*SS*C+
+     &	(2.d0*A*WSD3(I)*S*C)**2+(WGL(I)*C)**2
 C D/A
         DA1=WGL(I)*(CC-A*(WDSD1(I)+WDSD3(I)*SS)*C+
      +       SS*(WDGL(I)*AA+1.d0)*(1.d0+2.d0*A*C*WSD3(I)))
@@ -2751,14 +2752,14 @@ C-------------------------------
 	WSL22(I)=	E*UX30
 	WSL2(I)=	WSL0(I)*S1+AA*WSL22(I)
 	WSL1(I)=	E*X20
-	WSL3(I)=	E*(X40-3.*X22)
+	WSL3(I)=	E*(X40-3.d0*X22)
 	S=	2.d0*E*RBR0
 	S1=	CR2*RBR0
 	S2=	AA*S1
         WSV0(I)=	S*(X20+S1*X30)
         WSV1(I)=	S*(X30+S2*X40)
 	WSV2(I)=	S*(X40-X22+S1*(X50-X32))
-	WSV3(I)=	S*(X50-3.*X32+S2*(X60-3.*X42))
+	WSV3(I)=	S*(X50-3.d0*X32+S2*(X60-3.d0*X42))
 
 	UX30=	WSU2(I)
         UX12=	WSU1(I)
@@ -2767,7 +2768,7 @@ C-------------------------------
         WSU1(I)=	S*(CR2+S2*(UX30*RBR0-2.d0*X20))
         WSU0(I)=	-RBR0*WSU1(I)
         WSU2(I)=	S*(2.d0*X20+RBR0*(UX12-UX30))
-        WSU3(I)=	S*(UX30-3.*UX12)
+        WSU3(I)=	S*(UX30-3.d0*UX12)
  1	CONTINUE
 	RETURN
 	END
@@ -2983,7 +2984,7 @@ c
 c
 c betta j
 c
-	WGBJ=4.*GB/(WBJ0**2)
+	WGBJ=4.d0*GB/(WBJ0**2)
 	S=WSL0(NA1)*WSAA(NA1)
 c
 c betta
@@ -2994,7 +2995,7 @@ c betta*
 c
 	WGBST=2.d0*SQRT(2.d0*(GBS-WSP(NA1)*GB)/S)/WBBS0**2
 	WGBD=2.d0*GB/(WBR0**2*(2.d0*GBD-FF0*WSU0(NA1)*WSAA(NA1)/WGL(NA1)))
-	WGMJ=4.*GBD*(WBR0/WBJ0)**2
+	WGMJ=4.d0*GBD*(WBR0/WBJ0)**2
 	WSP(1)=-WSP(NA1)
 	FF0=(WBBS0*WBR00/WBR0)**2
 	WBFF(1)=FF0+2.d0*WBFF(NA1)
@@ -3072,7 +3073,7 @@ C --- DERIVATIVES
 
 4	CONTINUE
 
-	WGMJEX=4.*WGMJEX*WBBS0/WBJ0**2
+	WGMJEX=4.d0*WGMJEX*WBBS0/WBJ0**2
 
 	END
 C======================================================================|
