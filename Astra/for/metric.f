@@ -494,7 +494,7 @@ C----------------------------------------------------------------------|
 	if (abs(YGE) .gt. 1.d0)	goto	8
 	if (YGE) 9,5,1
  1	continue
-	YD1 = 1.d0+YT2*(YT2-2./YGE)
+	YD1 = 1.d0+YT2*(YT2-2.d0/YGE)
 	if (YD1) 3,2,2
  2	continue
 	YD1 = sqrt(YD1)
@@ -2256,7 +2256,7 @@ C metric tensor components
           endif
  10   continue
 CMR
-	YLIN=YLIN*WBBS0*WBBS0*A*2./(.4d0*cgp*PLCUR)**2/BR00
+	YLIN=YLIN*WBBS0*WBBS0*A*2.d0/(.4d0*cgp*PLCUR)**2/BR00
 C	open(33,file='dat/lin3')
 C	write(33,*) YLIN
 !,yvol*A

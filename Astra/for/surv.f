@@ -567,7 +567,7 @@ C R2>0 only
 		return
 			endif
 	R=ROUNDN(R2,5-JM)
-	if(R.lt.1.e-4*10.**JM)	then
+	if(R.lt.1.e-4*10.d0**JM)	then
 		write(T,11)R
  11		format(1F25.11)
 		do	3	J=15,20+JM
@@ -584,8 +584,8 @@ C R2>0 only
 		return
 			endif
 	R=ROUNDN(R2,6-JM)
-	if(R.lt.1.e6/10.**JM)	then
-	if(R.ge.1.e5/10.**JM)	R=ROUNDN(R2,7-JM)
+	if(R.lt.1.e6/10.d0**JM)	then
+	if(R.ge.1.e5/10.d0**JM)	R=ROUNDN(R2,7-JM)
 		write(T,11)R
 		do	5	J=8+JM,17-JM
 		if(T(J:J).ne.' '.and.T(J:J).ne.'0')	go to 6
@@ -594,7 +594,7 @@ C R2>0 only
 				return
 			endif
 	R=ROUNDN(R2,5-JM)
-	if(R.lt.1.e13/10.**JM)	then
+	if(R.lt.1.e13/10.d0**JM)	then
 		write(T,11)R
 		do	7	J=1,11
 		if(T(J:J).ne.' '.and.T(J:J).ne.'0')	go to 8
@@ -616,10 +616,10 @@ C=================================================================
 	if(R.ge.1.e13.or.R.lt.1.e-9)	return
 	R=R*1.e9
 	do	1	J=1,25
-	if(R.lt.10.)	go to 2
-	R=R/10.
+	if(R.lt.10.d0)	go to 2
+	R=R/10.d0
 1	continue
-2	R=(R+50./10.**N)*10.**(J-10)
+2	R=(R+50.d0/10.d0**N)*10.d0**(J-10)
 	ROUNDN=R
 	end
 C=================================================================
@@ -656,7 +656,7 @@ Cpole	S=LINE(1:JM-1)
 	F6=N
 	S=LINE(JM:6)
 	READ(S,10,ERR=2)N
-	F6=F6*10.**N
+	F6=F6*10.d0**N
 			return
 Cpole3	if(JE.le.1)	go to 3
  3	if(JE.le.1)	go to 2
@@ -665,7 +665,7 @@ Cpole3	if(JE.le.1)	go to 3
 	F6=N
 	S=LINE(JE+1:6)
 	READ(S,10,ERR=2)N
-	F6=F6*10.**N
+	F6=F6*10.d0**N
 			return
  4	READ(LINE,11,ERR=2)F6
  11	FORMAT(1F6.3)

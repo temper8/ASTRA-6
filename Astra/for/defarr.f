@@ -31,7 +31,7 @@ C----------------------------------------------------------------------|
 	      write(*,'(2A,F10.6)')
      >	'               The rotational transform is less or equal zero '
      >,			'at rho_N =',RHO(j)/ROC
-	      if (TIME .le. TSTART+TAU/2.)	write(*,'(A/2A,1H"/)')
+	      if (TIME .le. TSTART+TAU/2.d0)	write(*,'(A/2A,1H"/)')
      >	'               Most probably it has not been properly defined'
      >,	'               by the data file "',RDNAME(1:length(RDNAME))
 	      call	a_stop
@@ -122,7 +122,7 @@ C----------------------------------------------------------------------|
 C Compute edge value of the array ARR(NA1) assuming that d^3(ARR)/dr^3=0
 C----------------------------------------------------------------------|
 	double precision ARR(*),H
-	ARRNA1 = ARR(1)+H*(2.d0*ARR(1)+ARR(-2)-3.*ARR(-1))
+	ARRNA1 = ARR(1)+H*(2.d0*ARR(1)+ARR(-2)-3.d0*ARR(-1))
 	end
 C======================================================================|
 	integer	function	IFSTEP(IFCONV)
@@ -158,10 +158,10 @@ C----------------------------------------------------------------------|
 	endif
 	CTAU = 1./TAUINC
 	do	j = 1,NA
-	   if(LEQ(1).gt.0)  CTAU = MAX(CTAU,ABS(NEO(j)/NE(j)-1.)/DELVAR)
-	   if(LEQ(2).gt.0)  CTAU = MAX(CTAU,ABS(TEO(j)/TE(j)-1.)/DELVAR)
-	   if(LEQ(3).gt.0)  CTAU = MAX(CTAU,ABS(TIO(j)/TI(j)-1.)/DELVAR)
-C	   if(LEQ(4).gt.0)  CTAU = MAX(CTAU,ABS(FPO(j)/FP(j)-1.)/DELVAR)
+	   if(LEQ(1).gt.0)  CTAU = MAX(CTAU,ABS(NEO(j)/NE(j)-1.d0)/DELVAR)
+	   if(LEQ(2).gt.0)  CTAU = MAX(CTAU,ABS(TEO(j)/TE(j)-1.d0)/DELVAR)
+	   if(LEQ(3).gt.0)  CTAU = MAX(CTAU,ABS(TIO(j)/TI(j)-1.d0)/DELVAR)
+C	   if(LEQ(4).gt.0)  CTAU = MAX(CTAU,ABS(FPO(j)/FP(j)-1.d0)/DELVAR)
 	   do	jj=0,9
 	      if (LEQ(jj+10) .le. 0)	goto	1
 	      YY = 0.5d0*(abs(FJO(j,jj))+abs(FJ(j,jj)))
@@ -2186,7 +2186,7 @@ C Obsolete. Since July 2007 the subroutine is not used.
 	      write(*,'(A,F10.6)')
      >	'               The rotational transform is less or equal zero '
      >,			'at rho_N =',RHO(j)/ROC
-	      if (TIME .le. TSTART+TAU/2.)	write(*,'(A/2A,1H"/)')
+	      if (TIME .le. TSTART+TAU/2.d0)	write(*,'(A/2A,1H"/)')
      >	'               Most probably it has not been properly defined'
      >,	'               by the data file "',RDNAME(1:length(RDNAME))
 	      call	a_stop
