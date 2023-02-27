@@ -1789,7 +1789,7 @@ C	   FP(NA) = FP(j)+(G22(j)*(FP(j)-FP(j-1))+YD)/G22(NA)
 C	   FP(NA1) = FP(NA)+.4*GP*RTOR*IPLOLD*HROA/(G22(NA1)*IPOL(NA1))
 	   CU(NA1) = 0.d0
 	   YD = RTOR*IPL/IPOL(JNAO)/G22(JNAO)
-	   MU(NA1) = YD/(5.*BTOR*HRO*(JNAO))
+	   MU(NA1) = YD/(5.d0*BTOR*HRO*(JNAO))
 	elseif (NA1 .lt. JNA1O)	then		! NA1 decreases
 	   TE(NA1) = TE(JNA1O)
 	   TI(NA1) = TI(JNA1O)
@@ -1813,9 +1813,9 @@ C	   FP(NA1) = FP(NA)+.4*GP*RTOR*IPLOLD*HROA/(G22(NA1)*IPOL(NA1))
 	   F7(NA1) = F7(JNA1O)
 	   F8(NA1) = F8(JNA1O)
 	   F9(NA1) = F9(JNA1O)
-C	   MU(NA1) = RTOR*IPL/(5.*BTOR*HRO*NA*G22(NA)*IPOL(NA))
+C	   MU(NA1) = RTOR*IPL/(5.d0*BTOR*HRO*NA*G22(NA)*IPOL(NA))
 C	   MU(NA1) = ARRNA1(MU(NA),HROA/HRO)
-	   MU(NA1) = RTOR*IPL/(5.*BTOR*ROC*G22(NA)*IPOL(NA1))
+	   MU(NA1) = RTOR*IPL/(5.d0*BTOR*ROC*G22(NA)*IPOL(NA1))
 	   FP(NA1) = FP(NA)+(FV(NA1)-FV(NA))+HROA*YIPL
 	else					! NA1 doesn't change
 	   FP(NA1) = FP(NA)+(FV(NA1)-FV(NA))+HROA*YIPL
