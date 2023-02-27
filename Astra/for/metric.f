@@ -1482,9 +1482,14 @@ C GSD -> \delta^{ASTRA} (dimensionless)
 	   if (j.ne.1) B(J) = GSD(J)/A(J)
 	enddo
 	B(1)=0.
+	print *, '----'
+	print *, A(1),A(2),A(3)
+	print *, XEQ(1),XEQ(2),XEQ(3)
 	call	TRANSF(NEQL,B,XEQ,NA1,TRIA,XTR)
 	call	TRANSF(NEQL,A,XEQ,NA1,AMETR,XTR)
-
+	print *, AMETR(1),AMETR(2),AMETR(3)
+	print *, XTR(1),XTR(2),XTR(3)
+	pause
 	do	J=1,NA1
 C (option 2a, default) Volume is calculated using VR (shifted grid):
 C (option 2b) Volume is calculated using VINT(1) (main grid):
@@ -2140,7 +2145,7 @@ CMR extra quantities
          IF(I.EQ.1) GOTO 3
          K=I-1
          GR2AUX(I)=GR2AUX(K)+(SKDR(K)*AI0(K)*WSCJ1(K)+
-     +                 SKDR(I)*AI0(I)*WSCI1(K))*2./WBBS0
+     +                 SKDR(I)*AI0(I)*WSCI1(K))*2.d0/WBBS0
  3       CONTINUE
 C Need to calculate Ymax and Ymin, before doing flux surface averages
 C                                        ( Y=B^2 )
