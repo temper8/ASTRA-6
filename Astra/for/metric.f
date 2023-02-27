@@ -2129,7 +2129,7 @@ C 		Set initial conditions / zero iteration
             dgrda(i)=sqrt(fi)
          endif
       enddo
-	  print *, 'GR', GR(1),GR(2),GR(3)
+	  print *, 'GR', GR(1),GR(2),GR(3), wbr0
 CMR extra quantities
       GR2AUX(1)=0.d0
       GP=3.1415926d0
