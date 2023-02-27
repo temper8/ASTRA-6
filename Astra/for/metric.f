@@ -2591,6 +2591,7 @@ C------------------------------------------
 C--------------------------------------
 	C=	COS(T)
 	S=      SIN(T)
+	print *, 'cos sin', C, S, T
 	SS=	S*S
 	CC=	C*C
 	SX1=	-WSD1(I)-WSD3(I)*SS
@@ -2821,12 +2822,13 @@ C	double precision WSA(1),WSP(1),WSJP(1),WBA(1),WBB(1),WDBA(1),WDBB(1)
 	WBA(1)=WSJP(1)
 	WBB(1)=WSP(1)
 	WDBB(1)=2.d0*(WSP(2)-WSP(1))/WSA(2)**2
-	H=.5d0/WSA(2)
-	do 1 I=2,NA
-	WBA(I)=WSJP(I)
-	WBB(I)=WSP(I)
-	WDBB(I)=(WSP(I+1)-WSP(I-1))*H/WSA(I)
-1	WDBA(I)=(WSJP(I+1)-WSJP(I-1))*H/WSA(I)
+	  H=0.5d0/WSA(2)
+	  do  I=2,NA
+	    WBA(I)=WSJP(I)
+	    WBB(I)=WSP(I)
+	    WDBB(I)=(WSP(I+1)-WSP(I-1))*H/WSA(I)
+    	WDBA(I)=(WSJP(I+1)-WSJP(I-1))*H/WSA(I)
+      end do
 	WBA(NA1)=WSJP(NA1)
 	WDBA(NA1)=(WSJP(NA1)-WSJP(NA))/WSA(2)/WSA(NA1)
 	WBB(NA1)=WSP(NA1)
@@ -2834,12 +2836,12 @@ C	double precision WSA(1),WSP(1),WSJP(1),WBA(1),WBB(1),WDBA(1),WDBB(1)
 	S=WBR0/WBR00
 	RS=1.d0/S
 	SS=S-RS
-	do 2 I=1,NA1
-	WBA(I)=WBA(I)*RS+WBB(I)*SS
-	WBB(I)=WBB(I)*S
-	WDBA(I)=WDBA(I)*RS+WDBB(I)*SS
-	WDBB(I)=WDBB(I)*S
-2	continue
+      do I=1,NA1
+	    WBA(I)=WBA(I)*RS+WBB(I)*SS
+	    WBB(I)=WBB(I)*S
+	    WDBA(I)=WDBA(I)*RS+WDBB(I)*SS
+    	WDBB(I)=WDBB(I)*S
+      end do
 	end
 
 	subroutine EQPPAB(NA)
