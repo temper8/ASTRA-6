@@ -774,7 +774,7 @@ C	write(*,'(3(A,F8.6))')'h_a -> h_a:  ',HROA/HRO,' -> ',YIPL/HRO
 	      if (CC(J).gt.0.0) then
 		 ULON(J)=Y1*CU(J)/CC(J)
 	      else
-		 ULON(J)=0.0
+		 ULON(J)=0.d0
 	      endif
 	      UPL(J)   =ULON(J)/(IPOL(J)*G33(J))
 	   enddo
@@ -1488,7 +1488,7 @@ C GSD -> \delta^{ASTRA} (dimensionless)
 	   A(j) = YDA*(J-1.d0)
 	   if (j.ne.1) B(J) = GSD(J)/A(J)
 	enddo
-	B(1)=0.
+	B(1)=0.d0
 	print *, '----'
 	print *, A(1),A(2),A(3)
 	print *, XEQ(1),XEQ(2),XEQ(3)
@@ -2140,18 +2140,18 @@ CMR extra quantities
       GP2=2.d0*GP
       NT1=NT+1
       SDT0=1.d0/NT
-	YLIN=0.
-	YVOL=0.
+	YLIN=0.d0
+	YVOL=0.d0
       do 10 I=1,NA1
          A=WSA(I)
          AA=A*A
-         B2B0EQ(I)	=0.
-         B0B2EQ(I) 	=0.
-         BMODEQ(I) 	=0.
-         FOFBEQ(I) 	=0.
-         GRDAEQ(I)	=0.
-         SKGGG		=0.
-         YMIN		=99999.
+         B2B0EQ(I)	=0.d0
+         B0B2EQ(I) 	=0.d0
+         BMODEQ(I) 	=0.d0
+         FOFBEQ(I) 	=0.d0
+         GRDAEQ(I)	=0.d0
+         SKGGG		=0.d0
+         YMIN		=99999.d0
          YMAX		=0.
          AI0(I)=WBF(I)*WBR0
          IF(I.EQ.1) GOTO 3
@@ -2564,25 +2564,25 @@ C----------------------------------------------------------------------|
 	EE=	WGL(I)**2
 	SC1=	0.25d0*(EE-1.d0)
 	SC2=	0.5d0*(EE+1.d0)
-	WBK02(I)=0.
-	WBG332(I)=0.
-	WBG222(I)=0.
-	WSU1(I)=0.
-	WSU2(I)=0.
-	WBK20(I)=0.
-	WBK22(I)=0.
-	WBK10(I)=0.
-	WBK11(I)=0.
-	WBK13(I)=0.
-	WBK30(I)=0.
-	WBK31(I)=0.
-	WBK33(I)=0.
+	WBK02(I)=0.d0
+	WBG332(I)=0.d0
+	WBG222(I)=0.d0
+	WSU1(I)=0.d0
+	WSU2(I)=0.d0
+	WBK20(I)=0.d0
+	WBK22(I)=0.d0
+	WBK10(I)=0.d0
+	WBK11(I)=0.d0
+	WBK13(I)=0.d0
+	WBK30(I)=0.d0
+	WBK31(I)=0.d0
+	WBK33(I)=0.d0
 C------------------------------------------
 C KONOVALOV LIKES TO DO SOMETHING BY HIMSELF
 C------------------------------------------
-	SKGA(I)=0.
-        SKDR(I)=0.
-	SQG22R(I)=0.
+	SKGA(I)=0.d0
+        SKDR(I)=0.d0
+	SQG22R(I)=0.d0
 C------------------------------------------
       DO 2 K=1,NT1
 	T=	SDT0*CGP*(K-1)
@@ -2956,20 +2956,20 @@ C --- GP,SJ,DSJ,BJ,SJL,SJR
 2	CONTINUE
 
 	GPI=WGMC(1)*WGL(1)
-	WGP(1)=0.
+	WGP(1)=0.d0
 	SLI=WGP(1)*WSJ(1)*WGL(1)*WBD0(1)
-	WSLI=0.
+	WSLI=0.d0
 
 	FFI=(WBA(1)-WBB(1))*GPI
-	WBFF(1)=0.
-	WSP(1)=0.
+	WBFF(1)=0.d0
+	WSP(1)=0.d0
 
 	GBI=WBB(1)*GPI*WSL0(1)
-	GB=0.
-	GBSI=0.
-	GBS=0.
+	GB=0.d0
+	GBSI=0.d0
+	GBS=0.d0
 	GBDI=(WBA(1)-WBB(1))*WGMC(1)*WSU0(1)
-	GBD=0.
+	GBD=0.d0
 
 	DO 3 I=2,NA1
 	J=I-1
@@ -3028,29 +3028,29 @@ c
 
 C --- SJP,SDJP,SP,BFF,DGMC,SQ,SDQ,GMJ,GMJEX
 	DV0=2.d0*(WBB(1)*WSV0(1)+WSW0(1)-WGMC(1)*WBK02(1))
-	V0I=0.
+	V0I=0.d0
 	DL0I=(WDGL(1)-2.d0*WBD02(1))*WGL(1)
-	DL0=0.
+	DL0=0.d0
 	WDGMC(1)=(WDBA(1)*WSL0(1)+WBA(1)*(WGL(1)*WBD02(1)+.25*DL0I)-
      ,	WGMC(1)*WDBK00(1)+DV0)/WBK0(1)
 
 	FFI=(WBA(1)-WBB(1))*WGMC(1)*WGL(1)
 	WSQ(1)=WBF(1)/(WBR0*WGMC(1))
 	DG33=2.d0*WBG332(1)*WSQ(1)
-	G33I=0.
+	G33I=0.d0
 	WDSQ(1)=WSQ(1)*(-FFI/WBFF(1)-WDGMC(1)/WGMC(1))+DG33
-	WDSQRQ(1)=0.
+	WDSQRQ(1)=0.d0
 
 	DD12=2.d0*((WBA(1)-WBB(1))*WBG22(1)/(WBR0*WSQ(1))**2+
      ,	WBB(1)*WBD12(1))
-	D12I=0.
+	D12I=0.d0
 	WSJP(1)=WBA(1)
 	WDSJP(1)=WDBA(1)+DD12
 
 	BJI=WGL(1)
-	BJ=0.
+	BJ=0.d0
 	GMJI=FFI/WBF(1)*BJI*0.5d0
-	WGMJEX=0.
+	WGMJEX=0.d0
 
 	DO 4 I=2,NA1
 	J=I-1
