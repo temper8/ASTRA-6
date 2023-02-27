@@ -164,7 +164,7 @@ C----------------------------------------------------------------------|
 C	   if(LEQ(4).gt.0)  CTAU = MAX(CTAU,ABS(FPO(j)/FP(j)-1.)/DELVAR)
 	   do	jj=0,9
 	      if (LEQ(jj+10) .le. 0)	goto	1
-	      YY = 0.5*(abs(FJO(j,jj))+abs(FJ(j,jj)))
+	      YY = 0.5d0*(abs(FJO(j,jj))+abs(FJ(j,jj)))
 	      if (YY .lt. 1.E-6)	then		! Allow zero FJ
 		 YY = abs(FJO(j,jj)-FJ(j,jj))
 	      else
@@ -241,7 +241,7 @@ C-----------------------------------------------------------------------
 	YF2 = FO(2)/((XO(2)-XO(1))*(XO(2)-XO(3)))
 	YF3 = FO(3)/((XO(3)-XO(1))*(XO(3)-XO(2)))
 	do	5	j=1,N
-		if(2.*XN(j).le.XO(I+1)+XO(I+2))	go to	4
+		if(2.d0*XN(j).le.XO(I+1)+XO(I+2))	go to	4
  3		I = I+1
 		if(I.gt.NO-2)	I=NO-2
 	if(2.*XN(j).gt.XO(I+1)+XO(I+2).and.I.lt.NO-2)	go to	3
@@ -280,11 +280,11 @@ C-----------------------------------------------------------------------
 
 C The following two lines require that at the boundary
 C     the fit concides with the original function
-	YD = COS(0.5*PIOVN)
-	YA = (2.*YA-YB*(1.-YD))/(1.+YD)
+	YD = COS(0.5d0*PIOVN)
+	YA = (2.*YA-YB*(1.d0-YD))/(1.d0+YD)
 
-      BMA=0.5*(YB-YA)
-      BPA=0.5*(YB+YA)
+      BMA=0.5d0*(YB-YA)
+      BPA=0.5d0*(YB+YA)
       do 11 K=1,NCHCF
         YC(K) = BPA+BMA*COS(PIOVN*(K-0.5))
  11   continue
@@ -294,14 +294,14 @@ C     the fit concides with the original function
       do 13 J=1,NCHCF
         SUM=0.
         do 12 K=1,NCHCF
-          SUM=SUM+YF(K)*COS(PIOVN*(K-0.5)*(J-1.))
+          SUM=SUM+YF(K)*COS(PIOVN*(K-0.5)*(J-1.d0))
  12     continue
         YC(J)=FAC*SUM
  13   continue
 
       call   CHEBPC(YC,CHEBCF,YF,NCHCF)
 
-      FAC = 1./BMA
+      FAC = 1.d0/BMA
       do 14 J=2,NCHCF
         CHEBCF(J)=CHEBCF(J)*FAC
         FAC=FAC/BMA
@@ -343,7 +343,7 @@ C-----------------------------------------------------------------------
       do 14 J=N,2,-1
         D(J)=D(J-1)-F(J)
 14    continue
-      D(1)=-F(1)+0.5*C(1)
+      D(1)=-F(1)+0.5d0*C(1)
       return
       end
 C======================================================================|
@@ -370,7 +370,7 @@ C      YWA(J)=DN(J)
 C      YWB(J)=-CN(J)		! CN=-VP*VRHH
 C      NE(ND1)=...
 C      NEO(ND1)=NE(ND1)
-C      YWC(4)=1.
+C      YWC(4)=1.d0
 C      call RUNN(YWA,YWB,SNN,SN,YWD,NEO,ND,TAU,HRO,YWC,NE,VRO,VR,G11)
 C----------------------------------------------------------------------|
 C Exponential scheme
@@ -430,16 +430,16 @@ C----------------------------------------------------------------------|
               goto	99
            endif
 C Power-law scheme: (1 line)
-	   P1 = 0.5*(abs(YB)+YB)		! 0.5(|B|+B)
+	   P1 = 0.5d0*(abs(YB)+YB)		! 0.5(|B|+B)
 	   if (YA .eq. 0.d0)	goto	1
 	   if (j .eq. N)	HJ = HB
 C Exponential scheme: (7 lines)
 	   YJ = HJ*YB/YA			! |\xi|
-	   if (abs(YJ) .ge. 4.d1) goto	1	! Use (A/h)*f(\xi) = .5*(|B|+B)
+	   if (abs(YJ) .ge. 4.d1) goto	1	! Use (A/h)*f(\xi) = .5d0*(|B|+B)
 	   if (abs(YJ) .ge. 1.d-5) then
-	      P1 = YB/(1.-exp(-YJ))	   ! Use (A/h)*f(\xi) = B/(1-exp{-\xi})
+	      P1 = YB/(1.d0-exp(-YJ))	   ! Use (A/h)*f(\xi) = B/(1-exp{-\xi})
 	   else
-	      P1 = YA/HJ*(1.+0.5*YJ)   	   ! Use (A/h)*f(\xi) = A/h/(1-\xi/2)
+	      P1 = YA/HJ*(1.d0+0.5d0*YJ)   	   ! Use (A/h)*f(\xi) = A/h/(1-\xi/2)
 	   endif
 C Power-law scheme: (6 lines)
 C	   YJ = abs(HJ*YB/YA)			! \xi = h B/A
@@ -489,8 +489,8 @@ C	dn/dt=1/V'*d[V'<(\nabla\rho)^2>*(A*dn/dr+B*n)]/dr+C*n+D
 C	Scheme:		H*H/GT*V'(j)*(NN(j)-NO(j))=
 C		=V'(j+1/2)*A(j+1/2)*(NN(j+1)-NN(j))-
 C		-V'(j-1/2)*A(j-1/2)*(NN(j)-NN(j-1))+
-C		+0.5*H*V'(j+1/2)*B(j+1/2)*(NN(j+1)+NN(j))-
-C		-0.5*H*V'(j-1/2)*B(j-1/2)*(NN(j)+NN(j-1))-
+C		+0.5d0*H*V'(j+1/2)*B(j+1/2)*(NN(j+1)+NN(j))-
+C		-0.5d0*H*V'(j-1/2)*B(j-1/2)*(NN(j)+NN(j-1))-
 C		+H*H*(V'(j)*C(j)*NN(j)+D(j))
 C	Here	A,B,C,D		- arrays(1:N)
 C		NOld,NNew 	- arrays(1:N+1)
@@ -512,14 +512,14 @@ C----------------------------------------------------------------------|
 	RA = 0.
 	RB = 0.
 	HH = H*H
-	H05 = 0.5*H
+	H05 = 0.5d0*H
 	do	1	J=1,N
 		RA0 = RA
 		RB0 = RB
 		YG11 = G11(J)*GT
 		RA = A(J)*YG11
 		if (j .eq. N)	then
-			H05 = 0.5*HB
+			H05 = 0.5d0*HB
 			HH  = H05*(H+HB)
 			RA0 = RA0*HB/H
 			RB0 = RB0*HB/H
@@ -557,13 +557,13 @@ C----------------------------------------------------------------------|
 C Exponential scheme
 C----------------------------------------------------------------------|
 C	The subroutine provides run of the equation:
-C		d(N*T)/dt=1/V'*d[V'*(A*dT/dr+B*T)]/dr+625.*(C*T+P)
+C		d(N*T)/dt=1/V'*d[V'*(A*dT/dr+B*T)]/dr+625.d0*(C*T+P)
 C		V'(j)*(NN(j)*TN(j)-NO(j)*TO(j))*H*H/GT=
 C			=V'(j+1/2)*A(j+1/2)*(TN(j+1)-TN(j))-
 C			-V'(j-1/2)*A(j-1/2)*(TN(j)-TN(j-1))+
-C			+0.5*V'(j+1/2)*B(j+1/2)*(TN(j+1)+TN(j))-
-C			-0.5*V'(j-1/2)*B(j-1/2)*(TN(j)+TN(j-1))-
-C			+V'(j)*H*H*625.*(C(j)*TN(j)+P(j))
+C			+0.5d0*V'(j+1/2)*B(j+1/2)*(TN(j+1)+TN(j))-
+C			-0.5d0*V'(j-1/2)*B(j-1/2)*(TN(j)+TN(j-1))-
+C			+V'(j)*H*H*625.d0*(C(j)*TN(j)+P(j))
 C
 C	Here	A,B,C,P		- arrays(1:N)
 C		NOld,NNew 	- arrays(1:N+1)		(densities)
@@ -583,8 +583,8 @@ C----------------------------------------------------------------------|
      3		H1,HJ,YA,YB,Y1,Y2,YJ,P0,P1,Q0,Q1,G0,G1
 	integer	N,j
 	HB = Q(1)
-	GT23 = GT/1.5
-	Y625 = 625.*GT23
+	GT23 = GT/1.5d0
+	Y625 = 625.d0*GT23
 	G1 = 0.
 	P1 = 0.
 	Q1 = 0.
@@ -595,12 +595,12 @@ C----------------------------------------------------------------------|
 	   P0 = P1
 	   Q0 = Q1
 	   if (j .eq. N)	then
-C	      HJ = 0.5*(H+HB)
+C	      HJ = 0.5d0*(H+HB)
 	      H1 = HB
 	   endif
 	   G1 = GT23*G11(j)
 C	   if (DV(N+1) .gt. 0.)	then
-C	      Y1 = 0.5*(NN(j)+NN(j+1))*DV(j)
+C	      Y1 = 0.5d0*(NN(j)+NN(j+1))*DV(j)
 C	      YA = A(j)+Y1
 C	      YB = B(j)-Y1*log(TO(j+1)/TO(j))/H1
 C	   else
@@ -608,15 +608,15 @@ C	   else
 	      YB = B(j)
 C	   endif
 	   if (YA .lt. 0.d0)	goto	99
-	   P1 = 0.5*(abs(YB)+YB)
+	   P1 = 0.5d0*(abs(YB)+YB)
 	   if (YA .eq. 0.d0)	goto	1
 C Exponential scheme: (7 lines)
 	   YJ = H1*YB/YA			! |\xi|
-	   if (abs(YJ) .ge. 4.d1) goto	1	! Use (A/h)*f(\xi) = .5*(|B|+B)
+	   if (abs(YJ) .ge. 4.d1) goto	1	! Use (A/h)*f(\xi) = .5d0*(|B|+B)
 	   if (abs(YJ) .ge. 1.d-5) then
-	      P1 = YB/(1.-exp(-YJ))	   ! Use (A/h)*f(\xi) = B/(1-exp{-\xi})
+	      P1 = YB/(1.d0-exp(-YJ))	   ! Use (A/h)*f(\xi) = B/(1-exp{-\xi})
 	   else
-	      P1 = YA/H1*(1.+0.5*YJ)   	   ! Use (A/h)*f(\xi) = A/h/(1-\xi/2)
+	      P1 = YA/H1*(1.d0+0.5d0*YJ)   	   ! Use (A/h)*f(\xi) = A/h/(1-\xi/2)
 	   endif
 C Power-law scheme: (6 lines)
 C	   YJ = abs(H1*YB/YA)			! |\xi|
@@ -642,8 +642,8 @@ C	   P1 = YJ+P1
 	   B(j) = Q1
  10	continue
 C Here Q(2)=QjB, Q(3)=QjTB, where j should be replaced by E or I
-	if (Q(4) .lt. 0.)	TN(N+1) = (G11(N)*Q1*TN(N)-625.*Q(2))
-     .				     /(G11(N)*(P1-G(N)*Q1)+625.*Q(3))
+	if (Q(4) .lt. 0.)	TN(N+1) = (G11(N)*Q1*TN(N)-625.d0*Q(2))
+     .				     /(G11(N)*(P1-G(N)*Q1)+625.d0*Q(3))
 C or equivalent
 C	if (Q(4) .lt. 0.)
 C     .	   TN(N+1) = (G1*Q1*TN(N)-Y625*Q(2))/(AJ-G(N)*G1*Q1+Y625*Q(3))
@@ -674,7 +674,7 @@ C======================================================================|
 	double precision COULG,PEI
 	include	'for/parameter.inc'
 	include	'for/status.inc'
-C	COULG=15.9-.5*log(NE(J))+log(TE(J))
+C	COULG=15.9-.5d0*log(NE(J))+log(TE(J))
 C	PEI=0.00246*COULG*NE(J)*NI(J)*ZMAIN(J)*ZMAIN(J)/
 C     .		(AMAIN(J)*TE(J)*sqrt(TE(J)))
 	include	'fml/pei'
@@ -689,7 +689,7 @@ C----------------------------------------------------------------------|
 C Exponential scheme
 C----------------------------------------------------------------------|
 C	The subroutine makes time step in the matrix equation:
-C		d(N*T)/dt=1/V'*d[V'*(A*dT/dr+B*T)]/dr+625.*(C*T+D)
+C		d(N*T)/dt=1/V'*d[V'*(A*dT/dr+B*T)]/dr+625.d0*(C*T+D)
 C
 C	Here	A,B,C,D		- arrays(1:N)
 C		NOld,NNew 	- arrays(1:N+1)		(densities)
@@ -726,8 +726,8 @@ C----------------------------------------------------------------------|
 	save	icall,N0
 	data	icall/0/
         call add2loc("Subroutine RUNTT"//char(0))
-	GT23 = GT/1.5
-	Y625 = 625.*GT23
+	GT23 = GT/1.5d0
+	Y625 = 625.d0*GT23
 	HJ = H
 	G1 = 0.
 	P1 = 0.
@@ -747,7 +747,7 @@ C----------------------------------------------------------------------|
 	   YA = A(j)
 	   YB = B(j)
 	   if (DV(N+1) .gt. 0.)	then
-	      Y11 = DV(j)*0.5*(NN(j)+NN(j+1))
+	      Y11 = DV(j)*0.5d0*(NN(j)+NN(j+1))
 	      Y12 = Y11*log(TO(j)/TO(j+1))/H1
 	      YA = YA+Y11
 	      YB = YB+Y12
@@ -759,19 +759,19 @@ C----------------------------------------------------------------------|
 	      endif
 	   endif
 	   if (YA .lt. 0.d0)	goto	99
-	   P1 = 0.5*(abs(YB)+YB)	   ! 0.5(|B|+B) (Used if vh/D is big)
+	   P1 = 0.5d0*(abs(YB)+YB)	   ! 0.5(|B|+B) (Used if vh/D is big)
 	   if (YA .eq. 0.d0)	goto	1
 	   YJ = H1*YB/YA		   ! |\xi| Peclet number
-	   if (abs(YJ) .ge. 4.d1) goto	1  ! Use (A/h)*f(\xi) = .5*(|B|+B)
+	   if (abs(YJ) .ge. 4.d1) goto	1  ! Use (A/h)*f(\xi) = .5d0*(|B|+B)
 	   if (abs(YJ) .ge. 1.d-5) then
-	      P1 = YB/(1.-exp(-YJ))	   ! Use (A/h)*f(\xi) = B/(1-exp{-\xi})
+	      P1 = YB/(1.d0-exp(-YJ))	   ! Use (A/h)*f(\xi) = B/(1-exp{-\xi})
 	   else
-	      P1 = YA/H1*(1.+0.5*YJ)   	   ! Use (A/h)*f(\xi) = A/h/(1-\xi/2)
+	      P1 = YA/H1*(1.+0.5d0*YJ)   	   ! Use (A/h)*f(\xi) = A/h/(1-\xi/2)
 	   endif
  1	   continue
 	   Q1 = P1-YB			   ! (A/h)*g(\xi) = (A/h)*f(\xi)-B
 	   if (DS(N+1) .gt. 5.d-1)	then
-	      Y1 = DS(j)*0.5*(NN(j)+NN(j+1))/H1
+	      Y1 = DS(j)*0.5d0*(NN(j)+NN(j+1))/H1
 C	      A(j) = 1.6d-3*G11(j)*Y1		
 	   endif
 
@@ -889,24 +889,24 @@ C----------------------------------------------------------------------|
 	double precision Y1,Y2,Y11,Y12,Y21,Y22,YD
 	if (Q1(4).lt.0. .and. Q2(4).lt.0.)	then
 C Both eqns use fluxes as boundary conditions:
-	   Y11 = W(N,19)*W(N,11)-W(N,17)-625.*Q1(3)
-	   Y22 = W(N,20)*W(N,14)-W(N,18)-625.*Q2(3)
+	   Y11 = W(N,19)*W(N,11)-W(N,17)-625.d0*Q1(3)
+	   Y22 = W(N,20)*W(N,14)-W(N,18)-625.d0*Q2(3)
 	   Y12 = W(N,19)*W(N,12)
 	   Y21 = W(N,20)*W(N,13)
 	   YD = Y11*Y22-Y12*Y21
-	   Y1 = 625.*Q1(2)-W(N,19)*W(N,15)
-	   Y2 = 625.*Q2(2)-W(N,20)*W(N,16)
+	   Y1 = 625.d0*Q1(2)-W(N,19)*W(N,15)
+	   Y2 = 625.d0*Q2(2)-W(N,20)*W(N,16)
 	   T1(N+1) = (Y11*Y1-Y12*Y2)/YD
 	   T2(N+1) = (Y22*Y2-Y21*Y1)/YD
 	elseif (Q1(4) .lt. 0.)	then
 C Mixed boundary conditions: 1st eqn flux, 2nd eqn temperature
-	   Y11 = W(N,19)*W(N,11)-W(N,17)-625.*Q1(3)
-	   Y1  = 625.*Q1(2)-W(N,19)*(W(N,15)+W(N,12)*T2(N+1))
+	   Y11 = W(N,19)*W(N,11)-W(N,17)-625.d0*Q1(3)
+	   Y1  = 625.d0*Q1(2)-W(N,19)*(W(N,15)+W(N,12)*T2(N+1))
 	   T1(N+1) = Y1/Y11
 	elseif (Q2(4) .lt. 0.)	then
 C Mixed boundary conditions: 2nd eqn flux, 1st eqn temperature
-	   Y22 = W(N,20)*W(N,14)-W(N,18)-625.*Q2(3)
-	   Y2  = 625.*Q2(2)-W(N,20)*(W(N,16)+W(N,13)*T1(N+1))
+	   Y22 = W(N,20)*W(N,14)-W(N,18)-625.d0*Q2(3)
+	   Y2  = 625.d0*Q2(2)-W(N,20)*(W(N,16)+W(N,13)*T1(N+1))
 	   T2(N+1) = Y2/Y22
 	endif
 C Define new temperatures:
@@ -944,7 +944,7 @@ C----------------------------------------------------------------------|
 C Exponential scheme
 C----------------------------------------------------------------------|
 C	The subroutine makes time step in the matrix equation:
-C		d(N*T)/dt=1/V'*d[V'*(A*dT/dr+B*T)]/dr+625.*(C*T+D)
+C		d(N*T)/dt=1/V'*d[V'*(A*dT/dr+B*T)]/dr+625.d0*(C*T+D)
 C
 C	Here	A,B,C,D		- arrays(1:N)
 C		NOld,NNew 	- arrays(1:N+1)		(densities)
@@ -977,8 +977,8 @@ C----------------------------------------------------------------------|
 	save	icall,N0
 	data	icall/0/
         call add2loc("Subroutine RUNTT1"//char(0))
-	GT23 = GT/1.5
-	Y625 = 625.*GT23
+	GT23 = GT/1.5d0
+	Y625 = 625.d0*GT23
 	HJ = H
 	G1 = 0.
 	P1 = 0.
@@ -992,23 +992,23 @@ C----------------------------------------------------------------------|
 	   YA = A(j)
 	   YB = B(j)
 	   if (YA .lt. 0.d0)	goto	99
-	   P1 = 0.5*(abs(YB)+YB)		! 0.5(|B|+B)
+	   P1 = 0.5d0*(abs(YB)+YB)		! 0.5(|B|+B)
 	   if (YA .eq. 0.d0)	goto	1
 	   if (j .eq. N)	then
-C	      HJ = 0.5*(H+HB)
+C	      HJ = 0.5d0*(H+HB)
 	      H1 = HB
 	   endif
 C Exponential scheme: (7 lines)
 	   YJ = H1*YB/YA		   ! |\xi|
-	   if (abs(YJ) .ge. 4.d1) goto	1  ! Use (A/h)*f(\xi) = .5*(|B|+B)
+	   if (abs(YJ) .ge. 4.d1) goto	1  ! Use (A/h)*f(\xi) = .5d0*(|B|+B)
 	   if (abs(YJ) .ge. 1.d-5) then
-	      P1 = YB/(1.-exp(-YJ))	   ! Use (A/h)*f(\xi) = B/(1-exp{-\xi})
+	      P1 = YB/(1.d0-exp(-YJ))	   ! Use (A/h)*f(\xi) = B/(1-exp{-\xi})
 	   else
-	      P1 = YA/H1*(1.+0.5*YJ)   	   ! Use (A/h)*f(\xi) = A/h/(1-\xi/2)
+	      P1 = YA/H1*(1.+0.5d0*YJ)   	   ! Use (A/h)*f(\xi) = A/h/(1-\xi/2)
 	   endif
 C Power-law scheme: (6 lines)
 C	   YJ = abs(H1*YB/YA)			! |\xi|
-C	   if (YJ .ge. 1.d1)	goto	1	! Use (A/h)*f(\xi) = .5*(|B|+B)
+C	   if (YJ .ge. 1.d1)	goto	1	! Use (A/h)*f(\xi) = .5d0*(|B|+B)
 C	   Y1 = 1.d0-.1d0*YJ			! (1 - 0.1|\xi|)
 C	   Y2 = Y1*Y1				! (1 - 0.1|\xi|)^2
 C	   YJ = Y2*Y2*Y1*YA/H1			! (A/h)*(1 - 0.1|\xi|)^5
@@ -1106,13 +1106,13 @@ C----------------------------------------------------------------------|
 C Linear scheme
 C----------------------------------------------------------------------|
 C	The subroutine provides run of the equation:
-C		d(N*T)/dt=1/V'*d[V'*(A*dT/dr+B*T)]/dr+625.*(C*T+D)
+C		d(N*T)/dt=1/V'*d[V'*(A*dT/dr+B*T)]/dr+625.d0*(C*T+D)
 C		V'(j)*(NN(j)*TN(j)-NO(j)*TO(j))*H*H/GT=
 C			=V'(j+1/2)*A(j+1/2)*(TN(j+1)-TN(j))-
 C			-V'(j-1/2)*A(j-1/2)*(TN(j)-TN(j-1))+
-C			+0.5*V'(j+1/2)*B(j+1/2)*(TN(j+1)+TN(j))-
-C			-0.5*V'(j-1/2)*B(j-1/2)*(TN(j)+TN(j-1))-
-C			+V'(j)*H*H*625.*(C(j)*TN(j)+D(j))
+C			+0.5d0*V'(j+1/2)*B(j+1/2)*(TN(j+1)+TN(j))-
+C			-0.5d0*V'(j-1/2)*B(j-1/2)*(TN(j)+TN(j-1))-
+C			+V'(j)*H*H*625.d0*(C(j)*TN(j)+D(j))
 C
 C	Here	A,B,C,D		- arrays(1:N)
 C		NOld,NNew 	- arrays(1:N+1)		(densities)
@@ -1132,12 +1132,12 @@ C----------------------------------------------------------------------|
      3          RA,RA0,RB,RB0,AJ,BJ,CJ,DJ,VO,VN
 	integer	N,j
 	HB = E(1)
-	GT23 = GT/1.5
-	Y625 = 625.*GT23
+	GT23 = GT/1.5d0
+	Y625 = 625.d0*GT23
 	RA = 0.
 	RB = 0.
 	HH = H*H
-	H05 = 0.5*H
+	H05 = 0.5d0*H
 	do	1	J=1,N
 		VO = VOL(J)**1.666667
 		VN = VNE(J)**0.666667
@@ -1146,7 +1146,7 @@ C----------------------------------------------------------------------|
 		YG11 = G11(J)*GT23
 		RA = A(J)*YG11
 		if (j .eq. N)	then
-			H05 = 0.5*HB
+			H05 = 0.5d0*HB
 			HH  = H05*(H+HB)
 			RA0 = RA0*HB/H
 			RB0 = RB0*HB/H
@@ -1211,7 +1211,7 @@ C----------------------------------------------------------------------|
      2		H,HB,GT,HH,AJ,BJ,CJ,DJ,RJ,RJHH,YHB
 	HH = H*H
 	AJ = 0.
-	RJ = -0.5*H
+	RJ = -0.5d0*H
 	do	1	J=1,N
 	   CJ = AJ
 	   RJ = RJ+H
@@ -1272,14 +1272,14 @@ C----------------------------------------------------------------------|
 	YDN1 = D(N-1)
 	HH = H*H
 	AJ = 0.
-	RJ = -0.5*H
+	RJ = -0.5d0*H
 	do	1	J=1,N
 	   CJ = AJ
 	   RJ = RJ+H
 	   RJHH = RJ*HH
 	   if (j .eq. N)	then
 	      CJ = CJ*HB/H
-	      RJHH = RJ*0.5*HB*(H+HB)
+	      RJHH = RJ*0.5d0*HB*(H+HB)
 	   endif
 	   AJ = AK(J)
 	   DJ = RJHH*B(J)/GT
@@ -1298,7 +1298,7 @@ C----------------------------------------------------------------------|
  2	continue
 	goto	4
 	AJ = 0.
-	YHB = 0.5*HB/H
+	YHB = 0.5d0*HB/H
 	do	3	J=1,N
 		CJ = AJ
 		if (j .lt. N)	then
