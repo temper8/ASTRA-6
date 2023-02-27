@@ -573,8 +573,8 @@ C Note: j_{||Z}=j_{||A}*mu0*RTOR/(RTOR+SHIF(1))/IPOL(j)/G33(j)
 	   do	J=1,Nesc
 	      XEQ(J) = (J-1.d0)/(Nesc-1.d0)
 	   enddo
-	   print *, 'A2ESC 576'
-	   print *, XEQ(1),XEQ(2),XEQ(3)
+	   ! print *, 'A2ESC 576'
+	   ! print *, XEQ(1),XEQ(2),XEQ(3)
 	   do	J = 1,NA1
 	      XTR(J) = RHO(J)/ROC
 	   enddo
@@ -1307,8 +1307,8 @@ C	   CAR6(J) = B(J)
 	do	J=1,NEQL
 		XEQ(J) = (j-1.d0)/(NEQL-1.d0)
 	enddo
-	print *, 'EQUIL3 1310'
-	print *, XEQ(1),XEQ(2),XEQ(3)
+	! print *, 'EQUIL3 1310'
+	! print *, XEQ(1),XEQ(2),XEQ(3)
 C From transport grid in "a" to equidistant grid in "a"
 	ALFA	=.001d0
 	call	SMOOTH(ALFA,NA1,A,XTR,NEQL,BA,XEQ)
@@ -1419,9 +1419,9 @@ C 			    BD -> <|nabla(rho)|>
 	   BD(J) = BD(J)*BC(J)
 	   XEQ(J) = GR(J)/GR(NEQL)
 	enddo
-	print *, 'EQUIL3 1422 XEQ(J) = GR(J)/GR(NEQL)', NEQL
-	print *, GR(1), GR(2), GR(3)	
-	print *, XEQ(1), XEQ(2), XEQ(3)	
+	! print *, 'EQUIL3 1422 XEQ(J) = GR(J)/GR(NEQL)', NEQL
+	! print *, GR(1), GR(2), GR(3)	
+	! print *, XEQ(1), XEQ(2), XEQ(3)	
 C Define auxiliary (shifted) grid:
 	do	J=1,NA
 	   XTR(J) = J*HRO/ROC
@@ -1489,14 +1489,14 @@ C GSD -> \delta^{ASTRA} (dimensionless)
 	   if (j.ne.1) B(J) = GSD(J)/A(J)
 	enddo
 	B(1)=0.d0
-	print *, '----'
-	print *, A(1),A(2),A(3)
-	print *, XEQ(1),XEQ(2),XEQ(3)
+	! print *, '----'
+	! print *, A(1),A(2),A(3)
+	! print *, XEQ(1),XEQ(2),XEQ(3)
 	call	TRANSF(NEQL,B,XEQ,NA1,TRIA,XTR)
 	call	TRANSF(NEQL,A,XEQ,NA1,AMETR,XTR)
-	print *, AMETR(1),AMETR(2),AMETR(3)
-	print *, XTR(1),XTR(2),XTR(3)
-	pause
+	! print *, AMETR(1),AMETR(2),AMETR(3)
+	! print *, XTR(1),XTR(2),XTR(3)
+	!pause
 	do	J=1,NA1
 C (option 2a, default) Volume is calculated using VR (shifted grid):
 C (option 2b) Volume is calculated using VINT(1) (main grid):
@@ -2074,7 +2074,7 @@ C 		Set initial conditions / zero iteration
       G3DOLD=GD30
       NAOLD=NA
       WBR00=BR00
-	  print *, 'WBR00=BR00'
+	  ! print *, 'WBR00=BR00'
  4    continue
       do  I=1,NA1
          WSJP(I)=BA(I)
@@ -2095,8 +2095,8 @@ C 		Set initial conditions / zero iteration
       endif
       call add2loc("Calling EQPPAB"//char(0))
 	  call EQPPAB(NA)
-	  print *, 'WBR00', WBR00	  
-	  print *, 'wbr0', wbr0	  
+	  ! print *, 'WBR00', WBR00	  
+	  ! print *, 'wbr0', wbr0	  
       D0=WSD1(NA1)*WSAA(NA1)
       GR(1)=0.d0
       Vol(1)=0.d0
@@ -2132,8 +2132,8 @@ C 		Set initial conditions / zero iteration
             dgrda(i)=sqrt(fi)
          endif
       enddo
-	  print *, 'GR', GR(1),GR(2),GR(3)
-	  print *, 'wbr0', wbr0
+	  ! print *, 'GR', GR(1),GR(2),GR(3)
+	  ! print *, 'wbr0', wbr0
 CMR extra quantities
       GR2AUX(1)=0.d0
       GP=3.1415926d0
@@ -2281,8 +2281,8 @@ C ACC   - relative tolerance parameter
 	WSAC1=	WDSD1(NA1)
 	WSAC2=	WDGL(NA1)
 	WSAC3=	WDSD3(NA1)
-	print *, 'EQAB3 NA1=', NA1
-	print *, WBR00, WSD1(NA1), WSAA(NA1)
+	! print *, 'EQAB3 NA1=', NA1
+	! print *, WBR00, WSD1(NA1), WSAA(NA1)
 	WBR0=	WBR00+WSD1(NA1)*WSAA(NA1)
       call add2loc("Calling EQK3"//char(0))
       CALL EQK3(NA,NT)
@@ -2315,8 +2315,8 @@ C  GMC,SW0,SDD1,GDL
 	FV3I=	WDBA(1)*WSL3(1)+WDBB(1)*WSV3(1)
 	BP3=	(WBA(1)*WSL3(1)+WBB(1)*WSV3(1)+
      *	 	FU3I/6.d0)/WGMC(1)-WBK30(1)
-	 print *, BP1, BP3
-	 print *, WBK11(1), WBK33(1), WBK13(1), WBK31(1)
+	 ! print *, BP1, BP3
+	 ! print *, WBK11(1), WBK33(1), WBK13(1), WBK31(1)
 	S=	1.d0/(WBK11(1)*WBK33(1)-WBK13(1)*WBK31(1))
 	WBS1(1)=(BP1*WBK33(1)-BP3*WBK13(1))*S
 	WBS3(1)=(BP3*WBK11(1)-BP1*WBK31(1))*S
@@ -2371,7 +2371,7 @@ C  GMC,SW0,SDD1,GDL
 	WDSD1(I)=WBS1(I)
  1	CONTINUE
 C  SD1,GL
-      print *, 'WDSD1 1 NA1', WDSD1(1), WDSD1(NA1)
+      ! print *, 'WDSD1 1 NA1', WDSD1(1), WDSD1(NA1)
 	W1=	0.d0
 	WSD1(1)=0.5d0*WDSD1(1)
 	S=	WGL(NA1)*EXP(-WDGL(NA1))
@@ -2398,12 +2398,12 @@ C  SD3,SDD3
      ,		WBS3(J))*WSCJ1(J))/(AA+2.d0*WSCJ1(J)*FU3J)
 	WDSD3(J)=WBS3(J)+2.d0*WSD3(J)*FU3J
  3	CONTINUE
-      print *, 'WDSD1 1 NA1',WDSD1(1),WDSD1(NA1)
+      ! print *, 'WDSD1 1 NA1',WDSD1(1),WDSD1(NA1)
 	WSAC1=	WSA(NA1)*ABS(WDSD1(NA1)-WSAC1)
 	WSAC2=	WSAA(NA1)*ABS(WDGL(NA1)-WSAC2)
 	WSAC3=	WSA(NA1)*ABS(WDSD3(NA1)-WSAC3)
 	WSACC=	WSAC1+WSAC2+WSAC3
-      print *, 'acc', WSACC, ACC, ITER
+      ! print *, 'acc', WSACC, ACC, ITER
       IF(ITER.LT.NITER.AND.WSACC.GT.ACC) GO TO 200
 
 C	write(*,'(2I5,5F10.7)')ITER,NITER,WSACC,WSAC1,WSAC2,WSAC3
@@ -2557,7 +2557,7 @@ C----------------------------------------------------------------------|
 	NA1=	NA+1
 	NT1=	NT+1
 	SDT0=	1.d0/NT
-	print *, 'SDT0=', SDT0
+	! print *, 'SDT0=', SDT0
 	RI=	1.d0/WBR0
       DO 1 I=1,NA1
 	A=	WSA(I)
