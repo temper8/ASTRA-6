@@ -1041,7 +1041,7 @@ C-----------------------------------------------------------------------
 	integer	j
 	double precision	YCB,YG,YTH2
 C Preparing input for the 3M equilibrium solver:
-	YCB = 1.6E-3*RTOR/(BTOR*HRO*HRO)
+	YCB = 1.6d-3*RTOR/(BTOR*HRO*HRO)
 	do	J=2,NA
 	   if (j.eq.NA) YCB = YCB*HRO/HROA
 C	   EQFF(J) = -YCB/(MU(J))*(
@@ -2591,7 +2591,7 @@ C------------------------------------------
 C--------------------------------------
 	C=	COS(T)
 	S=      SIN(T)
-	print *, 'cos sin', C, S, T
+!	print *, 'cos sin', C, S, T
 	SS=	S*S
 	CC=	C*C
 	SX1=	-WSD1(I)-WSD3(I)*SS
