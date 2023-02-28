@@ -156,7 +156,7 @@ C----------------------------------------------------------------------|
 	   ICALL = 1
 	   YDTIME = TIME
 	endif
-	CTAU = 1./TAUINC
+	CTAU = 1.d0/TAUINC
 	do	j = 1,NA
 	   if(LEQ(1).gt.0)  CTAU = MAX(CTAU,ABS(NEO(j)/NE(j)-1.d0)/DELVAR)
 	   if(LEQ(2).gt.0)  CTAU = MAX(CTAU,ABS(TEO(j)/TE(j)-1.d0)/DELVAR)
@@ -268,15 +268,15 @@ C-----------------------------------------------------------------------
       integer	NIN,NCHCF,NMAX,K,J
       double precision	FIN(NIN),XIN(NIN),CHEBCF(NCHCF),YA,YB,FAC,YD
       parameter	(NMAX=10)
-      double precision	YC(NMAX),YF(NMAX),SUM,PI,PIOVN,BMA,BPA
-      data	PI/3.141592654/
+      double precision	YC(NMAX),YF(NMAX),SUM,PIOVN,BMA,BPA
+      double precision, parameter :: pi=4.d0*datan(1.d0)
       if (NCHCF .gt. NMAX)	then
 	 write(*,*)'>>> Chebyshev fit error: too high power'
 	 call	a_stop
       endif
       YA = max(XIN(1),XIN(NIN))
       YB = min(XIN(1),XIN(NIN))
-      PIOVN = PI/NCHCF
+      PIOVN = pi/NCHCF
 
 C The following two lines require that at the boundary
 C     the fit concides with the original function
@@ -838,7 +838,7 @@ C  W(1:N,23),	W(1:N,24) -   (used in NURTT to compute PETOT, PITOT)
 	      YA = YA-W(j,5)*W(j-1,12)	!          (YB Y2)
 	      YB = YB-W(j,6)*W(j-1,13)
 	   endif
-	   YJ = 1./(Y1*Y2-YA*YB)
+	   YJ = 1.d0/(Y1*Y2-YA*YB)
 	   Y11 = Y2*YJ			!           ( Y2 -YA)      (Y11 Y12)
 	   Y12 =-YA*YJ			! Inversed =         /det =
 	   Y21 =-YB*YJ			!           (-YB  Y1)      (Y21 Y22)
@@ -1072,7 +1072,7 @@ C  W(1:N,23),	W(1:N,24) - RHS evaluation
 	      YA = YA-W(j,5)*W(j-1,12)	!          (YB Y2)
 	      YB = YB-W(j,6)*W(j-1,13)
 	   endif
-	   YJ = 1./(Y1*Y2-YA*YB)
+	   YJ = 1.d0/(Y1*Y2-YA*YB)
 	   Y11 = Y2*YJ			!           ( Y2 -YA)      (Y11 Y12)
 	   Y12 =-YA*YJ			! Inversed =         /det =
 	   Y21 =-YB*YJ			!           (-YB  Y1)      (Y21 Y22)

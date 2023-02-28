@@ -2035,14 +2035,14 @@ C	\delta' =WDSD3(I)*WSA(I)
 	double precision	B2B0EQ(*),B0B2EQ(*),BMAXEQ(*),BMINEQ(*),
      1		BMODEQ(*),FOFBEQ(*),GRDAEQ(*),
      2		A,AA,C,CC,S,SS,SR,SX,SX1,T,Y,Y1,SDT,SDT0,
-     3		DRDA,DZDA,DRDT,DZDT,DMETR,DA2,DGR2,FI,FJ,D0,CGP,
+     3		DRDA,DZDA,DRDT,DZDT,DMETR,DA2,DGR2,FI,FJ,D0,
      4		GP,GP2,GR2,GLOLD,G3DOLD,AOLD,G22A2,SKGGG,
      5		SKDR,SKGA,SQG,SQG22R,YLIN,YVOL,YMIN,YMAX
-      save AOLD,GLOLD,G3DOLD,NAOLD,cgp,NITER
+      save AOLD,GLOLD,G3DOLD,NAOLD,NITER
       common /EMEQMR/SKDR(NP),SKGA(NP),SQG22R(NP)
       data AOLD/0.d0/GLOLD/0.d0/G3DOLD/0.d0/NAOLD/1/
-      data cgp/3.14159265359d0/	NITER/60/
-
+      data NITER/60/
+	  double precision, parameter :: cgp=4.d0*datan(1.d0)
 *************************************************
 C	if (TIME .gt. .1)	then
 C	write(*,*)BR00	! R_0+\Delta_edge		! RTOR+SHIFT
@@ -2136,7 +2136,7 @@ C 		Set initial conditions / zero iteration
 	  ! print *, 'wbr0', wbr0
 CMR extra quantities
       GR2AUX(1)=0.d0
-      GP=3.1415926d0
+      GP=4*atan(1.d0)
       GP2=2.d0*GP
       NT1=NT+1
       SDT0=1.d0/NT
@@ -2547,13 +2547,13 @@ C----------------------------------------------------------------------|
 	include	'for/emeq.inc'
 	integer	NA,NT,NA1,NT1,I,K
 	double precision
-     1		SKDR,SKGA,SQG22R,CGP,A,AA,ASPA,EE,SC1,SC2,T,DEN,
+     1		SKDR,SKGA,SQG22R,A,AA,ASPA,EE,SC1,SC2,T,DEN,
      2		DA1,DA2,RA,RI,XR,G22A2,R0RD,SF2,SF20,SF21,SF3,SF30,SF31,
      3		XRXR,SK10,SK11,SK13,SK0,SK01,SK2,SR,SX,SXX,SX1,SXX1,SZZ,
      4		S,SS,SY1,C,CC,BM1,BM2,BMI,BN,BN0,BN1,BN2,BN12,SDT,SDT0
 	common /EMEQMR/SKDR(NP),SKGA(NP),SQG22R(NP)
-	save	CGP
-      data CGP/3.14159265359d0/
+	double precision, parameter :: CGP=4.d0*datan(1.d0)
+
 	NA1=	NA+1
 	NT1=	NT+1
 	SDT0=	1.d0/NT
@@ -2909,12 +2909,11 @@ C	double precision WSL0(1),WSU0(1),WSW0(1),WSV0(1),WGMC(1),WDGMC(1)
 C	double precision WSJSL(1),WSJSR(1)
 	integer	NA,NA1,I,J
 	double precision
-     1		S,SLI,SLJ,G33I,G33J,CGP,DG33,BJ,BJI,BJJ,RR,RL,
+     1		S,SLI,SLJ,G33I,G33J,DG33,BJ,BJI,BJJ,RR,RL,
      2		DL0,DL0I,DL0J,D12I,D12J,DD12,DV0,FF0,FFI,FFJ,V0I,V0J,
      3		GB,GBI,GBJ,GBS,GBSI,GBSJ,GBD,GBDI,GBDJ,GPI,GPJ,GMJI,GMJJ,
      4		WGPINT,WGPRES,WSLI
-        save CGP
-	data CGP/3.14159265359d0/
+	 double precision, parameter :: CGP=4.d0*datan(1.d0)
 	NA1=NA+1
 C --- GP,SJ,DSJ,BJ,SJL,SJR
 
