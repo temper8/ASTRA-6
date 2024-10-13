@@ -6,7 +6,7 @@
 
 2. Install libx11-dev (because it is necessary XLib.h)
    ```
-   sudo apt-get install csh libx11-dev build-essential 
+   sudo apt-get install csh tcsh libx11-dev build-essential 
    ```
    
 3. set env var for Intel OneApi
